@@ -98,7 +98,7 @@ export const Model = () => {
               transition: "all 1s ease-in-out",
             }}
           >
-            <img src="../../public/Headline.svg" alt="Example" />
+            <img src="/Headline.svg" alt="Example" />
           </div>
         </Html>
 
