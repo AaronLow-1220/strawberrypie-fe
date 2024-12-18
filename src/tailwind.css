@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "GenSenRounded"; /* 自定義字體名稱 */
+  src: url("/public/font/GenSenRounded-B.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer utilities {
+  .bg-pink-radial {
+    background: radial-gradient(
+      circle,
+      rgba(255, 153, 255, 0.8) 0%,
+      rgba(255, 0, 153, 1) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  }
+  .logo {
+    background-image: url("../public/Headline.svg");
+    background-size: cover;
+    background-position: center;
+    width: 100px;
+    height: 100px;
+  }
+}
