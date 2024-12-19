@@ -10,24 +10,31 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
 
   useFrame((state, delta) => {
     const controls = controlsRef.current;
-
+    const easeInOut = (t) =>
+      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
     if (sliding) {
-      // 平滑增加進度
-      progress.current = Math.min(progress.current + delta * 0.5, 1);
+      progress.current = Math.min(progress.current + delta / 3, 1);
 
-      const t = progress.current;
-      const x = 0; // X 軸保持不變
-      const y = 0 + (4 - 0) * t; // Y 軸高度
-      const z = -5 + 21 * t; // Z 軸從 -5 到 16
+      const easedT = easeInOut(progress.current);
 
-      camera.position.set(x, y, z);
-      camera.lookAt(0, 0.5, -5);
+      // 動態計算相機位置
+      const x = 0;
+      const y = 5 - 1 * easedT;
+      const z = -5 + 21 * easedT;
 
-      camera.fov = 50 + 20 * Math.sin(t * Math.PI);
+      // 動態計算關注點
+      const targetX = 0;
+      const targetY = 5 - 4.5 * easedT;
+      const targetZ = -5;
+
+      camera.position.set(x, y, z); // 0 4 16
+      camera.lookAt(targetX, targetY, targetZ);
+      // 設定動態 FOV
+      camera.fov = 50 + 20 * Math.sin(easedT * Math.PI);
       camera.updateProjectionMatrix();
 
       // 動畫結束
-      if (t >= 1) {
+      if (easedT >= 1) {
         setSliding(false);
         if (controls) {
           controls.target.set(0, 0.5, -5);

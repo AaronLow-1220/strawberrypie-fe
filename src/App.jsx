@@ -1,4 +1,4 @@
-import { Model } from "./components/Model";
+import { Model } from "./components/MainVision/Model";
 
 function App() {
   return (

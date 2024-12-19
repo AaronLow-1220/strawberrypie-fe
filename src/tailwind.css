@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "GenSenRounded"; /* 自定義字體名稱 */
-  src: url("/public/font/GenSenRounded-B.ttf") format("truetype");
+  src: url("/font/GenSenRounded-B.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
