@@ -47,6 +47,8 @@ export default [
       ],
       // 添加 Node.js 相關配置
       "no-undef": "off", // 避免因為 Node.js 全局變量報錯
+      "react/no-unknown-property": "off",
+      "react/prop-types": "off",
     },
   },
 ];
