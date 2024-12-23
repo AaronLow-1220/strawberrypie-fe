@@ -3,23 +3,25 @@ import { Html } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useState, useEffect } from "react";
 import { SlidingCamera } from "./SlidingCamera";
-import { InfoCard } from "./InfoCard"; // 引入子元件
+import { InfoCard } from "./InfoCard";
+import { LightStrip } from "../SmallComponents/LightStrip";
 
 // 主程式
-export const Model = () => {
+export const Model = ({ onAnimationEnd, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
 
-  const [htmlPosition, setHtmlPosition] = useState([0, 0, 0]);
-  const [opacity, setOpacity] = useState(0);
+  const [htmlPosition, setHtmlPosition] = useState([0, 6.1, 0]);
+
   const [modelScale, setModelScale] = useState([2, 2, 2]);
   const [modelPosition, setModelPosition] = useState([0, -1, 0]);
-  const [logoWidth, setLogoWidth] = useState("500px");
 
   const [leftInfoOpacity, setLeftInfoOpacity] = useState(0);
   const [leftTransform, setLeftTransform] = useState("translateY(40px)");
 
   const [rightInfoOpacity, setRightInfoOpacity] = useState(0);
   const [rightTransform, setRightTransform] = useState("translateY(40px)");
+
+  const [LightStripHeight, setLightStripHeight] = useState("");
 
   useEffect(() => {
     if (gltf && gltf.scene) {
@@ -60,47 +62,31 @@ export const Model = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 确定動畫結束觸發子組建動畫
   const handleAnimationEnd = () => {
-    setTimeout(() => {
-      setOpacity(1);
-      if (window.innerWidth < 768) {
-        setLogoWidth("350px");
-      } else if (window.innerWidth < 1024) {
-        setLogoWidth("400px");
-      } else {
-        setLogoWidth("450px");
-      }
-    }, 500);
+    logoAnimation();
     setTimeout(() => {
       setLeftInfoOpacity(1);
       setLeftTransform("translateY(0px)");
-    }, 1000);
+    }, 900);
     setTimeout(() => {
       setRightInfoOpacity(1);
       setRightTransform("translateY(0px)");
-    }, 1500);
+    }, 1800);
+    setTimeout(() => {
+      setLightStripHeight("animate-light");
+    }, 2500);
+    setTimeout(() => {
+      onAnimationEnd();
+    }, 3000);
   };
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen ">
       <Canvas>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} />
         <SlidingCamera onAnimationEnd={handleAnimationEnd} />
-
-        {/* LOGO */}
-        <Html position={htmlPosition} center>
-          <div
-            style={{
-              width: logoWidth,
-              height: "100px",
-              opacity: opacity,
-              transition: "all 1s ease-in-out",
-            }}
-          >
-            <img src="/Headline.svg" alt="Example" />
-          </div>
-        </Html>
 
         {/* 資訊卡片 */}
         <Html position={[0, -4, 0]} center>
@@ -128,6 +114,11 @@ export const Model = () => {
               color="#FFFFFF"
             />
           </div>
+        </Html>
+
+        {/* 燈條 */}
+        <Html position={[0, -5.7, 0]} center>
+          <LightStrip animateLight={LightStripHeight} />
         </Html>
 
         {/* 3D 模型 */}
