@@ -1,34 +1,41 @@
 import { useState, useEffect, useRef } from "react";
 
 export const Logo = ({ beginAnimation }) => {
+  // 以 state 控制動畫類型即可
   const [animate, setAnimate] = useState("");
-  const [position, setPosition] = useState(17); // 初始位置
-  const [scale, setScale] = useState(1); // 圖片縮放比例
 
-  const animationFrameRef = useRef(null); // 用於儲存 requestAnimationFrame ID
-  const currentScale = useRef(1); // 儲存當前 scale 狀態
-  const currentPosition = useRef(17); // 儲存當前 position 狀態
+  // 永遠不變的初始位置 (用 ref)
+  const initialPositionRef = useRef(17);
 
-  // 線性插值函數
+  // 目前正在顯示的 top 和 scale
+  const [position, setPosition] = useState(initialPositionRef.current);
+  const [scale, setScale] = useState(1);
+
+  const animationFrameRef = useRef(null);
+
+  // 線性插值
   const lerp = (start, end, t) => start + (end - start) * t;
 
-  //接收觸發動畫
   useEffect(() => {
     if (beginAnimation) {
       triggerAnimation();
     }
   }, [beginAnimation]);
-  //處理初始動畫邏輯
+
   const triggerAnimation = () => {
     const updateLogoWidth = () => {
       if (window.innerWidth < 768) {
         setAnimate("animate-Logo");
+        initialPositionRef.current = 11;
+        setPosition(initialPositionRef.current);
       } else if (window.innerWidth < 1024) {
         setAnimate("animate-IpadLogo");
-        setPosition(9);
+        initialPositionRef.current = 9;
+        setPosition(initialPositionRef.current);
       } else {
         setAnimate("animate-WindowLogo");
-        setPosition(7.5);
+        initialPositionRef.current = 7.5;
+        setPosition(initialPositionRef.current);
       }
     };
     updateLogoWidth();
@@ -38,41 +45,35 @@ export const Logo = ({ beginAnimation }) => {
     };
   };
 
-  // 滾動處理邏輯
   useEffect(() => {
     const handleScroll = () => {
-      if (animationFrameRef.current) return; // 避免多次執行
+      if (animationFrameRef.current) return;
       animationFrameRef.current = requestAnimationFrame(() => {
         const scrollY = window.scrollY;
 
-        // 計算目標值
-        const targetScale = Math.max(0.5, 1 - scrollY / 500); // 最小縮放比例為 0.5
-        const targetTop = Math.max(2.1, 17 - scrollY / 20); // 逐漸移動到 top 0
+        // 1) 計算目標縮放
+        const targetScale = Math.max(0.5, 1 - scrollY / 500);
 
-        // 動態調整插值速度
-        const scaleDiff = Math.abs(currentScale.current - targetScale);
-        const positionDiff = Math.abs(currentPosition.current - targetTop);
+        // 2) 計算目標 top
+        //    以 initialPositionRef.current 當基準，
+        //    scrollY 越大 => top 越接近某個最小值 (這裡以 2.1)
+        const rawTop = initialPositionRef.current - scrollY / 20;
+        const targetTop = Math.max(3, rawTop);
 
-        // 動態插值係數
+        // 3) 計算差距，決定插值速度
+        const scaleDiff = Math.abs(scale - targetScale);
+        const positionDiff = Math.abs(position - targetTop);
         const dynamicLerp = scaleDiff > 0.1 || positionDiff > 1 ? 0.3 : 0.15;
 
-        // 使用插值平滑過渡
-        currentScale.current = lerp(
-          currentScale.current,
-          targetScale,
-          dynamicLerp
-        );
-        currentPosition.current = lerp(
-          currentPosition.current,
-          targetTop,
-          dynamicLerp
-        );
+        // 4) 插值
+        const newScale = lerp(scale, targetScale, dynamicLerp);
+        const newPosition = lerp(position, targetTop, dynamicLerp);
 
-        // 更新狀態
-        setScale(currentScale.current);
-        setPosition(currentPosition.current);
+        // 5) setState
+        setScale(newScale);
+        setPosition(newPosition);
 
-        animationFrameRef.current = null; // 清除 animationFrame 引用
+        animationFrameRef.current = null;
       });
     };
 
@@ -82,11 +83,11 @@ export const Logo = ({ beginAnimation }) => {
       if (animationFrameRef.current)
         cancelAnimationFrame(animationFrameRef.current);
     };
-  }, []);
+  }, [position, scale]);
 
   return (
     <div
-      className={`fixed left-[50%] transform -translate-x-1/2 -translate-y-1/2 z-10 ${animate}`}
+      className={`fixed left-[50%] transform -translate-x-1/2 -translate-y-1/2 z-30 ${animate}`}
       style={{
         top: `${position}%`,
         transform: `translate(-50%, -50%) scale(${scale})`,

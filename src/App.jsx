@@ -30,13 +30,15 @@ function App() {
   }, [isAnimationComplete]);
 
   return (
-    <div className="bg-pink-radial">
-      <Logo beginAnimation={animate} />
-      <Model
-        onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調
-        logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
-      />
-      <div className="w-full h-[2000px] bg-gray-100"></div>
+    <div>
+      <div className="bg-pink-radial ">
+        <Logo beginAnimation={animate} />
+        <Model
+          onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調
+          logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
+        />
+      </div>
+      <div className="w-full h-[2000px] bg-black"></div>
     </div>
   );
 }

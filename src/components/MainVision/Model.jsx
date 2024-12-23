@@ -10,10 +10,11 @@ import { LightStrip } from "../SmallComponents/LightStrip";
 export const Model = ({ onAnimationEnd, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
 
-  const [htmlPosition, setHtmlPosition] = useState([0, 6.1, 0]);
-
   const [modelScale, setModelScale] = useState([2, 2, 2]);
   const [modelPosition, setModelPosition] = useState([0, -1, 0]);
+  const [InfoCardWidth, setInfoCardWidth] = useState("21rem");
+  const [InfoCardPosition, setInfoCardPosition] = useState([0, -4, 0]);
+  const [LightStripPosition, setLightStripPosition] = useState([0, -5.7, 0]);
 
   const [leftInfoOpacity, setLeftInfoOpacity] = useState(0);
   const [leftTransform, setLeftTransform] = useState("translateY(40px)");
@@ -46,15 +47,19 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
       if (window.innerWidth < 768) {
         setModelScale([2, 2, 2]);
         setModelPosition([0, -1, 0]);
-        setHtmlPosition([0, 6.1, 0]);
+        setInfoCardPosition([0, -4, 0]);
       } else if (window.innerWidth < 1024) {
-        setModelScale([2.5, 2.5, 2.5]);
-        setModelPosition([0, -1.5, 0]);
-        setHtmlPosition([0, 7.5, 0]);
+        setModelScale([2.5, 2.2, 2.3]);
+        setModelPosition([0, -1.1, 0]);
+        setInfoCardPosition([0, -4.8, 0]);
+        setInfoCardWidth("25rem");
+        setLightStripPosition([0, -6.7, 0]);
       } else {
-        setModelScale([3, 2.4, 3]);
-        setModelPosition([0, -1.3, 0]);
-        setHtmlPosition([0, 7.5, 0]);
+        setModelScale([3, 2.5, 2.5]);
+        setModelPosition([0, -2.4, 0]);
+        setInfoCardPosition([0, -5, 0]);
+        setInfoCardWidth("60rem");
+        setLightStripPosition([0, -7.2, 0]);
       }
     };
     handleResize();
@@ -82,17 +87,17 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   };
 
   return (
-    <div className="w-full h-screen ">
-      <Canvas>
+    <div className="w-full h-screen relative">
+      <Canvas style={{ position: "absolute", zIndex: 0 }}>
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.3} penumbra={1} />
         <SlidingCamera onAnimationEnd={handleAnimationEnd} />
 
         {/* 資訊卡片 */}
-        <Html position={[0, -4, 0]} center>
+        <Html position={InfoCardPosition} center>
           <div
             style={{
-              width: "21rem",
+              width: InfoCardWidth,
               display: "flex",
               justifyContent: "space-between",
             }}
@@ -117,7 +122,7 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
         </Html>
 
         {/* 燈條 */}
-        <Html position={[0, -5.7, 0]} center>
+        <Html position={LightStripPosition} center>
           <LightStrip animateLight={LightStripHeight} />
         </Html>
 

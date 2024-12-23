@@ -1,6 +1,6 @@
-const withMT = require("@material-tailwind/react/utils/withMT");
+import withMT from "@material-tailwind/react/utils/withMT";
 
-module.exports = withMT({
+export default withMT({
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
@@ -26,27 +26,27 @@ module.exports = withMT({
           "50%": { transform: "translateY(0px)", opacity: 1 },
           "100%": { transform: "translateY(100px)", opacity: 0.1 },
         },
-        // 手機版Logo動畫
+        // 手機版 Logo 動畫
         Logo: {
           "0%": { width: "500px", opacity: 0 },
           "100%": { width: "350px", opacity: 1 },
         },
-        // 平板版Logo動畫
+        // 平板版 Logo 動畫
         IpadLogo: {
           "0%": { width: "500px", opacity: 0 },
           "100%": { width: "400px", opacity: 1 },
         },
-        // 電腦版Logo動畫
+        // 電腦版 Logo 動畫
         WindowLogo: {
           "0%": { width: "500px", opacity: 0 },
           "100%": { width: "450px", opacity: 1 },
         },
-        // 滑動後Logo動畫
+        // 滑動後 Logo 動畫
         LogoSide: {
           "0%": { transform: "translateX(0px)", opacity: 1 },
           "100%": { transform: "translateX(100px)", opacity: 0 },
         },
-        // InfoCard動畫
+        // InfoCard 動畫
         InfoCard: {
           "0%": { transform: "translateY(40px)", opacity: 0 },
           "100%": { transform: "translateY(0px)", opacity: 1 },
