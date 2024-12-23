@@ -7,6 +7,51 @@ module.exports = withMT({
       fontFamily: {
         sans: ["GenSenRounded", "sans-serif"],
       },
+      colors: {
+        "primary-color": "#FF99FF",
+        "secondary-color": "#FF0099",
+      },
+      animation: {
+        light: "lightAnimation 2s infinite",
+        InfoCard: "InfoCard 1s ease-in-out",
+        Logo: "Logo 1s ease-out forwards",
+        IpadLogo: "IpadLogo 1s ease-out forwards",
+        WindowLogo: "WindowLogo 1s ease-out forwards",
+        LogoSide: "LogoSide 1s ease-in-out forwards",
+      },
+      keyframes: {
+        // 跑馬燈動畫
+        lightAnimation: {
+          "0%": { transform: "translateY(-100px)", opacity: 0.1 },
+          "50%": { transform: "translateY(0px)", opacity: 1 },
+          "100%": { transform: "translateY(100px)", opacity: 0.1 },
+        },
+        // 手機版Logo動畫
+        Logo: {
+          "0%": { width: "500px", opacity: 0 },
+          "100%": { width: "350px", opacity: 1 },
+        },
+        // 平板版Logo動畫
+        IpadLogo: {
+          "0%": { width: "500px", opacity: 0 },
+          "100%": { width: "400px", opacity: 1 },
+        },
+        // 電腦版Logo動畫
+        WindowLogo: {
+          "0%": { width: "500px", opacity: 0 },
+          "100%": { width: "450px", opacity: 1 },
+        },
+        // 滑動後Logo動畫
+        LogoSide: {
+          "0%": { transform: "translateX(0px)", opacity: 1 },
+          "100%": { transform: "translateX(100px)", opacity: 0 },
+        },
+        // InfoCard動畫
+        InfoCard: {
+          "0%": { transform: "translateY(40px)", opacity: 0 },
+          "100%": { transform: "translateY(0px)", opacity: 1 },
+        },
+      },
     },
   },
   plugins: [],
