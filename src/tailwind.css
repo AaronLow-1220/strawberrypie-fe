@@ -18,11 +18,4 @@
       rgba(0, 0, 0, 1) 100%
     );
   }
-  .logo {
-    background-image: url("../public/Headline.svg");
-    background-size: cover;
-    background-position: center;
-    width: 100px;
-    height: 100px;
-  }
 }
