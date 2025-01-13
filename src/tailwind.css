@@ -11,11 +11,24 @@
 
 @layer utilities {
   .bg-pink-radial {
-    background: radial-gradient(
-      circle,
-      rgba(255, 153, 255, 0.8) 0%,
-      rgba(255, 0, 153, 1) 0%,
-      rgba(0, 0, 0, 1) 100%
-    );
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
+    background-image: url("/Background_web.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    mix-blend-mode: plus-lighter;
+  }
+  .wave-container {
+    position: relative;
+    width: 100%;
+    background-color: #1b080a; /* 背景色 */
+    overflow: hidden;
+  }
+
+  .wave {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
   }
 }

@@ -8,8 +8,8 @@ export default withMT({
         sans: ["GenSenRounded", "sans-serif"],
       },
       colors: {
-        "primary-color": "#FF99FF",
-        "secondary-color": "#FF0099",
+        "primary-color": "#F748C1",
+        "secondary-color": "#FFB0CE",
       },
       animation: {
         light: "lightAnimation 2s infinite",
