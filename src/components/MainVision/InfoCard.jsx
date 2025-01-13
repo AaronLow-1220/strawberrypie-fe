@@ -5,10 +5,15 @@ export const InfoCard = ({
   transform,
   backgroundColor,
   color,
+  containerWidth = "5rem",
+  containerHeight = "2rem",
+  fontSize = "1rem",
+  dateTextSize = "1.5rem",
+  children,
 }) => {
   const containerStyle = (backgroundColor) => ({
-    width: "5rem",
-    height: "2rem",
+    width: containerWidth,
+    height: containerHeight,
     backgroundColor: backgroundColor,
     borderRadius: "39px",
     textAlign: "center",
@@ -20,12 +25,14 @@ export const InfoCard = ({
 
   const dateStyle = {
     color: "#FFFFFF",
-    fontSize: "1.5rem",
+    fontSize: dateTextSize,
     marginTop: "0.75rem",
+    textAlign: "center",
+    whiteSpace: "nowrap",
   };
 
   const transitionStyle = (opacity, transform) => ({
-    width: "9rem",
+    width: "100%",
     height: "4.5rem",
     textAlign: "center",
     opacity: opacity,
@@ -36,9 +43,9 @@ export const InfoCard = ({
   return (
     <div style={transitionStyle(opacity, transform)}>
       <div style={containerStyle(backgroundColor)}>
-        <div style={{ color: color, fontSize: "1rem" }}>{title}</div>
+        <div style={{ color: color, fontSize: fontSize }}>{title}</div>
       </div>
-      <div style={dateStyle}>{date}</div>
+      <div style={dateStyle}>{children || date}</div>
     </div>
   );
 };

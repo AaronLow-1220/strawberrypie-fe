@@ -4,17 +4,17 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useState, useEffect } from "react";
 import { SlidingCamera } from "./SlidingCamera";
 import { InfoCard } from "./InfoCard";
-import { LightStrip } from "../SmallComponents/LightStrip";
+import { LightStrip } from "./LightStrip";
 
 // 主程式
 export const Model = ({ onAnimationEnd, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
 
   const [modelScale, setModelScale] = useState([2, 2, 2]);
-  const [modelPosition, setModelPosition] = useState([0, -1, 0]);
+  const [modelPosition, setModelPosition] = useState([0, -3, -4]);
   const [InfoCardWidth, setInfoCardWidth] = useState("21rem");
   const [InfoCardPosition, setInfoCardPosition] = useState([0, -4, 0]);
-  const [LightStripPosition, setLightStripPosition] = useState([0, -5.7, 0]);
+  const [LightStripPosition, setLightStripPosition] = useState([0, -5, 0]);
 
   const [leftInfoOpacity, setLeftInfoOpacity] = useState(0);
   const [leftTransform, setLeftTransform] = useState("translateY(40px)");
@@ -45,18 +45,18 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setModelScale([2, 2, 2]);
-        setModelPosition([0, -1, 0]);
+        setModelScale([1.8, 1.8, 1.8]);
+        setModelPosition([0, -3, -4]);
         setInfoCardPosition([0, -4, 0]);
       } else if (window.innerWidth < 1024) {
-        setModelScale([2.5, 2.2, 2.3]);
-        setModelPosition([0, -1.1, 0]);
+        setModelScale([2, 2, 2]);
+        setModelPosition([0, -3, -4]);
         setInfoCardPosition([0, -4.8, 0]);
         setInfoCardWidth("25rem");
         setLightStripPosition([0, -6.7, 0]);
       } else {
-        setModelScale([3, 2.5, 2.5]);
-        setModelPosition([0, -2.4, 0]);
+        setModelScale([3, 3, 3]);
+        setModelPosition([0, -6, -8]);
         setInfoCardPosition([0, -5, 0]);
         setInfoCardWidth("60rem");
         setLightStripPosition([0, -7.2, 0]);
@@ -104,18 +104,18 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
           >
             <InfoCard
               title="校內展"
-              date="04.07-04.11"
+              date="04.07-11"
               opacity={leftInfoOpacity}
               transform={leftTransform}
               backgroundColor="#FFFFFF"
-              color="#E04AA9"
+              color="#F748C1"
             />
             <InfoCard
               title="校外展"
-              date="04.25-04.28"
+              date="04.25-28"
               opacity={rightInfoOpacity}
               transform={rightTransform}
-              backgroundColor="#E04AA9"
+              backgroundColor="#F748C1"
               color="#FFFFFF"
             />
           </div>

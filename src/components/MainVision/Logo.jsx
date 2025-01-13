@@ -1,13 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 
 export const Logo = ({ beginAnimation }) => {
-  // 以 state 控制動畫類型即可
   const [animate, setAnimate] = useState("");
 
-  // 永遠不變的初始位置 (用 ref)
   const initialPositionRef = useRef(17);
 
-  // 目前正在顯示的 top 和 scale
   const [position, setPosition] = useState(initialPositionRef.current);
   const [scale, setScale] = useState(1);
 
@@ -52,11 +49,8 @@ export const Logo = ({ beginAnimation }) => {
         const scrollY = window.scrollY;
 
         // 1) 計算目標縮放
-        const targetScale = Math.max(0.5, 1 - scrollY / 500);
+        const targetScale = Math.max(0.3, 1 - scrollY / 500);
 
-        // 2) 計算目標 top
-        //    以 initialPositionRef.current 當基準，
-        //    scrollY 越大 => top 越接近某個最小值 (這裡以 2.1)
         const rawTop = initialPositionRef.current - scrollY / 20;
         const targetTop = Math.max(3, rawTop);
 
@@ -69,7 +63,6 @@ export const Logo = ({ beginAnimation }) => {
         const newScale = lerp(scale, targetScale, dynamicLerp);
         const newPosition = lerp(position, targetTop, dynamicLerp);
 
-        // 5) setState
         setScale(newScale);
         setPosition(newPosition);
 
