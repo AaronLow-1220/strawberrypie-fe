@@ -10,12 +10,15 @@
 }
 
 @layer utilities {
+  body {
+    background-color: #1B080A;
+  }
   .bg-pink-radial {
-    background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色 */
     background-image: url("/Background_web.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    background-blend-mode: screen;
     mix-blend-mode: plus-lighter;
   }
   .wave-container {

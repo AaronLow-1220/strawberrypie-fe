@@ -8,11 +8,39 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const [sliding, setSliding] = useState(true);
   const initialY = useRef(null);  // 儲存初始Y位置
 
-  camera.fov = 60;
+  camera.fov = 46;
   camera.near = 0.01;
   camera.updateProjectionMatrix();
 
   const ANIMATION_DURATION = 3;
+
+  var startFov = 84;
+  var endFov = 46;
+
+  // 設定不同尺寸的 FOV
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        camera.fov = 94;  // 手機版用更大的 FOV
+        startFov = 84;
+        endFov = 46;
+      } else if (window.innerWidth < 1024) {
+        camera.fov = 84;  // 平板版用標準 FOV
+        startFov = 84;
+        endFov = 46;
+      } else {
+        camera.fov = 74;  // 桌面版用較小的 FOV，視角更集中
+        startFov = 74;
+        endFov = 46;
+      }
+      camera.updateProjectionMatrix();  // 記得更新投影矩陣
+    };
+
+    // 初始化和監聽視窗大小變化
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 實現 cubic-bezier 函數
   const cubicBezier = (x1, y1, x2, y2) => {
@@ -21,34 +49,34 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
 
       let start = 0;
       let end = 1;
-      
+
       for (let i = 0; i < 10; i++) {
         const currentT = (start + end) / 2;
-        
+
         // 計算 bezier 曲線上的 x 點
         const x = 3 * currentT * (1 - currentT) ** 2 * x1 +
-                 3 * currentT ** 2 * (1 - currentT) * x2 +
-                 currentT ** 3;
-                 
+          3 * currentT ** 2 * (1 - currentT) * x2 +
+          currentT ** 3;
+
         if (Math.abs(x - t) < 0.001) {
           // 計算對應的 y 值
           return 3 * currentT * (1 - currentT) ** 2 * y1 +
-                 3 * currentT ** 2 * (1 - currentT) * y2 +
-                 currentT ** 3;
+            3 * currentT ** 2 * (1 - currentT) * y2 +
+            currentT ** 3;
         }
-        
+
         if (x > t) {
           end = currentT;
         } else {
           start = currentT;
         }
       }
-      
+
       // 計算最終的 y 值
       const currentT = (start + end) / 2;
       return 3 * currentT * (1 - currentT) ** 2 * y1 +
-             3 * currentT ** 2 * (1 - currentT) * y2 +
-             currentT ** 3;
+        3 * currentT ** 2 * (1 - currentT) * y2 +
+        currentT ** 3;
     };
   };
 
@@ -80,6 +108,11 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
 
   useEffect(() => {
     const handleScroll = (event) => {
+      // 檢查是否是縮放手勢
+      if (event.ctrlKey || event.metaKey) {
+        return; // 忽略縮放手勢
+      }
+
       if (!sliding) {
         // 確保初始Y位置被設定
         if (initialY.current === null) {
@@ -87,7 +120,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
         }
 
         // 直接更新相機位置
-        const newY = camera.position.y - event.deltaY * 0.001;
+        const newY = camera.position.y - event.deltaY * 0.002;
         // 確保不會超過初始位置
         camera.position.y = Math.min(initialY.current, Math.max(newY, -Infinity));
       }
@@ -101,12 +134,16 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
     if (sliding) {
       progress.current = Math.min(progress.current + delta / ANIMATION_DURATION, 1);
       const easedT = ease(progress.current);
-      
+
       const position = curve.getPoint(easedT);
       camera.position.set(position.x, position.y, position.z);
 
       const currentRotation = startRotation + (endRotation - startRotation) * easedT;
       camera.rotation.x = currentRotation;
+
+      const currentFov = startFov + (endFov - startFov) * easedT;
+      camera.fov = currentFov;
+      camera.updateProjectionMatrix();
 
       if (easedT >= 1) {
         setSliding(false);

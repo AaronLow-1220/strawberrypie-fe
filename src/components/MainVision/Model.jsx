@@ -10,8 +10,6 @@ import { LightStrip } from "./LightStrip";
 export const Model = ({ onAnimationEnd, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
 
-  const [modelScale, setModelScale] = useState([1, 1, 1]);
-  const [modelPosition, setModelPosition] = useState([0, 0, 0]);
   const [InfoCardWidth, setInfoCardWidth] = useState("21rem");
   const [InfoCardPosition, setInfoCardPosition] = useState([0, -4, 0]);
   const [LightStripPosition, setLightStripPosition] = useState([0, -5, 0]);
@@ -45,18 +43,12 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        // setModelScale([1.8, 1.8, 1.8]);
-        // setModelPosition([0, -3, -4]);
         setInfoCardPosition([0, -4, 0]);
       } else if (window.innerWidth < 1024) {
-        // setModelScale([2, 2, 2]);
-        // setModelPosition([0, -3, -4]);
         setInfoCardPosition([0, -4.8, 0]);
         setInfoCardWidth("25rem");
         setLightStripPosition([0, -6.7, 0]);
       } else {
-        // setModelScale([3, 3, 3]);
-        // setModelPosition([0, -6, -8]);
         setInfoCardPosition([0, -5, 0]);
         setInfoCardWidth("60rem");
         setLightStripPosition([0, -7.2, 0]);
@@ -133,10 +125,6 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
         {/* 3D 模型 */}
         <primitive
           object={gltf.scene}
-          position={modelPosition}
-          scale={modelScale}
-          castShadow
-          receiveShadow
         />
       </Canvas>
     </div>
