@@ -6,7 +6,8 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const { camera } = useThree();
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
-  const initialY = useRef(null);  // 儲存初始Y位置
+  const initialY = useRef(null);
+  const lastScrollY = useRef(0);
 
   camera.fov = 46;
   camera.near = 0.01;
@@ -14,33 +15,41 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
 
   const ANIMATION_DURATION = 3;
 
-  var startFov = 84;
-  var endFov = 46;
+  const SENSOR_HEIGHT = 24;
+
+  var startFov;
+  var endFov;
 
   // 設定不同尺寸的 FOV
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        camera.fov = 94;  // 手機版用更大的 FOV
-        startFov = 84;
-        endFov = 46;
-      } else if (window.innerWidth < 1024) {
-        camera.fov = 84;  // 平板版用標準 FOV
-        startFov = 84;
-        endFov = 46;
-      } else {
-        camera.fov = 74;  // 桌面版用較小的 FOV，視角更集中
-        startFov = 74;
-        endFov = 46;
-      }
-      camera.updateProjectionMatrix();  // 記得更新投影矩陣
-    };
-
     // 初始化和監聽視窗大小變化
-    handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window .removeEventListener('resize', handleResize);
   }, []);
+
+  const handleResize = () => {
+    if (window.innerWidth < 768) {
+      startFov = 8;
+      endFov = 15;
+    } else if (window.innerWidth < 1024) {
+      startFov = 13;
+      endFov = 19;
+    } else {
+      startFov = 12;
+      endFov = 19;
+    }
+    startFov = focalLengthToFOV(startFov);
+    console.log(startFov);
+    endFov = focalLengthToFOV(endFov);
+    camera.fov = endFov;
+    camera.updateProjectionMatrix();  // 記得更新投影矩陣
+  };
+
+  const focalLengthToFOV = (focalLength) => {
+    return 2 * Math.atan((SENSOR_HEIGHT / 2) / focalLength) * (180 / Math.PI);
+  };
+
+  handleResize();
 
   // 實現 cubic-bezier 函數
   const cubicBezier = (x1, y1, x2, y2) => {
@@ -120,7 +129,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
         }
 
         // 直接更新相機位置
-        const newY = camera.position.y - event.deltaY * 0.002;
+        const newY = camera.position.y - event.deltaY * 0.0015;
         // 確保不會超過初始位置
         camera.position.y = Math.min(initialY.current, Math.max(newY, -Infinity));
       }
@@ -130,25 +139,35 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
     return () => window.removeEventListener('wheel', handleScroll);
   }, [sliding]);
 
+  // 控制 overflow
+  useEffect(() => {
+    if (sliding) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [sliding]);
+
   useFrame((state, delta) => {
     if (sliding) {
       progress.current = Math.min(progress.current + delta / ANIMATION_DURATION, 1);
       const easedT = ease(progress.current);
-
+      
       const position = curve.getPoint(easedT);
       camera.position.set(position.x, position.y, position.z);
 
       const currentRotation = startRotation + (endRotation - startRotation) * easedT;
       camera.rotation.x = currentRotation;
 
-      const currentFov = startFov + (endFov - startFov) * easedT;
-      camera.fov = currentFov;
-      camera.updateProjectionMatrix();
-
       if (easedT >= 1) {
         setSliding(false);
-        initialY.current = camera.position.y;  // 儲存初始Y位置
-        if (onAnimationEnd) onAnimationEnd();
+        initialY.current = camera.position.y;
+        lastScrollY.current = window.scrollY;
+        // 可以移除 onAnimationEnd，因為我們現在直接在這裡處理 overflow
+        // if (onAnimationEnd) onAnimationEnd();
       }
     }
   });

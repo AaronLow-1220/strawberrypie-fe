@@ -34,7 +34,7 @@ function App() {
   }, [isAnimationComplete]);
 
   return (
-    <div className="bg-black">
+    <div className="">
       <div className="bg-pink-radial ">
         <Logo beginAnimation={animate} />
         <Model
@@ -42,7 +42,7 @@ function App() {
           logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
         />
       </div>
-      <div className="w-full h-[60rem] bg-black">
+      <div className="w-full h-[60rem]">
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
         <div className="w-full h-[49.4rem] mt-[2.6rem] ">
           <IpModel
@@ -89,7 +89,7 @@ function App() {
           />
         </div>
       </div>
-      <div className="w-full h-[75.5rem] bg-black">
+      <div className="w-full h-[75.5rem]">
         <Slogan title="跨域築夢不徘徊" secondTitle="提案練習日日在" />
         <div
           style={{
@@ -128,7 +128,7 @@ function App() {
           />
         </div>
       </div>
-      <div className="w-full h-[68rem] bg-black">
+      <div className="w-full h-[68rem]">
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
         <Unit title="主辦單位" img="/元智大學資訊傳播學系.svg" />
         <Unit title="指導單位" img="/第28屆畢業展覽籌備會.svg" />
