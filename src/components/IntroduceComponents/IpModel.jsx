@@ -39,7 +39,7 @@ export const IpModel = ({
           ></div>
           <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
             <img
-              className="relative"
+              className="relative transition-transform duration-300 ease-in-out group-hover:scale-110"
               style={{
                 width: imgWidth,
                 height: "100%",
@@ -85,8 +85,13 @@ export const IpModel = ({
           className="text-white flex flex-col justify-center"
           style={{ marginLeft: textMarginLeft }}
         >
-          <div className="text-[32px] leading-none">{title}</div>
-          <div className="text-[20px] mt-[0.5rem] leading-none text-secondary-color">
+          <div className="text-[32px] leading-none" style={{ fontFamily: "B" }}>
+            {title}
+          </div>
+          <div
+            className="text-[20px] mt-[0.5rem] leading-none text-secondary-color"
+            style={{ fontFamily: "R" }}
+          >
             {secondTitle}
           </div>
         </div>

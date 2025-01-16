@@ -56,6 +56,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
     mix-blend-mode: plus-lighter;
   }
 
@@ -83,11 +84,11 @@
   }
 
   .first {
-    animation: scroll 10s linear infinite;
+    animation: scroll 12s linear infinite;
   }
   .second {
-    animation: scroll 10s linear infinite;
-    animation-delay: -10s;
+    animation: scroll 12s linear infinite;
+    animation-delay: -12s;
   }
   @keyframes scroll {
     from {
@@ -98,11 +99,17 @@
     }
   }
 
+  .custom-scroll-container:hover .first,
+  .custom-scroll-container:hover .second {
+    animation-play-state: paused;
+  }
+
   .ipModelScroll {
     width: 100%;
     display: flex;
-    height: 19.7rem;
+    height: 20rem;
     margin-top: 4rem;
+    padding-top: 0.5rem;
     justify-content: space-between;
     overflow-x: auto;
     gap: 4.5rem;
@@ -110,6 +117,7 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-left: 4.5rem;
+    padding-right: 4.5rem;
   }
 
   .wave-container {

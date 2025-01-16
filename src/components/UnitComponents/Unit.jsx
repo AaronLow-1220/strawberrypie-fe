@@ -26,15 +26,14 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
         {title}
       </div>
       {img3 != null ? (
-        <div className="w-full mt-[1.5rem]">
+        <div className="w-full ">
           <div className="flex flex-wrap justify-center ">
             <img
               src={img}
               alt="Image 1"
               style={{
                 width: imgWidth,
-                marginLeft: "1.5rem",
-                marginRight: "1.5rem",
+                margin: "1.5rem",
               }}
             />
             <img
@@ -42,8 +41,7 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
               alt="Image 2"
               style={{
                 width: imgWidth,
-                marginLeft: "1.5rem",
-                marginRight: "1.5rem",
+                margin: "1.5rem",
               }}
             />
             <img
@@ -51,8 +49,7 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
               alt="Image 3"
               style={{
                 width: imgWidth,
-                marginLeft: "1.5rem",
-                marginRight: "1.5rem",
+                margin: "1.5rem",
               }}
             />
             <img
@@ -60,8 +57,7 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
               alt="Image 4"
               style={{
                 width: imgWidth,
-                marginLeft: "1.5rem",
-                marginRight: "1.5rem",
+                margin: "1.5rem",
               }}
             />
           </div>
