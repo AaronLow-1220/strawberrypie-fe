@@ -142,7 +142,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
         onAnimationEnd?.();
       }
 
-      const SCROLL_FACTOR = 0.0016;
+      const SCROLL_FACTOR = 0.0014;
 
       document.body.style.overflow = easedT >= 0.94 ? "auto" : "hidden";
 
