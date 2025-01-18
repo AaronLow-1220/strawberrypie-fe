@@ -21,6 +21,7 @@ export const InfoCard = ({
     alignItems: "center",
     justifyContent: "center",
     margin: "auto",
+    filter: "drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25))",
   });
 
   const dateStyle = {
@@ -35,7 +36,7 @@ export const InfoCard = ({
     textAlign: "center",
     opacity: opacity,
     transform: transform,
-    transition: "all 1s ease-in-out",
+    transition: "all 1s cubic-bezier(0.33, 1, 0.66, 1)",
   });
 
   return (
