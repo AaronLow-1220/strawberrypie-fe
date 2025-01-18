@@ -7,7 +7,6 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
   const initialY = useRef(null);
-  const lastScrollY = useRef(0);
 
   camera.fov = 46;
   camera.near = 0.01;
@@ -36,7 +35,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
       endFov = 19;
     } else {
       startFov = 12;
-      endFov = 19;
+      endFov = 20;
     }
     startFov = focalLengthToFOV(startFov);
     console.log(startFov);
@@ -115,62 +114,55 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const startRotation = 10 * (Math.PI / 180);  // 100度
   const endRotation = 0 * (Math.PI / 180);     // 90度
 
+  // 監聽頁面滾動，控制相機位置
   useEffect(() => {
-    const handleScroll = (event) => {
-      // 檢查是否是縮放手勢
-      if (event.ctrlKey || event.metaKey) {
-        return; // 忽略縮放手勢
-      }
-
-      if (!sliding) {
-        // 確保初始Y位置被設定
-        if (initialY.current === null) {
-          initialY.current = camera.position.y;
-        }
-
-        // 直接更新相機位置
-        const newY = camera.position.y - event.deltaY * 0.0015;
-        // 確保不會超過初始位置
-        camera.position.y = Math.min(initialY.current, Math.max(newY, -Infinity));
+    // 滾動靈敏度係數
+    const SCROLL_FACTOR = 0.0016;
+    
+    const updateCameraPosition = () => {
+      // 只在入場動畫結束後且有初始位置時執行
+      if (!sliding && initialY.current !== null) {
+        // 根據滾動位置更新相機Y軸位置
+        // 限制不超過初始位置，但可以無限往下
+        camera.position.y = Math.min(
+          initialY.current,
+          initialY.current - (window.scrollY * SCROLL_FACTOR)
+        );
       }
     };
 
-    window.addEventListener('wheel', handleScroll, { passive: true });
-    return () => window.removeEventListener('wheel', handleScroll);
-  }, [sliding]);
+    window.addEventListener('scroll', updateCameraPosition);
+    return () => window.removeEventListener('scroll', updateCameraPosition);
+  }, [sliding, camera]);
 
-  // 控制 overflow
-  useEffect(() => {
-    if (sliding) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [sliding]);
-
+  // 每幀執行的動畫邏輯
   useFrame((state, delta) => {
     if (sliding) {
+      // 計算動畫進度（0-1之間）
       progress.current = Math.min(progress.current + delta / ANIMATION_DURATION, 1);
       const easedT = ease(progress.current);
       
+      // 當動畫進行到60%時解除滾動鎖定
+      document.body.style.overflow = easedT >= 0.6 ? "auto" : "hidden";
+      
+      // 更新相機位置和旋轉
       const position = curve.getPoint(easedT);
       camera.position.set(position.x, position.y, position.z);
+      camera.rotation.x = startRotation + (endRotation - startRotation) * easedT;
 
-      const currentRotation = startRotation + (endRotation - startRotation) * easedT;
-      camera.rotation.x = currentRotation;
-
+      // 動畫結束時的處理
       if (easedT >= 1) {
         setSliding(false);
         initialY.current = camera.position.y;
-        lastScrollY.current = window.scrollY;
-        // 可以移除 onAnimationEnd，因為我們現在直接在這裡處理 overflow
-        // if (onAnimationEnd) onAnimationEnd();
+        onAnimationEnd?.();
       }
     }
   });
+
+  // 組件卸載時恢復滾動功能
+  useEffect(() => () => {
+    document.body.style.overflow = "auto";
+  }, []);
 
   return null;
 };
