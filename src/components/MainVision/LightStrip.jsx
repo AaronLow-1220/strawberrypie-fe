@@ -4,7 +4,7 @@ export const LightStrip = ({ animateLight }) => {
       className={`flex flex-col items-center justify-center w-full overflow-hidden`}
       style={{
         position: "absolute",
-        bottom: "5%",
+        bottom: "2%",
       }}
     >
       <div
