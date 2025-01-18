@@ -1,12 +1,15 @@
 import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CatmullRomCurve3, Vector3 } from "three";
+import { CatmullRomCurve3, Vector3, Object3D } from "three";
 
 export const SlidingCamera = ({ onAnimationEnd }) => {
   const { camera } = useThree();
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
   const initialY = useRef(null);
+
+  // 創建相機錨點
+  const cameraAnchor = useRef(new Object3D());
 
   camera.fov = 46;
   camera.near = 0.01;
@@ -23,7 +26,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   useEffect(() => {
     // 初始化和監聽視窗大小變化
     window.addEventListener('resize', handleResize);
-    return () => window .removeEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleResize = () => {
@@ -114,55 +117,48 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const startRotation = 10 * (Math.PI / 180);  // 100度
   const endRotation = 0 * (Math.PI / 180);     // 90度
 
-  // 監聽頁面滾動，控制相機位置
+  // 初始化設置
   useEffect(() => {
-    // 滾動靈敏度係數
-    const SCROLL_FACTOR = 0.0016;
-    
-    const updateCameraPosition = () => {
-      // 只在入場動畫結束後且有初始位置時執行
-      if (!sliding && initialY.current !== null) {
-        // 根據滾動位置更新相機Y軸位置
-        // 限制不超過初始位置，但可以無限往下
-        camera.position.y = Math.min(
-          initialY.current,
-          initialY.current - (window.scrollY * SCROLL_FACTOR)
-        );
-      }
-    };
-
-    window.addEventListener('scroll', updateCameraPosition);
-    return () => window.removeEventListener('scroll', updateCameraPosition);
-  }, [sliding, camera]);
+    // 將相機加入錨點
+    cameraAnchor.current.add(camera);
+    // 保持相機原始位置
+    camera.position.set(0, 0, 0);
+  }, []);
 
   // 每幀執行的動畫邏輯
   useFrame((state, delta) => {
     if (sliding) {
-      // 計算動畫進度（0-1之間）
       progress.current = Math.min(progress.current + delta / ANIMATION_DURATION, 1);
       const easedT = ease(progress.current);
-      
-      // 當動畫進行到60%時解除滾動鎖定
-      document.body.style.overflow = easedT >= 0.6 ? "auto" : "hidden";
-      
-      // 更新相機位置和旋轉
-      const position = curve.getPoint(easedT);
-      camera.position.set(position.x, position.y, position.z);
-      camera.rotation.x = startRotation + (endRotation - startRotation) * easedT;
 
-      // 動畫結束時的處理
+      // 更新錨點的位置和旋轉
+      const position = curve.getPoint(easedT);
+      cameraAnchor.current.position.set(position.x, position.y, position.z);
+      cameraAnchor.current.rotation.x = startRotation + (endRotation - startRotation) * easedT;
+
       if (easedT >= 1) {
         setSliding(false);
-        initialY.current = camera.position.y;
+        initialY.current = cameraAnchor.current.position.y;
         onAnimationEnd?.();
       }
+
+      const SCROLL_FACTOR = 0.0016;
+
+      document.body.style.overflow = easedT >= 0.94 ? "auto" : "hidden";
+
+      // 監聽頁面滾動，直接控制相機位置
+      const updateCameraPosition = () => {
+        // 直接更新相機的Y軸位置
+        camera.position.y = Math.min(
+          0, // 相機相對錨點的初始位置是 0
+          -(window.scrollY * SCROLL_FACTOR)
+        );
+      };
+
+      window.addEventListener('scroll', updateCameraPosition);
+      return () => window.removeEventListener('scroll', updateCameraPosition);
     }
   });
-
-  // 組件卸載時恢復滾動功能
-  useEffect(() => () => {
-    document.body.style.overflow = "auto";
-  }, []);
 
   return null;
 };
