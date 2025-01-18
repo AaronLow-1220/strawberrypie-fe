@@ -7,7 +7,7 @@ import { InfoCard } from "./InfoCard";
 import { LightStrip } from "./LightStrip";
 
 // 3D 模型展示元件
-export const Model = ({ onAnimationEnd, logoAnimation }) => {
+export const Model = ({ onAnimationStart, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
   const [sceneReady, setSceneReady] = useState(false);
 
@@ -52,20 +52,19 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   }, []);
 
   // 确定動畫結束觸發子組建動畫
-  const handleAnimationEnd = () => {
+  const handleAnimationStart = () => {
     logoAnimation();
     setTimeout(() => {
       setLeftInfoOpacity(1);
       setLeftTransform("translateY(0px)");
-    }, 900);
+    }, 1000);
     setTimeout(() => {
       setRightInfoOpacity(1);
       setRightTransform("translateY(0px)");
-    }, 1800);
+    }, 1500);
     setTimeout(() => {
       setLightStripHeight("animate-light");
-    }, 2500);
-    onAnimationEnd();
+    }, 2000);
   };
 
   useEffect(() => {
@@ -92,7 +91,7 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
         <Stats />
         {sceneReady && (  // 確保場景準備好才渲染
           <>
-            <SlidingCamera onAnimationEnd={handleAnimationEnd} />
+            <SlidingCamera onAnimationStart={handleAnimationStart} />
             <primitive object={gltf.scene} />
           </>
         )}
