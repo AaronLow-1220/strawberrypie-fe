@@ -82,6 +82,7 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
 
   return (
     <div className="w-full h-screen relative">
+      div
       <Canvas 
         style={{ position: "absolute", zIndex: 0 }}
         onCreated={({ gl }) => {

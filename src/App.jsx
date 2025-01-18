@@ -35,7 +35,8 @@ function App() {
 
   return (
     <div className="">
-      <div className="bg-pink-radial ">
+      <div>
+        <div className="bg-pink-radial"></div>
         <Logo beginAnimation={animate} />
         <Model
           onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調

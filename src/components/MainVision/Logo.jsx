@@ -8,75 +8,59 @@ export const Logo = ({ beginAnimation }) => {
   const [position, setPosition] = useState(initialPositionRef.current);
   const [scale, setScale] = useState(1);
 
-  const animationFrameRef = useRef(null);
+  const baseScaleRef = useRef(1);
 
-  // 線性插值
-  const lerp = (start, end, t) => start + (end - start) * t;
-
-  useEffect(() => {
-    if (beginAnimation) {
-      triggerAnimation();
+  // 設置不同裝置的基礎尺寸
+  const updateLogoWidth = () => {
+    if (window.innerWidth < 768) {  // 手機版
+      setAnimate("animate-Logo");
+      initialPositionRef.current = 13;
+      baseScaleRef.current = 0.75;
+    } else if (window.innerWidth < 1024) {  // 平板版
+      setAnimate("animate-IpadLogo");
+      initialPositionRef.current = 9;
+      baseScaleRef.current = 1;
+    } else {  // 桌面版
+      setAnimate("animate-WindowLogo");
+      initialPositionRef.current = 7.5;
+      baseScaleRef.current = 1.2;
     }
-  }, [beginAnimation]);
-
-  const triggerAnimation = () => {
-    const updateLogoWidth = () => {
-      if (window.innerWidth < 768) {
-        setAnimate("animate-Logo");
-        initialPositionRef.current = 11;
-        setPosition(initialPositionRef.current);
-      } else if (window.innerWidth < 1024) {
-        setAnimate("animate-IpadLogo");
-        initialPositionRef.current = 9;
-        setPosition(initialPositionRef.current);
-      } else {
-        setAnimate("animate-WindowLogo");
-        initialPositionRef.current = 7.5;
-        setPosition(initialPositionRef.current);
-      }
-    };
-    updateLogoWidth();
-    window.addEventListener("resize", updateLogoWidth);
-    return () => {
-      window.removeEventListener("resize", updateLogoWidth);
-    };
+    setPosition(initialPositionRef.current);
+    setScale(baseScaleRef.current);
   };
 
   useEffect(() => {
+    if (beginAnimation) {
+      updateLogoWidth();
+      window.addEventListener("resize", updateLogoWidth);
+      return () => window.removeEventListener("resize", updateLogoWidth);
+    }
+  }, [beginAnimation]);
+
+  // 滾動處理
+  useEffect(() => {
     const handleScroll = () => {
-      if (animationFrameRef.current) return;
-      animationFrameRef.current = requestAnimationFrame(() => {
-        const scrollY = window.scrollY;
+      const scrollY = window.scrollY;
+      
+      // 直接使用 scrollY 計算縮放和位置
+      const scrollProgress = Math.min(scrollY / 500, 1);  // 將滾動範圍限制在 0-500px
+      
+      // 縮放從基礎尺寸到最小尺寸 (30%)
+      const currentScale = baseScaleRef.current * (1 - (scrollProgress * 0.7));
+      
+      // 位置從初始位置向上移動
+      const currentPosition = Math.max(
+        3,  // 最小位置
+        initialPositionRef.current - (scrollY / 20)
+      );
 
-        // 1) 計算目標縮放
-        const targetScale = Math.max(0.3, 1 - scrollY / 500);
-
-        const rawTop = initialPositionRef.current - scrollY / 20;
-        const targetTop = Math.max(3, rawTop);
-
-        // 3) 計算差距，決定插值速度
-        const scaleDiff = Math.abs(scale - targetScale);
-        const positionDiff = Math.abs(position - targetTop);
-        const dynamicLerp = scaleDiff > 0.1 || positionDiff > 1 ? 0.3 : 0.15;
-
-        // 4) 插值
-        const newScale = lerp(scale, targetScale, dynamicLerp);
-        const newPosition = lerp(position, targetTop, dynamicLerp);
-
-        setScale(newScale);
-        setPosition(newPosition);
-
-        animationFrameRef.current = null;
-      });
+      setScale(currentScale);
+      setPosition(currentPosition);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (animationFrameRef.current)
-        cancelAnimationFrame(animationFrameRef.current);
-    };
-  }, [position, scale]);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div
