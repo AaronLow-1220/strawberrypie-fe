@@ -22,6 +22,11 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   var startFov;
   var endFov;
 
+
+  // 設定起始和結束角度（轉換為弧度）
+  var startRotation = 15 * (Math.PI / 180);  // 100度
+  var endRotation = -3 * (Math.PI / 180);     // 90度
+
   // 設定不同尺寸的 FOV
   useEffect(() => {
     // 初始化和監聽視窗大小變化
@@ -36,9 +41,11 @@ export const SlidingCamera = ({ onAnimationStart }) => {
     } else if (window.innerWidth < 1024) {
       startFov = 13;
       endFov = 19;
+      endRotation = 1 * (Math.PI / 180);
     } else {
       startFov = 12;
       endFov = 20;
+      endRotation = 0 * (Math.PI / 180);
     }
     startFov = focalLengthToFOV(startFov);
     console.log(startFov);
@@ -125,10 +132,6 @@ export const SlidingCamera = ({ onAnimationStart }) => {
 
   const curve = new CatmullRomCurve3(points);
 
-  // 設定起始和結束角度（轉換為弧度）
-  const startRotation = 15 * (Math.PI / 180);  // 100度
-  const endRotation = -2 * (Math.PI / 180);     // 90度
-
   // 確保場景和相機都準備好
   useEffect(() => {
     if (!camera || !gl.domElement) {
@@ -180,7 +183,7 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   });
 
   useEffect(() => {
-    const SCROLL_FACTOR = 0.0016;
+    const SCROLL_FACTOR = 0.0014;
 
     const updateCameraPosition = () => {
       camera.position.y = Math.min(
