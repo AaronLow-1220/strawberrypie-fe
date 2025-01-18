@@ -15,7 +15,7 @@ export const InfoCard = ({
     width: containerWidth,
     height: containerHeight,
     backgroundColor: backgroundColor,
-    borderRadius: "39px",
+    borderRadius: "100px",
     textAlign: "center",
     display: "flex",
     alignItems: "center",
@@ -32,8 +32,6 @@ export const InfoCard = ({
   };
 
   const transitionStyle = (opacity, transform) => ({
-    width: "100%",
-    height: "4.5rem",
     textAlign: "center",
     opacity: opacity,
     transform: transform,
