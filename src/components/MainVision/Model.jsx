@@ -9,9 +9,8 @@ import { LightStrip } from "./LightStrip";
 // 3D 模型展示元件
 export const Model = ({ onAnimationEnd, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
+  const [sceneReady, setSceneReady] = useState(false);
 
-  const [InfoCardWidth, setInfoCardWidth] = useState("21rem");
-  const [InfoCardPosition, setInfoCardPosition] = useState([0, -4, 0]);
   const [LightStripPosition, setLightStripPosition] = useState([0, -5, 0]);
 
   const [leftInfoOpacity, setLeftInfoOpacity] = useState(0);
@@ -43,15 +42,8 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setInfoCardPosition([0, -4, 0]);
       } else if (window.innerWidth < 1024) {
-        setInfoCardPosition([0, -4.8, 0]);
-        setInfoCardWidth("25rem");
-        setLightStripPosition([0, -6.7, 0]);
       } else {
-        setInfoCardPosition([0, -5, 0]);
-        setInfoCardWidth("60rem");
-        setLightStripPosition([0, -7.2, 0]);
       }
     };
     handleResize();
@@ -83,50 +75,56 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
     }
   }, [gltf]);
 
+  useEffect(() => {
+    if (gltf) {
+      setSceneReady(true);
+    }
+  }, [gltf]);
+
   return (
     <div className="w-full h-screen relative">
-      <Canvas style={{ position: "absolute", zIndex: 0 }}>
+      <Canvas 
+        style={{ position: "absolute", zIndex: 0 }}
+        onCreated={({ gl }) => {
+          gl.setClearColor('#000000', 0);  // 設置背景
+        }}
+      >
         <Stats />
-        <SlidingCamera onAnimationEnd={handleAnimationEnd} />
-
-        {/* 資訊卡片 */}
-        <Html position={InfoCardPosition} center>
-          <div
-            style={{
-              width: InfoCardWidth,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <InfoCard
-              title="校內展"
-              date="04.07-11"
-              opacity={leftInfoOpacity}
-              transform={leftTransform}
-              backgroundColor="#FFFFFF"
-              color="#F748C1"
-            />
-            <InfoCard
-              title="校外展"
-              date="04.25-28"
-              opacity={rightInfoOpacity}
-              transform={rightTransform}
-              backgroundColor="#F748C1"
-              color="#FFFFFF"
-            />
-          </div>
-        </Html>
-
-        {/* 燈條 */}
-        <Html position={LightStripPosition} center>
-          <LightStrip animateLight={LightStripHeight} />
-        </Html>
-
-        {/* 3D 模型 */}
-        <primitive
-          object={gltf.scene}
-        />
+        {sceneReady && (  // 確保場景準備好才渲染
+          <>
+            <SlidingCamera onAnimationEnd={handleAnimationEnd} />
+            <primitive object={gltf.scene} />
+          </>
+        )}
       </Canvas>
+      <div
+        style={{
+          position: "absolute",
+          width: "100%",
+          bottom: "15%",
+          display: "flex",
+          justifyContent: "space-evenly",
+        }}
+      >
+        <InfoCard
+          title="校內展"
+          date="04.07-11"
+          opacity={leftInfoOpacity}
+          transform={leftTransform}
+          backgroundColor="#FFFFFF"
+          color="#F748C1"
+        />
+        <InfoCard
+          title="校外展"
+          date="04.25-28"
+          opacity={rightInfoOpacity}
+          transform={rightTransform}
+          backgroundColor="#F748C1"
+          color="#FFFFFF"
+        />
+      </div>
+      <LightStrip animateLight={LightStripHeight} />
+
     </div>
   );
 };

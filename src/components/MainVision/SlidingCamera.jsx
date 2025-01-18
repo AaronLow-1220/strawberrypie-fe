@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { CatmullRomCurve3, Vector3, Object3D } from "three";
 
 export const SlidingCamera = ({ onAnimationEnd }) => {
-  const { camera } = useThree();
+  const { camera, gl, scene } = useThree();
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
   const initialY = useRef(null);
@@ -32,7 +32,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const handleResize = () => {
     if (window.innerWidth < 768) {
       startFov = 8;
-      endFov = 15;
+      endFov = 18;
     } else if (window.innerWidth < 1024) {
       startFov = 13;
       endFov = 19;
@@ -114,20 +114,33 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const curve = new CatmullRomCurve3(points);
 
   // 設定起始和結束角度（轉換為弧度）
-  const startRotation = 10 * (Math.PI / 180);  // 100度
-  const endRotation = 0 * (Math.PI / 180);     // 90度
+  const startRotation = 15 * (Math.PI / 180);  // 100度
+  const endRotation = -2 * (Math.PI / 180);     // 90度
 
-  // 初始化設置
+  // 確保場景和相機都準備好
   useEffect(() => {
-    // 將相機加入錨點
+    if (!camera || !gl.domElement) {
+      console.warn('Camera or renderer not ready');
+      return;
+    }
+
+    // 初始化錨點
+    cameraAnchor.current = new Object3D();
+    scene.add(cameraAnchor.current);  // 將錨點加入場景
     cameraAnchor.current.add(camera);
-    // 保持相機原始位置
     camera.position.set(0, 0, 0);
-  }, []);
+
+    // 清理函數
+    return () => {
+      scene.remove(cameraAnchor.current);
+      cameraAnchor.current.remove(camera);
+    };
+  }, [camera, gl, scene]);
 
   // 每幀執行的動畫邏輯
   useFrame((state, delta) => {
     if (sliding) {
+      state.invalidate();  // 強制更新渲染
       progress.current = Math.min(progress.current + delta / ANIMATION_DURATION, 1);
       const easedT = ease(progress.current);
 
@@ -142,23 +155,24 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
         onAnimationEnd?.();
       }
 
-      const SCROLL_FACTOR = 0.0014;
 
-      document.body.style.overflow = easedT >= 0.94 ? "auto" : "hidden";
-
-      // 監聽頁面滾動，直接控制相機位置
-      const updateCameraPosition = () => {
-        // 直接更新相機的Y軸位置
-        camera.position.y = Math.min(
-          0, // 相機相對錨點的初始位置是 0
-          -(window.scrollY * SCROLL_FACTOR)
-        );
-      };
-
-      window.addEventListener('scroll', updateCameraPosition);
-      return () => window.removeEventListener('scroll', updateCameraPosition);
+      document.body.style.overflow = easedT >= 0.9 ? "auto" : "hidden";
     }
   });
+
+  useEffect(() => {
+    const SCROLL_FACTOR = 0.0016;
+
+    const updateCameraPosition = () => {
+      camera.position.y = Math.min(
+        0,
+        -(window.scrollY * SCROLL_FACTOR)
+      );
+    };
+
+    window.addEventListener('scroll', updateCameraPosition, { passive: true });
+    return () => window.removeEventListener('scroll', updateCameraPosition);
+  }, []);
 
   return null;
 };
