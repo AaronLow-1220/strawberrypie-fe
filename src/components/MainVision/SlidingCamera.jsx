@@ -22,10 +22,9 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   var startFov;
   var endFov;
 
-
   // 設定起始和結束角度（轉換為弧度）
   var startRotation = 15 * (Math.PI / 180);  // 100度
-  var endRotation = -5 * (Math.PI / 180);     // 90度
+  var endRotation = -3 * (Math.PI / 180);     // 90度
 
   // 設定不同尺寸的 FOV
   useEffect(() => {
@@ -37,18 +36,16 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   const handleResize = () => {
     if (window.innerWidth < 768) {
       startFov = 10;
-      endFov = 18;
-    } else if (window.innerWidth < 1024) {
-      startFov = 13;
       endFov = 19;
-      endRotation = -4 * (Math.PI / 180);
+    } else if (window.innerWidth < 1024) {
+      startFov = 12;
+      endFov = 20;
+      endRotation = -2 * (Math.PI / 180);
     } else {
       startFov = 12;
       endFov = 20;
-      endRotation = -3 * (Math.PI / 180);
     }
     startFov = focalLengthToFOV(startFov);
-    console.log(startFov);
     endFov = focalLengthToFOV(endFov);
     camera.fov = endFov;
     camera.updateProjectionMatrix();  // 記得更新投影矩陣
