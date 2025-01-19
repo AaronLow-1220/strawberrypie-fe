@@ -41,11 +41,11 @@ export const SlidingCamera = ({ onAnimationStart }) => {
     } else if (window.innerWidth < 1024) {
       startFov = 13;
       endFov = 19;
-      endRotation = 1 * (Math.PI / 180);
+      endRotation = -4 * (Math.PI / 180);
     } else {
       startFov = 12;
       endFov = 20;
-      endRotation = 0 * (Math.PI / 180);
+      endRotation = -3 * (Math.PI / 180);
     }
     startFov = focalLengthToFOV(startFov);
     console.log(startFov);
