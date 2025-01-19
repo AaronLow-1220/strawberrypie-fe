@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 export const Logo = ({ beginAnimation }) => {
   const [animate, setAnimate] = useState("");
 
-  const initialPositionRef = useRef(17);
+  const initialPositionRef = useRef(10);
 
   const [position, setPosition] = useState(initialPositionRef.current);
   const [scale, setScale] = useState(1);
@@ -23,7 +23,7 @@ export const Logo = ({ beginAnimation }) => {
     const updateLogoWidth = () => {
       if (window.innerWidth < 768) {
         setAnimate("animate-Logo");
-        initialPositionRef.current = 11;
+        initialPositionRef.current = 15;
         setPosition(initialPositionRef.current);
       } else if (window.innerWidth < 1024) {
         setAnimate("animate-IpadLogo");
@@ -52,7 +52,7 @@ export const Logo = ({ beginAnimation }) => {
         const targetScale = Math.max(0.3, 1 - scrollY / 500);
 
         const rawTop = initialPositionRef.current - scrollY / 20;
-        const targetTop = Math.max(3, rawTop);
+        const targetTop = Math.max(4.2, rawTop);
 
         // 3) 計算差距，決定插值速度
         const scaleDiff = Math.abs(scale - targetScale);

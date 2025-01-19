@@ -29,11 +29,12 @@ export const InfoCard = ({
     marginTop: "0.75rem",
     textAlign: "center",
     whiteSpace: "nowrap",
+    lineHeight: "normal",
   };
 
   const transitionStyle = (opacity, transform) => ({
     width: "100%",
-    height: "4.5rem",
+    height: "100%",
     textAlign: "center",
     opacity: opacity,
     transform: transform,

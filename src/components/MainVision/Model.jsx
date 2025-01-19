@@ -1,5 +1,5 @@
 import { Canvas, useLoader } from "@react-three/fiber";
-import { Html, OrbitControls, Grid, Stats } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useState, useEffect } from "react";
 import { SlidingCamera } from "./SlidingCamera";
@@ -9,12 +9,16 @@ import { LightStrip } from "./LightStrip";
 // 3D 模型展示元件
 export const Model = ({ onAnimationEnd, logoAnimation }) => {
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
+  const [primitivePosition, setPrimitivePosition] = useState([0, 0, 0]);
+  const [primitiveScale, setPrimitiveScale] = useState([0.9, 0.9, 0.9]);
+  const [InfoCardWidth, setInfoCardWidth] = useState("23rem");
+  const [InfoCardPosition, setInfoCardPosition] = useState([0, -1.2, 0]);
+  const [InfoWidth, setInfoWidth] = useState("5rem");
+  const [InfoHeight, setInfoHeight] = useState("2rem");
+  const [InfoFontSize, setInfoFontSize] = useState("1rem");
+  const [InfoDateTextSize, setInfoDateTextSize] = useState("1.5rem");
 
-  const [modelScale, setModelScale] = useState([1, 1, 1]);
-  const [modelPosition, setModelPosition] = useState([0, 0, 0]);
-  const [InfoCardWidth, setInfoCardWidth] = useState("21rem");
-  const [InfoCardPosition, setInfoCardPosition] = useState([0, -4, 0]);
-  const [LightStripPosition, setLightStripPosition] = useState([0, -5, 0]);
+  const [LightStripPosition, setLightStripPosition] = useState([0, -1.5, 0]);
 
   const [leftInfoOpacity, setLeftInfoOpacity] = useState(0);
   const [leftTransform, setLeftTransform] = useState("translateY(40px)");
@@ -45,21 +49,22 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        // setModelScale([1.8, 1.8, 1.8]);
-        // setModelPosition([0, -3, -4]);
-        setInfoCardPosition([0, -4, 0]);
+        setInfoCardPosition([0, -1.2, 0]);
+        setPrimitiveScale([0.9, 0.9, 0.9]);
       } else if (window.innerWidth < 1024) {
-        // setModelScale([2, 2, 2]);
-        // setModelPosition([0, -3, -4]);
-        setInfoCardPosition([0, -4.8, 0]);
-        setInfoCardWidth("25rem");
-        setLightStripPosition([0, -6.7, 0]);
+        setPrimitivePosition([0, 0.1, 0]);
+        setInfoCardPosition([0, -1.4, 0]);
+        setPrimitiveScale([1.05, 1.05, 1.05]);
+        setInfoCardWidth("32rem");
+        setInfoWidth("8.75rem");
+        setInfoHeight("3.15rem");
+        setInfoFontSize("1.75rem");
+        setInfoDateTextSize("2.25rem");
+        setLightStripPosition([0, -2, 0]);
       } else {
-        // setModelScale([3, 3, 3]);
-        // setModelPosition([0, -6, -8]);
-        setInfoCardPosition([0, -5, 0]);
+        setInfoCardPosition([0, -3, 0]);
         setInfoCardWidth("60rem");
-        setLightStripPosition([0, -7.2, 0]);
+        setLightStripPosition([0, -2.2, 0]);
       }
     };
     handleResize();
@@ -94,7 +99,6 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
   return (
     <div className="w-full h-screen relative">
       <Canvas style={{ position: "absolute", zIndex: 0 }}>
-        <Stats />
         <SlidingCamera onAnimationEnd={handleAnimationEnd} />
 
         {/* 資訊卡片 */}
@@ -109,16 +113,24 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
             <InfoCard
               title="校內展"
               date="04.07-11"
+              containerWidth={InfoWidth}
+              containerHeight={InfoHeight}
               opacity={leftInfoOpacity}
               transform={leftTransform}
+              fontSize={InfoFontSize}
+              dateTextSize={InfoDateTextSize}
               backgroundColor="#FFFFFF"
               color="#F748C1"
             />
             <InfoCard
               title="校外展"
               date="04.25-28"
+              containerWidth={InfoWidth}
+              containerHeight={InfoHeight}
               opacity={rightInfoOpacity}
               transform={rightTransform}
+              fontSize={InfoFontSize}
+              dateTextSize={InfoDateTextSize}
               backgroundColor="#F748C1"
               color="#FFFFFF"
             />
@@ -133,8 +145,8 @@ export const Model = ({ onAnimationEnd, logoAnimation }) => {
         {/* 3D 模型 */}
         <primitive
           object={gltf.scene}
-          position={modelPosition}
-          scale={modelScale}
+          position={primitivePosition}
+          scale={primitiveScale}
           castShadow
           receiveShadow
         />

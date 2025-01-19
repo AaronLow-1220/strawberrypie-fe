@@ -6,7 +6,7 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const { camera } = useThree();
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
-  const initialY = useRef(null);  // 儲存初始Y位置
+  const initialY = useRef(null); // 儲存初始Y位置
 
   camera.fov = 60;
   camera.near = 0.01;
@@ -21,34 +21,39 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
 
       let start = 0;
       let end = 1;
-      
+
       for (let i = 0; i < 10; i++) {
         const currentT = (start + end) / 2;
-        
+
         // 計算 bezier 曲線上的 x 點
-        const x = 3 * currentT * (1 - currentT) ** 2 * x1 +
-                 3 * currentT ** 2 * (1 - currentT) * x2 +
-                 currentT ** 3;
-                 
+        const x =
+          3 * currentT * (1 - currentT) ** 2 * x1 +
+          3 * currentT ** 2 * (1 - currentT) * x2 +
+          currentT ** 3;
+
         if (Math.abs(x - t) < 0.001) {
           // 計算對應的 y 值
-          return 3 * currentT * (1 - currentT) ** 2 * y1 +
-                 3 * currentT ** 2 * (1 - currentT) * y2 +
-                 currentT ** 3;
+          return (
+            3 * currentT * (1 - currentT) ** 2 * y1 +
+            3 * currentT ** 2 * (1 - currentT) * y2 +
+            currentT ** 3
+          );
         }
-        
+
         if (x > t) {
           end = currentT;
         } else {
           start = currentT;
         }
       }
-      
+
       // 計算最終的 y 值
       const currentT = (start + end) / 2;
-      return 3 * currentT * (1 - currentT) ** 2 * y1 +
-             3 * currentT ** 2 * (1 - currentT) * y2 +
-             currentT ** 3;
+      return (
+        3 * currentT * (1 - currentT) ** 2 * y1 +
+        3 * currentT ** 2 * (1 - currentT) * y2 +
+        currentT ** 3
+      );
     };
   };
 
@@ -75,8 +80,8 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
   const curve = new CatmullRomCurve3(points);
 
   // 設定起始和結束角度（轉換為弧度）
-  const startRotation = 10 * (Math.PI / 180);  // 100度
-  const endRotation = 0 * (Math.PI / 180);     // 90度
+  const startRotation = 10 * (Math.PI / 180); // 100度
+  const endRotation = 0 * (Math.PI / 180); // 90度
 
   useEffect(() => {
     const handleScroll = (event) => {
@@ -89,28 +94,35 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
         // 直接更新相機位置
         const newY = camera.position.y - event.deltaY * 0.001;
         // 確保不會超過初始位置
-        camera.position.y = Math.min(initialY.current, Math.max(newY, -Infinity));
+        camera.position.y = Math.min(
+          initialY.current,
+          Math.max(newY, -Infinity)
+        );
       }
     };
 
-    window.addEventListener('wheel', handleScroll, { passive: true });
-    return () => window.removeEventListener('wheel', handleScroll);
+    window.addEventListener("wheel", handleScroll, { passive: true });
+    return () => window.removeEventListener("wheel", handleScroll);
   }, [sliding]);
 
   useFrame((state, delta) => {
     if (sliding) {
-      progress.current = Math.min(progress.current + delta / ANIMATION_DURATION, 1);
+      progress.current = Math.min(
+        progress.current + delta / ANIMATION_DURATION,
+        1
+      );
       const easedT = ease(progress.current);
-      
+
       const position = curve.getPoint(easedT);
       camera.position.set(position.x, position.y, position.z);
 
-      const currentRotation = startRotation + (endRotation - startRotation) * easedT;
+      const currentRotation =
+        startRotation + (endRotation - startRotation) * easedT;
       camera.rotation.x = currentRotation;
 
       if (easedT >= 1) {
         setSliding(false);
-        initialY.current = camera.position.y;  // 儲存初始Y位置
+        initialY.current = camera.position.y; // 儲存初始Y位置
         if (onAnimationEnd) onAnimationEnd();
       }
     }
