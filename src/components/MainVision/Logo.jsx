@@ -2,31 +2,32 @@ import { useState, useEffect, useRef } from "react";
 
 export const Logo = ({ beginAnimation }) => {
   const [animate, setAnimate] = useState("");
-
   const initialPositionRef = useRef(17);
-
-  const [position, setPosition] = useState(initialPositionRef.current);
-  const [scale, setScale] = useState(1);
-
+  const logoRef = useRef(null);
   const baseScaleRef = useRef(1);
+  const frameRef = useRef(null);
 
   // 設置不同裝置的基礎尺寸
   const updateLogoWidth = () => {
-    if (window.innerWidth < 768) {  // 手機版
+    if (!logoRef.current) return;
+
+    if (window.innerWidth < 768) {
       setAnimate("animate-Logo");
-      initialPositionRef.current = 13;
-      baseScaleRef.current = 0.75;
-    } else if (window.innerWidth < 1024) {  // 平板版
+      initialPositionRef.current = 11;
+      baseScaleRef.current = 0.8;
+    } else if (window.innerWidth < 1024) {
       setAnimate("animate-IpadLogo");
       initialPositionRef.current = 9;
       baseScaleRef.current = 1;
-    } else {  // 桌面版
+    } else {
       setAnimate("animate-WindowLogo");
       initialPositionRef.current = 7.5;
       baseScaleRef.current = 1.2;
     }
-    setPosition(initialPositionRef.current);
-    setScale(baseScaleRef.current);
+
+    // 直接更新 CSS 變數
+    logoRef.current.style.setProperty('--logo-y', `${initialPositionRef.current}%`);
+    logoRef.current.style.setProperty('--logo-scale', baseScaleRef.current);
   };
 
   useEffect(() => {
@@ -39,39 +40,66 @@ export const Logo = ({ beginAnimation }) => {
 
   // 滾動處理
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      
-      // 直接使用 scrollY 計算縮放和位置
-      const scrollProgress = Math.min(scrollY / 500, 1);  // 將滾動範圍限制在 0-500px
-      
-      // 縮放從基礎尺寸到最小尺寸 (30%)
-      const currentScale = baseScaleRef.current * (1 - (scrollProgress * 0.7));
-      
-      // 位置從初始位置向上移動
-      const currentPosition = Math.max(
-        3,  // 最小位置
-        initialPositionRef.current - (scrollY / 20)
-      );
+    let ticking = false;
 
-      setScale(currentScale);
-      setPosition(currentPosition);
+    const updateTransform = (scrollY) => {
+      if (!logoRef.current) return;
+
+      const progress = Math.min(Math.max(scrollY / 400, 0), 1);
+      
+      const currentScale = baseScaleRef.current * (1 - (progress * 0.7));
+      const currentPosition = initialPositionRef.current - 
+        ((initialPositionRef.current - 3) * progress);
+
+      // 直接更新 CSS 變數
+      logoRef.current.style.setProperty('--logo-y', `${currentPosition}%`);
+      logoRef.current.style.setProperty('--logo-scale', currentScale);
+      
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        frameRef.current = requestAnimationFrame(() => {
+          updateTransform(window.scrollY);
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
   }, []);
 
   return (
     <div
-      className={`fixed left-[50%] transform -translate-x-1/2 -translate-y-1/2 z-30 ${animate}`}
+      ref={logoRef}
+      className={`fixed left-[50%] z-30 ${animate}`}
       style={{
-        top: `${position}%`,
-        transform: `translate(-50%, -50%) scale(${scale})`,
+        '--logo-y': `${initialPositionRef.current}%`,
+        '--logo-scale': baseScaleRef.current,
+        transform: 'translate3d(-50%, -50%, 0) scale3d(var(--logo-scale), var(--logo-scale), 1)',
+        top: 'var(--logo-y)',
+        willChange: 'transform',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
       }}
     >
       <div className="h-[100px]">
-        <img src="/Headline.svg" alt="Example" />
+        <img 
+          src="/Headline.svg" 
+          alt="Example"
+          style={{
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+          }}
+        />
       </div>
     </div>
   );
