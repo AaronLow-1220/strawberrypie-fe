@@ -101,7 +101,7 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
         style={{
           position: "absolute",
           width: "100%",
-          bottom: "12%",
+          bottom: "10%",
           display: "flex",
           justifyContent: "space-evenly",
         }}
