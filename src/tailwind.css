@@ -13,6 +13,10 @@
   body {
     background-color: #1B080A;
   }
+  .h-screen {
+    height: 100vh;
+    height: 100svh;
+  }
   .bg-pink-radial {
     position: absolute;
     width: 100%;
