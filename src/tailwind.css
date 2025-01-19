@@ -64,6 +64,10 @@ body {
     height: 100vh;
     height: 100svh;
   }
+  .h-screen {
+    height: 100vh;
+    height: 100svh;
+  }
   .bg-pink-radial {
 <<<<<<< HEAD
 =======
