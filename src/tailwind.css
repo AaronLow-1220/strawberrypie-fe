@@ -62,4 +62,47 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+
+  .waveMoveIMG {
+    width: 150%;
+    height: 800px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+    background-size: 700px auto;
+    background-position: -50px 0;
+    animation: waveAnimation 10s linear infinite;
+  }
+
+  @keyframes waveAnimation {
+    0% {
+      background-position: -50px 0;
+    }
+    100% {
+      background-position: -700px 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .waveMoveIMG {
+      width: 200%;
+      height: 500px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      object-fit: contain;
+      background-size: 700px auto;
+      background-position: -50px 0;
+      animation: waveAnimation 10s linear infinite;
+    }
+    @keyframes waveAnimation {
+      0% {
+        background-position: -50px 0;
+      }
+      100% {
+        background-position: -300px 0;
+      }
+    }
+  }
 }

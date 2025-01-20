@@ -11,7 +11,7 @@ function App() {
   const [animate, setAnimate] = useState(false);
   const [ipModelWindowHeight, setIpModelWindowHeight] = useState("60rem");
   const [ipModelWidth, setIpModelWidth] = useState("100%");
-  const [dateMapWindowHeight, setDateMapWindowHeight] = useState("85rem");
+  const [dateMapWindowHeight, setDateMapWindowHeight] = useState("78rem");
   const [unitWindowHeight, setUnitWindowHeight] = useState("68rem");
   const [windowTrue, setWindowTrue] = useState(false);
 
@@ -147,19 +147,22 @@ function App() {
         <Slogan title="跨域築夢不徘徊" secondTitle="提案練習日日在" />
         {windowTrue === true ? (
           <>
-            <div
-              style={{
-                background: `
-                linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 80%),
-                url('/wave_1-1.svg')
-              `,
-                backgroundSize: "cover",
-                backgroundPosition: "10px 0px",
-                width: "100%",
-                height: "25rem",
-                paddingTop: "4.625rem",
-              }}
-            >
+            <div className="mt-[4.125rem]">
+              <div className="w-full h-[100px] overflow-hidden relative">
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: 'url("/wave_0-extend.svg") repeat-x',
+                  }}
+                ></div>
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 1) 15%),
+                url('/wave_1-extend.svg')`,
+                  }}
+                ></div>
+              </div>
               <DateMap
                 backgroundColor="#FFFFFF"
                 color="#E04AA9"
@@ -169,18 +172,16 @@ function App() {
                 place="元智大學•五館三樓 / 六館玻璃屋"
               />
             </div>
-            <div
-              style={{
-                background: `
-              linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 1) 80%),
-              url('/wave_2-1.svg')
-            `,
-                backgroundSize: "cover",
-                backgroundPosition: "-910px 0px",
-                height: "25rem",
-                paddingTop: "6.6875rem",
-              }}
-            >
+            <div>
+              <div className="w-full h-[100px] overflow-hidden relative">
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 1) 15%),
+                url('/wave_2-extend.svg')`,
+                  }}
+                ></div>
+              </div>
               <DateMap
                 backgroundColor="#E04AA9"
                 color="#FFFFFF"
@@ -189,22 +190,43 @@ function App() {
                 secondDate="04.28"
                 place="松三文創園區• 三號倉庫"
               />
+            </div>
+            <div>
+              <div
+                className="w-full h-[100px] overflow-hidden relative"
+                style={{
+                  transform: "rotate(180deg)",
+                }}
+              >
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 3%, rgba(0, 0, 0, 1) 15%),
+                url('/wave_0-extend.svg')`,
+                  }}
+                ></div>
+              </div>
             </div>
           </>
         ) : (
           <>
-            <div
-              style={{
-                background: `
-                linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 1) 100%),
-                url('/wave_1-1.svg')
-              `,
-                backgroundSize: "cover",
-                backgroundPosition: "550px",
-                height: "36rem",
-                paddingTop: "4.625rem",
-              }}
-            >
+            <div>
+              <div className="w-full h-[50px] overflow-hidden relative">
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 20%),
+                url('/wave_0-extend.svg')`,
+                  }}
+                ></div>
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 20%),
+                url('/wave_1-extend.svg')`,
+                  }}
+                ></div>
+              </div>
               <DateMap
                 backgroundColor="#FFFFFF"
                 color="#E04AA9"
@@ -214,18 +236,16 @@ function App() {
                 place="元智大學•五館三樓 / 六館玻璃屋"
               />
             </div>
-            <div
-              style={{
-                background: `
-              linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 1) 100%),
-              url('/wave_2-1.svg')
-            `,
-                backgroundSize: "cover",
-                backgroundPosition: "500px",
-                height: "38rem",
-                paddingTop: "6.6875rem",
-              }}
-            >
+            <div>
+              <div className="w-full h-[50px] overflow-hidden relative">
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 1) 15%),
+                url('/wave_2-extend.svg')`,
+                  }}
+                ></div>
+              </div>
               <DateMap
                 backgroundColor="#E04AA9"
                 color="#FFFFFF"
@@ -235,10 +255,29 @@ function App() {
                 place="松三文創園區• 三號倉庫"
               />
             </div>
+            <div>
+              <div
+                className="w-full h-[50px] overflow-hidden relative"
+                style={{
+                  transform: "rotate(180deg)",
+                }}
+              >
+                <div
+                  className="waveMoveIMG"
+                  style={{
+                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 3%, rgba(0, 0, 0, 1) 15%),
+                url('/wave_0-extend.svg')`,
+                  }}
+                ></div>
+              </div>
+            </div>
           </>
         )}
       </div>
-      <div className="w-full bg-black" style={{ height: unitWindowHeight }}>
+      <div
+        className="w-full bg-black mt-[4.125rem]"
+        style={{ height: unitWindowHeight }}
+      >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
         {windowTrue === true ? (
           <>
