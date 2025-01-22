@@ -30,8 +30,13 @@ export const IpModel = ({
     (windowWidthTrue && (
       // 電腦版
       <div className="-z-0 w-[12.5rem]">
-        <div className="relative h-[15rem] w-[12.5rem] flex flex-col justify-center">
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[7.5rem] w-[7.5rem] rounded-full bg-primary-color filter blur-[20px] z-0"></div>
+        <div className="relative h-[15rem] w-[12.5rem] flex flex-col justify-center group">
+          <div
+            className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
+                      h-[7.5rem] w-[7.5rem] rounded-full bg-primary-color
+                      filter blur-[20px] z-0 transition-all duration-300 ease-in-out block
+                      group-hover:h-[11.25rem] group-hover:w-[11.25rem]"
+          ></div>
           <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
             <img
               className="relative"
@@ -60,7 +65,7 @@ export const IpModel = ({
         style={{ height: height }}
       >
         <div className="relative h-full ">
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[5rem] w-[5rem] rounded-full bg-primary-color filter blur-[20px] z-0"></div>
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[5rem] w-[5rem] rounded-full bg-primary-color filter blur-[20px] z-0 "></div>
           <img
             className="relative w-full h-full "
             src={img}

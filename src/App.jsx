@@ -14,6 +14,7 @@ function App() {
   const [dateMapWindowHeight, setDateMapWindowHeight] = useState("78rem");
   const [unitWindowHeight, setUnitWindowHeight] = useState("68rem");
   const [windowTrue, setWindowTrue] = useState(false);
+  const [marginBottom, setMarginBottom] = useState("3rem");
 
   // Logo 動畫觸發方法
   const handleLogoAnimation = () => {
@@ -36,12 +37,14 @@ function App() {
         setUnitWindowHeight("55.25rem");
         setIpModelWidth("calc(100% - 9rem)");
         setWindowTrue(true);
+        setMarginBottom("6rem");
       } else {
         setIpModelWindowHeight("29.45rem");
         setDateMapWindowHeight("59.375rem");
         setUnitWindowHeight("52rem");
         setIpModelWidth("83rem");
         setWindowTrue(true);
+        setMarginBottom("8rem");
       }
     };
     handleResize();
@@ -71,8 +74,8 @@ function App() {
         />
       </div>
       <div
-        className="w-full bg-black mb-[6rem]"
-        style={{ height: ipModelWindowHeight }}
+        className="w-full "
+        style={{ height: ipModelWindowHeight, marginBottom: marginBottom }}
       >
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
         {windowTrue === true ? (
@@ -143,7 +146,7 @@ function App() {
           </div>
         )}
       </div>
-      <div className="w-full bg-black" style={{ height: dateMapWindowHeight }}>
+      <div className="w-full " style={{ height: dateMapWindowHeight }}>
         <Slogan title="跨域築夢不徘徊" secondTitle="提案練習日日在" />
         {windowTrue === true ? (
           <>
@@ -275,7 +278,7 @@ function App() {
         )}
       </div>
       <div
-        className="w-full bg-black mt-[4.125rem]"
+        className="w-full  mt-[4.125rem]"
         style={{ height: unitWindowHeight }}
       >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
@@ -314,8 +317,8 @@ function App() {
             <Unit title="指導單位" img="/第28屆畢業展覽籌備會.svg" />
             <Unit
               title="贊助單位"
-              img="/華視文教基金會_mobile.png"
-              img2="/教育部高等深耕教育計劃_mobile.png"
+              img="/教育部高等深耕教育計劃_mobile.png"
+              img2="/華視文教基金會_mobile.png"
             />
             <Unit
               title="贊助單位"
