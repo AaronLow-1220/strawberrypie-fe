@@ -42,7 +42,7 @@ function App() {
         setIpModelWindowHeight("29.45rem");
         setDateMapWindowHeight("59.375rem");
         setUnitWindowHeight("52rem");
-        setIpModelWidth("83rem");
+        setIpModelWidth("100%");
         setWindowTrue(true);
         setMarginBottom("8rem");
       }

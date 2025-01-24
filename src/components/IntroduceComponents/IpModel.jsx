@@ -97,7 +97,7 @@ export const IpModel = ({
         <div className="relative h-full ">
           <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2  h-[5rem] w-[5rem] rounded-full bg-primary-color filter blur-[20px] z-0"></div>
           <img
-            className="relative w-full h-full "
+            className="relative h-full "
             src={img}
             style={{ width: imgWidth }}
             alt="foreground image"

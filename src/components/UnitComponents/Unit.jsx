@@ -27,7 +27,7 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
       {img3 != null ? (
         WindowWidth === true ? (
           <div className="w-full">
-            <div className="flex justify-center">
+            <div className="flex justify-center overflow-auto">
               <img
                 src={img}
                 className="me-[4rem]"

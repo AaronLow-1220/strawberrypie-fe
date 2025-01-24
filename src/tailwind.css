@@ -28,7 +28,7 @@
     height: 3.375rem;
     margin: 1.5rem auto 0 auto;
     display: flex;
-    overflow-x: auto;
+    overflow-x: scroll;
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
