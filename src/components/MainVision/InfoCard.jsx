@@ -25,6 +25,7 @@ export const InfoCard = ({
 
   const dateStyle = {
     color: "#FFFFFF",
+    fontFamily: "B",
     fontSize: dateTextSize,
     marginTop: "0.75rem",
     textAlign: "center",
@@ -44,7 +45,9 @@ export const InfoCard = ({
   return (
     <div style={transitionStyle(opacity, transform)}>
       <div style={containerStyle(backgroundColor)}>
-        <div style={{ color: color, fontSize: fontSize }}>{title}</div>
+        <div style={{ color: color, fontSize: fontSize, fontFamily: "H" }}>
+          {title}
+        </div>
       </div>
       <div style={dateStyle}>{children || date}</div>
     </div>

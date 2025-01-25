@@ -51,8 +51,16 @@ export const IpModel = ({
           </div>
         </div>
         <div className=" w-full text-white flex flex-col justify-center mt-[8px]">
-          <div className="text-[32px] text-center leading-none">{title}</div>
-          <div className="text-[20px] text-center text-nowrap mt-[8px] leading-none text-secondary-color">
+          <div
+            className="text-[32px] text-center leading-none"
+            style={{ fontFamily: "B" }}
+          >
+            {title}
+          </div>
+          <div
+            className="text-[20px] text-center text-nowrap mt-[8px] leading-none text-secondary-color"
+            style={{ fontFamily: "R" }}
+          >
             {secondTitle}
           </div>
         </div>
@@ -89,8 +97,13 @@ export const IpModel = ({
         style={{ height: height }}
       >
         <div className="text-white flex flex-col justify-center">
-          <div className="text-[32px] leading-none">{title}</div>
-          <div className="text-[20px] mt-[0.5rem] leading-none text-secondary-color">
+          <div className="text-[32px] leading-none" style={{ fontFamily: "B" }}>
+            {title}
+          </div>
+          <div
+            className="text-[20px] mt-[0.5rem] leading-none text-secondary-color"
+            style={{ fontFamily: "R" }}
+          >
             {secondTitle}
           </div>
         </div>

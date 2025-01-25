@@ -21,12 +21,15 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
   }, []);
   return windowWidthTrue === true ? (
     <div className="mt-[4rem]">
-      <div className="w-[7rem] h-[2.25rem] bg-[#381025] rounded-[39px] text-center flex items-center justify-center mx-auto text-white">
+      <div
+        className="w-[7rem] h-[2.25rem] bg-[#381025] rounded-[39px] text-center flex items-center justify-center mx-auto text-white"
+        style={{ fontFamily: "M" }}
+      >
         {title}
       </div>
       {img3 != null ? (
         WindowWidth === true ? (
-          <div className="w-full">
+          <div className="w-full mt-[1.5rem]">
             <div className="flex justify-center overflow-auto">
               <img
                 src={img}
@@ -50,7 +53,7 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
             </div>
           </div>
         ) : (
-          <div className="w-full">
+          <div className="w-full mt-[1.5rem]">
             <div className="flex justify-center">
               <img
                 src={img}
@@ -92,7 +95,10 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
     </div>
   ) : (
     <div className="mt-[4rem]">
-      <div className="w-[7rem] h-[2.25rem] bg-[#381025] rounded-[39px] text-center flex items-center justify-center mx-auto text-white text-[1rem]">
+      <div
+        className="w-[7rem] h-[2.25rem] bg-[#381025] rounded-[39px] text-center flex items-center justify-center mx-auto text-white text-[1rem]"
+        style={{ fontFamily: "M" }}
+      >
         {title}
       </div>
       {img3 != null ? (

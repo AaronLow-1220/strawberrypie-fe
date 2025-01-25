@@ -9,11 +9,9 @@ import { Unit } from "./components/UnitComponents/Unit";
 function App() {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
   const [animate, setAnimate] = useState(false);
-  const [ipModelWindowHeight, setIpModelWindowHeight] = useState("60rem");
-  const [ipModelWidth, setIpModelWidth] = useState("100%");
-  const [dateMapWindowHeight, setDateMapWindowHeight] = useState("78rem");
   const [unitWindowHeight, setUnitWindowHeight] = useState("68rem");
   const [windowTrue, setWindowTrue] = useState(false);
+  const [windowDesktop, setWindowDesktop] = useState(false);
   const [marginBottom, setMarginBottom] = useState("3rem");
 
   // Logo 動畫觸發方法
@@ -30,20 +28,17 @@ function App() {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setIpModelWindowHeight("60rem");
+        setUnitWindowHeight("68rem");
+        setWindowTrue(false);
+        setMarginBottom("3rem");
       } else if (window.innerWidth < 1024) {
-        setIpModelWindowHeight("29.45rem");
-        setDateMapWindowHeight("59.375rem");
         setUnitWindowHeight("55.25rem");
-        setIpModelWidth("calc(100% - 9rem)");
         setWindowTrue(true);
         setMarginBottom("6rem");
       } else {
-        setIpModelWindowHeight("29.45rem");
-        setDateMapWindowHeight("59.375rem");
         setUnitWindowHeight("52rem");
-        setIpModelWidth("100%");
         setWindowTrue(true);
+        setWindowDesktop(true);
         setMarginBottom("8rem");
       }
     };
@@ -73,34 +68,66 @@ function App() {
           logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
         />
       </div>
-      <div
-        className="w-full "
-        style={{ height: ipModelWindowHeight, marginBottom: marginBottom }}
-      >
+      <div className="w-full " style={{ marginBottom: marginBottom }}>
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
-        {windowTrue === true ? (
-          <div
-            className="ipModelScroll mx-auto"
-            style={{ width: ipModelWidth }}
-          >
-            <IpModel
-              title="互動"
-              secondTitle="Digital Experience"
-              img="/互動_web.png"
-            />
-            <IpModel
-              title="遊戲"
-              secondTitle="Game Design"
-              img="/遊戲_web.png"
-            />
-            <IpModel
-              title="影視"
-              secondTitle="Film Production"
-              img="/影視_web.png"
-            />
-            <IpModel title="行銷" secondTitle="Marketing" img="/行銷_web.png" />
-            <IpModel title="動畫" secondTitle="Animation" img="/動畫_web.png" />
-          </div>
+        {windowTrue ? (
+          windowDesktop ? (
+            <div className="flex justify-center space-x-[4.5rem] mt-[5.375rem]">
+              <IpModel
+                title="互動"
+                secondTitle="Digital Experience"
+                img="/互動_web.png"
+              />
+              <IpModel
+                title="遊戲"
+                secondTitle="Game Design"
+                img="/遊戲_web.png"
+              />
+              <IpModel
+                title="影視"
+                secondTitle="Film Production"
+                img="/影視_web.png"
+              />
+              <IpModel
+                title="行銷"
+                secondTitle="Marketing"
+                img="/行銷_web.png"
+              />
+              <IpModel
+                title="動畫"
+                secondTitle="Animation"
+                img="/動畫_web.png"
+              />
+            </div>
+          ) : (
+            <div className="ipModelScroll">
+              <IpModel
+                title="互動"
+                secondTitle="Digital Experience"
+                img="/互動_web.png"
+              />
+              <IpModel
+                title="遊戲"
+                secondTitle="Game Design"
+                img="/遊戲_web.png"
+              />
+              <IpModel
+                title="影視"
+                secondTitle="Film Production"
+                img="/影視_web.png"
+              />
+              <IpModel
+                title="行銷"
+                secondTitle="Marketing"
+                img="/行銷_web.png"
+              />
+              <IpModel
+                title="動畫"
+                secondTitle="Animation"
+                img="/動畫_web.png"
+              />
+            </div>
+          )
         ) : (
           <div className="max-w-[33.75rem] h-[49.4rem] mt-[2.6rem] mx-auto">
             <IpModel
@@ -146,133 +173,118 @@ function App() {
           </div>
         )}
       </div>
-      <div className="w-full " style={{ height: dateMapWindowHeight }}>
+      <div className="w-full h-[84rem]">
         <Slogan title="跨域築夢不徘徊" secondTitle="提案練習日日在" />
         {windowTrue === true ? (
           <>
-            <div className="mt-[4.125rem]">
-              <div className="w-full h-[100px] overflow-hidden relative">
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: 'url("/wave_0-extend.svg") repeat-x',
-                  }}
-                ></div>
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 1) 15%),
-                url('/wave_1-extend.svg')`,
-                  }}
-                ></div>
+            <div className="wave-container ">
+              <div className="img-container">
+                <img src="/wave_0.webp" alt="" className="wave" />
+                <img src="/wave_0.webp" alt="" className="wave" />
               </div>
-              <DateMap
-                backgroundColor="#FFFFFF"
-                color="#E04AA9"
-                title="校內展"
-                date="04.07"
-                secondDate="04.11"
-                place="元智大學•五館三樓 / 六館玻璃屋"
-              />
+              <div className="img-container">
+                <img src="/wave_1.webp" alt="" className="wave" />
+                <img src="/wave_1.webp" alt="" className="wave" />
+              </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <DateMap
+                  backgroundColor="#FFFFFF"
+                  color="#E04AA9"
+                  title="校內展"
+                  date="04.07"
+                  secondDate="04.11"
+                  place="元智大學•五館三樓 / 六館玻璃屋"
+                />
+              </div>
             </div>
-            <div>
-              <div className="w-full h-[100px] overflow-hidden relative">
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 1) 15%),
-                url('/wave_2-extend.svg')`,
-                  }}
-                ></div>
+            <div className="wave-container absolute left-1/2 transform -translate-x-1/2 -translate-y-[30%]">
+              <div className="img-container">
+                <img src="/wave_2.webp" alt="" className="wave" />
+                <img src="/wave_2.webp" alt="" className="wave" />
               </div>
-              <DateMap
-                backgroundColor="#E04AA9"
-                color="#FFFFFF"
-                title="校外展"
-                date="04.25"
-                secondDate="04.28"
-                place="松三文創園區• 三號倉庫"
-              />
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                <DateMap
+                  backgroundColor="#FFFFFF"
+                  color="#E04AA9"
+                  title="校內展"
+                  date="04.07"
+                  secondDate="04.11"
+                  place="元智大學•五館三樓 / 六館玻璃屋"
+                />
+              </div>
             </div>
-            <div>
-              <div
-                className="w-full h-[100px] overflow-hidden relative"
-                style={{
-                  transform: "rotate(180deg)",
-                }}
-              >
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 3%, rgba(0, 0, 0, 1) 15%),
-                url('/wave_0-extend.svg')`,
-                  }}
-                ></div>
+            <div
+              className="wave-container absolute z-0"
+              style={{
+                height: "350px",
+                transform: " translateY(-110%)",
+                background:
+                  "linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 100%)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <div className="img-container" style={{ position: "relative" }}>
+                <img src="/wave_3.webp" alt="" className="wave" />
+                <img src="/wave_3.webp" alt="" className="wave" />
               </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
             </div>
           </>
         ) : (
           <>
-            <div>
-              <div className="w-full h-[50px] overflow-hidden relative">
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 20%),
-                url('/wave_0-extend.svg')`,
-                  }}
-                ></div>
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 20%),
-                url('/wave_1-extend.svg')`,
-                  }}
-                ></div>
+            <div className="wave-container absolute left-1/2 transform -translate-x-1/2">
+              <div className="img-container">
+                <img src="/wave_0.webp" alt="" className="wave" />
+                <img src="/wave_0.webp" alt="" className="wave" />
               </div>
-              <DateMap
-                backgroundColor="#FFFFFF"
-                color="#E04AA9"
-                title="校內展"
-                date="04.07"
-                secondDate="04.11"
-                place="元智大學•五館三樓 / 六館玻璃屋"
-              />
+              <div className="img-container">
+                <img src="/wave_1.webp" alt="" className="wave" />
+                <img src="/wave_1.webp" alt="" className="wave" />
+              </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <DateMap
+                  backgroundColor="#FFFFFF"
+                  color="#E04AA9"
+                  title="校內展"
+                  date="04.07"
+                  secondDate="04.11"
+                  place="元智大學•五館三樓 / 六館玻璃屋"
+                />
+              </div>
             </div>
-            <div>
-              <div className="w-full h-[50px] overflow-hidden relative">
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 1) 15%),
-                url('/wave_2-extend.svg')`,
-                  }}
-                ></div>
+            <div className="wave-container absolute left-1/2 transform -translate-x-1/2 -translate-y-[27%]">
+              <div className="img-container">
+                <img src="/wave_2.webp" alt="" className="wave" />
+                <img src="/wave_2.webp" alt="" className="wave" />
               </div>
-              <DateMap
-                backgroundColor="#E04AA9"
-                color="#FFFFFF"
-                title="校外展"
-                date="04.25"
-                secondDate="04.28"
-                place="松三文創園區• 三號倉庫"
-              />
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                <DateMap
+                  backgroundColor="#FFFFFF"
+                  color="#E04AA9"
+                  title="校內展"
+                  date="04.07"
+                  secondDate="04.11"
+                  place="元智大學•五館三樓 / 六館玻璃屋"
+                />
+              </div>
             </div>
-            <div>
-              <div
-                className="w-full h-[50px] overflow-hidden relative"
-                style={{
-                  transform: "rotate(180deg)",
-                }}
-              >
-                <div
-                  className="waveMoveIMG"
-                  style={{
-                    background: `linear-gradient(to bottom, rgba(0, 0, 0, 0) 3%, rgba(0, 0, 0, 1) 15%),
-                url('/wave_0-extend.svg')`,
-                  }}
-                ></div>
+            <div
+              className="wave-container absolute z-0"
+              style={{
+                height: "200px",
+                transform: " translateY(-190%)",
+                background:
+                  "linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 100%)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              <div className="img-container" style={{ position: "relative" }}>
+                <img src="/wave_3.webp" alt="" className="wave" />
+                <img src="/wave_3.webp" alt="" className="wave" />
               </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
             </div>
           </>
         )}
@@ -291,7 +303,7 @@ function App() {
                 imgWidth="15.625rem"
               />
               <Unit
-                title="指導單位"
+                title="執行單位"
                 img="/第28屆畢業展覽籌備會.svg"
                 imgWidth="15.625rem"
               />
@@ -303,7 +315,7 @@ function App() {
               imgWidth="15.625rem"
             />
             <Unit
-              title="贊助單位"
+              title="指導單位"
               img="/桃園市政府.svg"
               img2="/桃園市政府青年事務局.png"
               img3="/桃園市議會.svg"
@@ -314,14 +326,14 @@ function App() {
         ) : (
           <>
             <Unit title="主辦單位" img="/元智大學資訊傳播學系.svg" />
-            <Unit title="指導單位" img="/第28屆畢業展覽籌備會.svg" />
+            <Unit title="執行單位" img="/第28屆畢業展覽籌備會.svg" />
             <Unit
               title="贊助單位"
               img="/教育部高等深耕教育計劃_mobile.png"
               img2="/華視文教基金會_mobile.png"
             />
             <Unit
-              title="贊助單位"
+              title="指導單位"
               img="/桃園市政府.svg"
               img2="/桃園市政府青年事務局.png"
               img3="/桃園市議會.svg"

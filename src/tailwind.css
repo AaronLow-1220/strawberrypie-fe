@@ -3,13 +3,52 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "GenSenRounded"; /* 自定義字體名稱 */
+  font-family: "B";
   src: url("/font/GenSenRounded-B.ttf") format("truetype");
-  font-weight: normal;
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "EL";
+  src: url("/font/GenSenRounded-EL.ttf") format("truetype");
+  font-weight: 200; /* Extra Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "H";
+  src: url("/font/GenSenRounded-H.ttf") format("truetype");
+  font-weight: 900; /* Heavy */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "L";
+  src: url("/font/GenSenRounded-L.ttf") format("truetype");
+  font-weight: 300; /* Light */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "M";
+  src: url("/font/GenSenRounded-M.ttf") format("truetype");
+  font-weight: 500; /* Medium */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "R";
+  src: url("/font/GenSenRounded-R.ttf") format("truetype");
+  font-weight: 400; /* Regular */
   font-style: normal;
 }
 
 @layer utilities {
+  body {
+    background-color: #1b080a;
+  }
+
   .bg-pink-radial {
     position: absolute;
     top: 0;
@@ -51,7 +90,7 @@
     animation: scroll 10s linear infinite;
   }
   .second {
-    animation: scroll2 10s linear infinite;
+    animation: scroll 10s linear infinite;
     animation-delay: -10s;
   }
   @keyframes scroll {
@@ -62,18 +101,11 @@
       transform: translateX(-100%);
     }
   }
-  @keyframes scroll2 {
-    from {
-      transform: translateX(0%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
 
   .ipModelScroll {
+    width: 100%;
     display: flex;
-    height: 19.25rem;
+    height: 19.7rem;
     margin-top: 4rem;
     justify-content: space-between;
     overflow-x: auto;
@@ -81,48 +113,47 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    padding-left: 4.5rem;
   }
 
-  .waveMoveIMG {
-    width: 150%;
-    height: 800px;
+  .wave-container {
+    width: 100vw;
+    overflow: hidden;
+    height: 650px;
+    position: relative;
+  }
+  .wave-container .img-container {
+    display: flex;
+    width: 200%;
+    height: 100%;
     position: absolute;
-    top: 0;
-    left: 0;
-    object-fit: contain;
-    background-size: 700px auto;
-    background-position: -50px 0;
-    animation: waveAnimation 10s linear infinite;
+    animation: wave-animation 2s linear infinite;
   }
-
-  @keyframes waveAnimation {
+  .wave-container .img-container img {
+    width: 50%;
+  }
+  @keyframes wave-animation {
     0% {
-      background-position: -50px 0;
+      left: 0%;
     }
     100% {
-      background-position: -700px 0;
+      left: -100%;
     }
   }
 
   @media (max-width: 768px) {
-    .waveMoveIMG {
-      width: 200%;
-      height: 500px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      object-fit: contain;
-      background-size: 700px auto;
-      background-position: -50px 0;
-      animation: waveAnimation 10s linear infinite;
+    .wave-container {
+      width: 100vw;
+      overflow-x: hidden;
+      height: 760px;
+      position: relative;
     }
-    @keyframes waveAnimation {
-      0% {
-        background-position: -50px 0;
-      }
-      100% {
-        background-position: -300px 0;
-      }
+    .wave-container .img-container {
+      display: flex;
+      width: 200%;
+      height: 100%;
+      position: absolute;
+      animation: wave-animation 2s linear infinite;
     }
   }
 }
