@@ -41,10 +41,6 @@ export const DateMap = ({
                 title={title}
                 backgroundColor={backgroundColor}
                 color={color}
-                containerWidth="9rem"
-                containerHeight="3.5rem"
-                fontSize="2rem"
-                dateTextSize="2.25rem"
               >
                 <div className="flex  items-center justify-center">
                   <span>{date}</span>

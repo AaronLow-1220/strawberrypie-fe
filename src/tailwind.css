@@ -48,18 +48,14 @@
   body {
     background-color: #1b080a;
   }
-
+  .h-screen {
+    height: 100vh;
+    height: 100svh;
+  }
   .bg-pink-radial {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
-    background-image: url("/Background_web.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
     mix-blend-mode: plus-lighter;
   }
 
@@ -117,7 +113,7 @@
   }
 
   .wave-container {
-    width: 100vw;
+    width: 100%;
     overflow: hidden;
     height: 650px;
     position: relative;

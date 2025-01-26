@@ -1,156 +1,201 @@
 import { Canvas, useLoader } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import { Stats } from "@react-three/drei";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useState, useEffect } from "react";
 import { SlidingCamera } from "./SlidingCamera";
 import { InfoCard } from "./InfoCard";
 import { LightStrip } from "./LightStrip";
+import { useDeviceType } from "./useDeviceType";
 
 // 3D 模型展示元件
-export const Model = ({ onAnimationEnd, logoAnimation }) => {
+export const Model = ({ logoAnimation }) => {
+  const { deviceType } = useDeviceType();
+  const [sceneReady, setSceneReady] = useState(false);
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
-  const [primitivePosition, setPrimitivePosition] = useState([0, 0, 0]);
-  const [primitiveScale, setPrimitiveScale] = useState([0.9, 0.9, 0.9]);
-  const [InfoCardWidth, setInfoCardWidth] = useState("23rem");
-  const [InfoCardPosition, setInfoCardPosition] = useState([0, -1.2, 0]);
-  const [InfoWidth, setInfoWidth] = useState("5rem");
-  const [InfoHeight, setInfoHeight] = useState("2rem");
-  const [InfoFontSize, setInfoFontSize] = useState("1rem");
-  const [InfoDateTextSize, setInfoDateTextSize] = useState("1.5rem");
+  const [animate, setAnimate] = useState("");
 
-  const [LightStripPosition, setLightStripPosition] = useState([0, -1.5, 0]);
-
-  const [leftInfoOpacity, setLeftInfoOpacity] = useState(0);
-  const [leftTransform, setLeftTransform] = useState("translateY(40px)");
-
-  const [rightInfoOpacity, setRightInfoOpacity] = useState(0);
-  const [rightTransform, setRightTransform] = useState("translateY(40px)");
-
+  // 合併相關的狀態
+  const [infoCardStates, setInfoCardStates] = useState({
+    left: { opacity: 0, transform: "translateY(40px)" },
+    right: { opacity: 0, transform: "translateY(40px)" },
+  });
   const [LightStripHeight, setLightStripHeight] = useState("");
 
+  // 優化模型
   useEffect(() => {
     if (gltf && gltf.scene) {
       gltf.scene.traverse((child) => {
         if (child.isMesh) {
-          const material = child.material;
-          if (material && material.map) {
-            material.transparent = true;
-            material.premultipliedAlpha = true;
-            material.depthWrite = true;
-            material.depthTest = true;
-            material.alphaTest = 0.5;
-            material.needsUpdate = true;
+          // 優化幾何體
+          if (child.geometry) {
+            child.geometry.computeBoundingSphere();
+            child.geometry.computeBoundingBox();
           }
+
+          // 保持必要的材質設置
+          if (child.material && child.material.map) {
+            child.material.transparent = true;
+            child.material.premultipliedAlpha = true;
+            child.material.depthWrite = true;
+            child.material.depthTest = true;
+            child.material.alphaTest = 0.5;
+            child.material.needsUpdate = false;
+          }
+
+          // 啟用視錐體剔除以提升性能
+          child.frustumCulled = true;
         }
       });
+
+      setSceneReady(true);
     }
   }, [gltf]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setInfoCardPosition([0, -1.2, 0]);
-        setPrimitiveScale([0.9, 0.9, 0.9]);
-      } else if (window.innerWidth < 1024) {
-        setPrimitivePosition([0, 0.1, 0]);
-        setInfoCardPosition([0, -1.4, 0]);
-        setPrimitiveScale([1.05, 1.05, 1.05]);
-        setInfoCardWidth("32rem");
-        setInfoWidth("8.75rem");
-        setInfoHeight("3.15rem");
-        setInfoFontSize("1.75rem");
-        setInfoDateTextSize("2.25rem");
-        setLightStripPosition([0, -2, 0]);
-      } else {
-        setInfoCardPosition([0, -3, 0]);
-        setInfoCardWidth("60rem");
-        setLightStripPosition([0, -2.2, 0]);
-      }
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // 确定動畫結束觸發子組建動畫
-  const handleAnimationEnd = () => {
+  const handleAnimationStart = () => {
     logoAnimation();
+    setAnimate("animate-WindowLogo");
     setTimeout(() => {
-      setLeftInfoOpacity(1);
-      setLeftTransform("translateY(0px)");
-    }, 900);
+      setInfoCardStates((prev) => ({
+        ...prev,
+        left: { opacity: 1, transform: "translateY(0px)" },
+      }));
+    }, 1000);
+
     setTimeout(() => {
-      setRightInfoOpacity(1);
-      setRightTransform("translateY(0px)");
-    }, 1800);
+      setInfoCardStates((prev) => ({
+        ...prev,
+        right: { opacity: 1, transform: "translateY(0px)" },
+      }));
+    }, 1500);
+
     setTimeout(() => {
       setLightStripHeight("animate-light");
-    }, 2500);
-    onAnimationEnd();
+    }, 2000);
   };
 
-  useEffect(() => {
-    if (gltf.scene) {
-      gltf.scene.position.set(0, 0, 0);
-      gltf.scene.scale.set(1, 1, 1);
-    }
-  }, [gltf]);
+  // 抽取 InfoCard 共用的 props
+  const infoCards = [
+    {
+      title: "校內展",
+      date: deviceType === "mobile" ? "04.07-11" : "04.07",
+      endDate: deviceType !== "mobile" ? "04.11" : undefined,
+      backgroundColor: "#FFFFFF",
+      color: "#F748C1",
+    },
+    {
+      title: "校外展",
+      date: deviceType === "mobile" ? "04.25-28" : "04.25",
+      endDate: deviceType !== "mobile" ? "04.28" : undefined,
+      backgroundColor: "#F748C1",
+      color: "#FFFFFF",
+    },
+  ];
 
   return (
     <div className="w-full h-screen relative">
-      <Canvas style={{ position: "absolute", zIndex: 0 }}>
-        <SlidingCamera onAnimationEnd={handleAnimationEnd} />
+      <Canvas
+        style={{ position: "absolute", zIndex: 0 }}
+        gl={{
+          antialias: true, // 保持抗鋸齒
+          alpha: true, // 保持透明背景
+          powerPreference: "high-performance",
+          pixelRatio: Math.min(window.devicePixelRatio, 2), // 限制像素比例以提升性能
+          depth: true, // 確保深度緩衝區可用
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor("#000000", 0);
+        }}
+      >
+        {process.env.NODE_ENV === "development" && <Stats />}
+        {sceneReady && (
+          <>
+            <SlidingCamera onAnimationStart={handleAnimationStart} />
+            <primitive object={gltf.scene} frustumCulled={true} />
+          </>
+        )}
+      </Canvas>
 
-        {/* 資訊卡片 */}
-        <Html position={InfoCardPosition} center>
+      {deviceType === "desktop" ? (
+        <div
+          className="absolute top-[50%] z-30 flex items-center justify-between"
+          style={{
+            width: "100%",
+            minWidth: "1540px",
+            maxWidth: "2000px",
+            padding: "0 5%",
+            transform: "translateY(-55%)",
+          }}
+        >
           <div
+            className={`flex opacity-0 flex-col items-center w-fit ${animate}`}
             style={{
-              width: InfoCardWidth,
-              display: "flex",
-              justifyContent: "space-between",
+              transform: "scale(0.9)",
             }}
           >
-            <InfoCard
-              title="校內展"
-              date="04.07-11"
-              containerWidth={InfoWidth}
-              containerHeight={InfoHeight}
-              opacity={leftInfoOpacity}
-              transform={leftTransform}
-              fontSize={InfoFontSize}
-              dateTextSize={InfoDateTextSize}
-              backgroundColor="#FFFFFF"
-              color="#F748C1"
-            />
-            <InfoCard
-              title="校外展"
-              date="04.25-28"
-              containerWidth={InfoWidth}
-              containerHeight={InfoHeight}
-              opacity={rightInfoOpacity}
-              transform={rightTransform}
-              fontSize={InfoFontSize}
-              dateTextSize={InfoDateTextSize}
-              backgroundColor="#F748C1"
-              color="#FFFFFF"
-            />
+            <div className="w-[420px]">
+              <img
+                src="/Headline.svg"
+                alt="Example"
+                style={{
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              />
+            </div>
+            <div className="mt-4 text-center flex flex-col items-center">
+              <p className="text-white text-[42px] tracking-[8px]">
+                元智大學資訊傳播學系
+              </p>
+              <img className="w-[360px] mt-4" src="/畢業展28.svg" alt="" />
+            </div>
           </div>
-        </Html>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: "380px",
+              rowGap: "64px",
+              marginRight: "64px",
+              transform: "scale(0.9)",
+            }}
+          >
+            {infoCards.map((card, index) => (
+              <InfoCard
+                key={card.title}
+                {...card}
+                opacity={infoCardStates[index === 0 ? "left" : "right"].opacity}
+                transform={
+                  infoCardStates[index === 0 ? "left" : "right"].transform
+                }
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+      {deviceType !== "desktop" ? (
+        <div
+          style={{
+            position: "absolute",
+            width: "100%",
+            bottom: "10%",
+            display: "flex",
+            justifyContent: "space-evenly",
+          }}
+        >
+          {infoCards.map((card, index) => (
+            <InfoCard
+              key={card.title}
+              {...card}
+              opacity={infoCardStates[index === 0 ? "left" : "right"].opacity}
+              transform={
+                infoCardStates[index === 0 ? "left" : "right"].transform
+              }
+            />
+          ))}
+        </div>
+      ) : null}
 
-        {/* 燈條 */}
-        <Html position={LightStripPosition} center>
-          <LightStrip animateLight={LightStripHeight} />
-        </Html>
-
-        {/* 3D 模型 */}
-        <primitive
-          object={gltf.scene}
-          position={primitivePosition}
-          scale={primitiveScale}
-          castShadow
-          receiveShadow
-        />
-      </Canvas>
+      <LightStrip animateLight={LightStripHeight} deviceType={deviceType} />
     </div>
   );
 };

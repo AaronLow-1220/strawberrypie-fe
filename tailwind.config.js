@@ -13,10 +13,10 @@ export default withMT({
       },
       animation: {
         light: "lightAnimation 2s infinite",
-        InfoCard: "InfoCard 1s ease-in-out",
+        InfoCard: "InfoCard 1s cubic-bezier(0.33, 1, 0.66, 1)",
         Logo: "Logo 1s ease-out forwards",
         IpadLogo: "IpadLogo 1s ease-out forwards",
-        WindowLogo: "WindowLogo 1s ease-out forwards",
+        WindowLogo: "WindowLogo 1s cubic-bezier(0.33, 1, 0.66, 1) forwards",
         LogoSide: "LogoSide 1s ease-in-out forwards",
       },
       keyframes: {
@@ -38,8 +38,8 @@ export default withMT({
         },
         // 電腦版 Logo 動畫
         WindowLogo: {
-          "0%": { width: "500px", opacity: 0 },
-          "100%": { width: "450px", opacity: 1 },
+          "0%": { transform: "translateY(80px)", opacity: 0 },
+          "100%": { transform: "translateY(0px)", opacity: 1 },
         },
         // 滑動後 Logo 動畫
         LogoSide: {

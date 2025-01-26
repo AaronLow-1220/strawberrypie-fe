@@ -59,9 +59,18 @@ function App() {
   }, [isAnimationComplete]);
 
   return (
-    <div className="bg-[#1B080A]">
-      <div className="relative">
-        <div className="bg-pink-radial "></div>
+    <div className="">
+      <div>
+        <div className="bg-pink-radial">
+          <div className="w-full h-full relative flex justify-center items-center">
+            <img
+              style={{ maxWidth: "initial" }}
+              className="h-full"
+              src="/Background_web.jpg"
+              alt=""
+            />
+          </div>
+        </div>
         <Logo beginAnimation={animate} />
         <Model
           onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調
@@ -175,7 +184,7 @@ function App() {
           </div>
         )}
       </div>
-      <div className="w-full h-[84rem]">
+      <div className="w-full h-[75.5rem]">
         <Slogan title="跨域築夢不徘徊" secondTitle="提案練習日日在" />
         {windowTrue === true ? (
           <>
@@ -219,8 +228,8 @@ function App() {
             <div
               className="wave-container absolute z-0"
               style={{
-                height: "350px",
-                transform: " translateY(-110%)",
+                height: "230px",
+                transform: " translateY(-155%)",
                 background:
                   "linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 100%)",
                 position: "relative",
@@ -293,7 +302,7 @@ function App() {
         )}
       </div>
       <div
-        className="w-full  mt-[4.125rem]"
+        className="w-full  mt-[7.125rem]"
         style={{ height: unitWindowHeight }}
       >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />

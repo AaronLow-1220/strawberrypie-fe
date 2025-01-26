@@ -1,64 +1,152 @@
 import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CatmullRomCurve3, Vector3 } from "three";
+import { CatmullRomCurve3, Vector3, Object3D } from "three";
 
-export const SlidingCamera = ({ onAnimationEnd }) => {
-  const { camera } = useThree();
+export const SlidingCamera = ({ onAnimationStart }) => {
+  const { camera, gl, scene } = useThree();
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
-  const initialY = useRef(null); // 儲存初始Y位置
+  const initialY = useRef(null);
+  const [deviceType, setDeviceType] = useState("desktop");
 
-  camera.fov = 60;
+  // 創建相機錨點
+  const cameraAnchor = useRef(new Object3D());
+
+  camera.fov = 46;
   camera.near = 0.01;
   camera.updateProjectionMatrix();
 
   const ANIMATION_DURATION = 3;
 
+  const SENSOR_HEIGHT = 24;
+
+  var startFov;
+  var endFov;
+
+  // 根據裝置類型設定不同的滾動係數
+  const getScrollFactor = () => {
+    switch (deviceType) {
+      case "mobile":
+        return 0.0014;
+      case "tablet":
+        return 0.0012;
+      case "desktop":
+        return 0.0008; // 電腦版滾動速度較慢
+      default:
+        return 0.0014;
+    }
+  };
+
+  // 監聽視窗大小變化
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setDeviceType(
+        width < 768 ? "mobile" : width < 1536 ? "tablet" : "desktop"
+      );
+    };
+
+    handleResize(); // 初始化
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 設定起始和結束角度（轉換為弧度）
+  var startRotation = 15 * (Math.PI / 180); // 100度
+  var endRotation = -3 * (Math.PI / 180); // 90度
+
+  // 設定不同尺寸的 FOV
+  useEffect(() => {
+    // 初始化和監聽視窗大小變化
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleResize = () => {
+    if (window.innerWidth < 768) {
+      startFov = 10;
+      endFov = 19;
+    } else if (window.innerWidth < 1024) {
+      startFov = 12;
+      endFov = 20;
+      endRotation = -2 * (Math.PI / 180);
+    } else {
+      startFov = 14;
+      endFov = 24;
+      endRotation = -2 * (Math.PI / 180);
+    }
+    startFov = focalLengthToFOV(startFov);
+    endFov = focalLengthToFOV(endFov);
+    camera.fov = endFov;
+    camera.updateProjectionMatrix(); // 記得更新投影矩陣
+  };
+
+  const focalLengthToFOV = (focalLength) => {
+    return 2 * Math.atan(SENSOR_HEIGHT / 2 / focalLength) * (180 / Math.PI);
+  };
+
+  handleResize();
+
   // 實現 cubic-bezier 函數
-  const cubicBezier = (x1, y1, x2, y2) => {
+  const cubicBezier = (p1x, p1y, p2x, p2y) => {
     return (t) => {
-      if (t === 0 || t === 1) return t;
+      // 控制點：起點(0,0)，兩個控制點(p1,p2)，終點(1,1)
+      const cx = 3 * p1x;
+      const bx = 3 * (p2x - p1x) - cx;
+      const ax = 1 - cx - bx;
 
-      let start = 0;
-      let end = 1;
+      const cy = 3 * p1y;
+      const by = 3 * (p2y - p1y) - cy;
+      const ay = 1 - cy - by;
 
-      for (let i = 0; i < 10; i++) {
-        const currentT = (start + end) / 2;
+      const sampleCurveX = (t) => ((ax * t + bx) * t + cx) * t;
+      const sampleCurveY = (t) => ((ay * t + by) * t + cy) * t;
+      const sampleCurveDerivativeX = (t) => (3 * ax * t + 2 * bx) * t + cx;
 
-        // 計算 bezier 曲線上的 x 點
-        const x =
-          3 * currentT * (1 - currentT) ** 2 * x1 +
-          3 * currentT ** 2 * (1 - currentT) * x2 +
-          currentT ** 3;
-
-        if (Math.abs(x - t) < 0.001) {
-          // 計算對應的 y 值
-          return (
-            3 * currentT * (1 - currentT) ** 2 * y1 +
-            3 * currentT ** 2 * (1 - currentT) * y2 +
-            currentT ** 3
-          );
+      // 使用牛頓法求解 t
+      let x = t;
+      for (let i = 0; i < 8; i++) {
+        const currentX = sampleCurveX(x) - t;
+        if (Math.abs(currentX) < 1e-7) {
+          break;
         }
-
-        if (x > t) {
-          end = currentT;
-        } else {
-          start = currentT;
+        const derivative = sampleCurveDerivativeX(x);
+        if (Math.abs(derivative) < 1e-7) {
+          break;
         }
+        x = x - currentX / derivative;
       }
 
-      // 計算最終的 y 值
-      const currentT = (start + end) / 2;
-      return (
-        3 * currentT * (1 - currentT) ** 2 * y1 +
-        3 * currentT ** 2 * (1 - currentT) * y2 +
-        currentT ** 3
-      );
+      return {
+        x: sampleCurveX(x),
+        y: sampleCurveY(x),
+      };
     };
   };
 
-  // 創建 cubic-bezier(.33,0,0,1) 的 easing 函數
-  const ease = cubicBezier(0.33, 0, 0, 1);
+  // 從 Blender 中獲取的控制點值
+  const BEZIER_POINTS = {
+    p0: { x: 0, y: 0 }, // 起點
+    p1: { x: 0.33, y: 0 }, // 第一個控制點
+    p2: { x: 0, y: 1 }, // 第二個控制點
+    p3: { x: 1, y: 1 }, // 終點
+  };
+
+  // 根據 Blender 的控制點計算貝茲曲線參數
+  const p1x =
+    (BEZIER_POINTS.p1.x - BEZIER_POINTS.p0.x) /
+    (BEZIER_POINTS.p3.x - BEZIER_POINTS.p0.x);
+  const p1y =
+    (BEZIER_POINTS.p1.y - BEZIER_POINTS.p0.y) /
+    (BEZIER_POINTS.p3.y - BEZIER_POINTS.p0.y);
+  const p2x =
+    (BEZIER_POINTS.p2.x - BEZIER_POINTS.p0.x) /
+    (BEZIER_POINTS.p3.x - BEZIER_POINTS.p0.x);
+  const p2y =
+    (BEZIER_POINTS.p2.y - BEZIER_POINTS.p0.y) /
+    (BEZIER_POINTS.p3.y - BEZIER_POINTS.p0.y);
+
+  const ease = cubicBezier(p1x, p1y, p2x, p2y);
 
   // 定義點數據並生成曲線
   const points = [
@@ -79,54 +167,73 @@ export const SlidingCamera = ({ onAnimationEnd }) => {
 
   const curve = new CatmullRomCurve3(points);
 
-  // 設定起始和結束角度（轉換為弧度）
-  const startRotation = 10 * (Math.PI / 180); // 100度
-  const endRotation = 0 * (Math.PI / 180); // 90度
-
+  // 確保場景和相機都準備好
   useEffect(() => {
-    const handleScroll = (event) => {
-      if (!sliding) {
-        // 確保初始Y位置被設定
-        if (initialY.current === null) {
-          initialY.current = camera.position.y;
-        }
+    if (!camera || !gl.domElement) {
+      console.warn("Camera or renderer not ready");
+      return;
+    }
 
-        // 直接更新相機位置
-        const newY = camera.position.y - event.deltaY * 0.001;
-        // 確保不會超過初始位置
-        camera.position.y = Math.min(
-          initialY.current,
-          Math.max(newY, -Infinity)
-        );
-      }
+    // 初始化錨點
+    cameraAnchor.current = new Object3D();
+    scene.add(cameraAnchor.current); // 將錨點加入場景
+    cameraAnchor.current.add(camera);
+    camera.position.set(0, 0, 0);
+
+    // 清理函數
+    return () => {
+      scene.remove(cameraAnchor.current);
+      cameraAnchor.current.remove(camera);
     };
+  }, [camera, gl, scene]);
 
-    window.addEventListener("wheel", handleScroll, { passive: true });
-    return () => window.removeEventListener("wheel", handleScroll);
-  }, [sliding]);
-
+  // 每幀執行的動畫邏輯
   useFrame((state, delta) => {
     if (sliding) {
       progress.current = Math.min(
         progress.current + delta / ANIMATION_DURATION,
         1
       );
-      const easedT = ease(progress.current);
+      const { x, y: easedT } = ease(progress.current); // 取得 x 和 y 值
 
+      document.body.style.overflow = easedT >= 0.94 ? "auto" : "hidden";
+
+      // 使用 y 值控制動畫
       const position = curve.getPoint(easedT);
-      camera.position.set(position.x, position.y, position.z);
-
-      const currentRotation =
+      cameraAnchor.current.position.set(position.x, position.y, position.z);
+      cameraAnchor.current.rotation.x =
         startRotation + (endRotation - startRotation) * easedT;
-      camera.rotation.x = currentRotation;
+
+      // 更新 FOV
+      camera.fov = startFov + (endFov - startFov) * easedT;
+      camera.updateProjectionMatrix(); // 必須調用這個來更新 FOV
 
       if (easedT >= 1) {
         setSliding(false);
-        initialY.current = camera.position.y; // 儲存初始Y位置
-        if (onAnimationEnd) onAnimationEnd();
+        initialY.current = cameraAnchor.current.position.y;
+      }
+
+      // 使用 x 值來觸發 onAnimationStart
+      var time = x * 180; // 根據全長180frame來計算，方便設定時間
+      if (time >= 90) {
+        onAnimationStart?.();
       }
     }
   });
+
+  useEffect(() => {
+    const SCROLL_FACTOR = getScrollFactor();
+
+    const updateCameraPosition = () => {
+      if (camera.position) {
+        // 確保 camera.position 存在
+        camera.position.y = Math.min(0, -(window.scrollY * SCROLL_FACTOR));
+      }
+    };
+
+    window.addEventListener("scroll", updateCameraPosition, { passive: true });
+    return () => window.removeEventListener("scroll", updateCameraPosition);
+  }, [deviceType]);
 
   return null;
 };
