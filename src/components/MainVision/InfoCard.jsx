@@ -41,7 +41,7 @@ export const InfoCard = ({
           fontSize: "28px",
         },
         date: {
-          fontSize: "36px",
+          fontSize: "48px",
           letterSpacing: "2px"
         }
       };
@@ -95,11 +95,17 @@ export const InfoCard = ({
       <div style={containerStyle}>
         <div style={{ color }}>{title}</div>
       </div>
-      <div className='flex items-center gap-[12px] mt-2'>
+      <div className='flex justify-center items-center gap-[12px] mt-2'>
         <div style={dateStyle}>{date}</div>
         {deviceType === "tablet" && endDate && (
           <>
             <div style={{ height: "6px", width: "30px", backgroundColor: "white", borderRadius: "100px"}}></div>
+            <div style={dateStyle}>{endDate}</div>
+          </>
+        )}
+        {deviceType === "desktop" && endDate && (
+          <>
+            <div style={{ height: "6px", width: "100%", backgroundColor: "white", borderRadius: "100px"}}></div>
             <div style={dateStyle}>{endDate}</div>
           </>
         )}
