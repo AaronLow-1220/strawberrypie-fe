@@ -21,11 +21,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: url("/Background_web.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-blend-mode: screen;
     mix-blend-mode: plus-lighter;
   }
   .wave-container {

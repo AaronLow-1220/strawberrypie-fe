@@ -36,7 +36,11 @@ function App() {
   return (
     <div className="">
       <div>
-        <div className="bg-pink-radial"></div>
+        <div className="bg-pink-radial">
+          <div className="w-full h-full relative flex justify-center items-center">
+            <img style={{ maxWidth: "initial" }} className="h-full" src="/Background_web.jpg" alt="" />
+          </div>
+        </div>
         <Logo beginAnimation={animate} />
         <Model
           onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調
