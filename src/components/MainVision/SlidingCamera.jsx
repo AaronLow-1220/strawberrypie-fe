@@ -7,6 +7,7 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   const progress = useRef(0);
   const [sliding, setSliding] = useState(true);
   const initialY = useRef(null);
+  const [deviceType, setDeviceType] = useState("desktop");
 
   // 創建相機錨點
   const cameraAnchor = useRef(new Object3D());
@@ -21,6 +22,40 @@ export const SlidingCamera = ({ onAnimationStart }) => {
 
   var startFov;
   var endFov;
+
+  // 設定起始和結束角度（轉換為弧度）
+  var startRotation = 15 * (Math.PI / 180);  // 100度
+  var endRotation = -3 * (Math.PI / 180);     // 90度
+
+  // 根據裝置類型設定不同的滾動係數
+  const getScrollFactor = () => {
+    switch (deviceType) {
+      case "mobile":
+        return 0.0014;
+      case "tablet":
+        return 0.0012;
+      case "desktop":
+        return 0.0008; // 電腦版滾動速度較慢
+      default:
+        return 0.0014;
+    }
+  };
+
+  // 監聽視窗大小變化
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setDeviceType(
+        width < 768 ? "mobile" :
+        width < 1536 ? "tablet" :
+        "desktop"
+      );
+    };
+
+    handleResize(); // 初始化
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // 設定起始和結束角度（轉換為弧度）
   var startRotation = 15 * (Math.PI / 180);  // 100度
@@ -42,8 +77,9 @@ export const SlidingCamera = ({ onAnimationStart }) => {
       endFov = 20;
       endRotation = -2 * (Math.PI / 180);
     } else {
-      startFov = 12;
-      endFov = 20;
+      startFov = 14;
+      endFov = 24;
+      endRotation = -2 * (Math.PI / 180);
     }
     startFov = focalLengthToFOV(startFov);
     endFov = focalLengthToFOV(endFov);
@@ -180,18 +216,20 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   });
 
   useEffect(() => {
-    const SCROLL_FACTOR = 0.0014;
+    const SCROLL_FACTOR = getScrollFactor();
 
     const updateCameraPosition = () => {
-      camera.position.y = Math.min(
-        0,
-        -(window.scrollY * SCROLL_FACTOR)
-      );
+      if (camera.position) {  // 確保 camera.position 存在
+        camera.position.y = Math.min(
+          0,
+          -(window.scrollY * SCROLL_FACTOR)
+        );
+      }
     };
 
     window.addEventListener('scroll', updateCameraPosition, { passive: true });
     return () => window.removeEventListener('scroll', updateCameraPosition);
-  }, []);
+  }, [deviceType]);
 
   return null;
 };

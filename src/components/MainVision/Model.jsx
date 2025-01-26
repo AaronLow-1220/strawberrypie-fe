@@ -5,12 +5,14 @@ import { useState, useEffect, useRef } from "react";
 import { SlidingCamera } from "./SlidingCamera";
 import { InfoCard } from "./InfoCard";
 import { LightStrip } from "./LightStrip";
+import { useDeviceType } from "./useDeviceType";
 
 // 3D 模型展示元件
 export const Model = ({ onAnimationStart, logoAnimation }) => {
+  const { deviceType } = useDeviceType();
   const [sceneReady, setSceneReady] = useState(false);
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
-  const [deviceType, setDeviceType] = useState("desktop");
+  const [animate, setAnimate] = useState("");
 
   // 合併相關的狀態
   const [infoCardStates, setInfoCardStates] = useState({
@@ -18,7 +20,6 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
     right: { opacity: 0, transform: "translateY(40px)" }
   });
   const [LightStripHeight, setLightStripHeight] = useState("");
-
 
   // 優化模型
   useEffect(() => {
@@ -46,32 +47,13 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
         }
       });
 
-      // 設置模型的初始位置和比例
-      gltf.scene.position.set(0, 0, 0);
-      gltf.scene.scale.set(1, 1, 1);
-
       setSceneReady(true);
     }
   }, [gltf]);
 
-  // 優化裝置類型判斷
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setDeviceType(
-        width < 768 ? "mobile" :
-          width < 1536 ? "tablet" :
-            "desktop"
-      );
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const handleAnimationStart = () => {
     logoAnimation();
+    setAnimate("animate-WindowLogo");
     setTimeout(() => {
       setInfoCardStates(prev => ({
         ...prev,
@@ -147,7 +129,10 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
             transform: "translateY(-55%)",
           }}
         >
-          <div className="flex flex-col items-center w-fit">
+          <div className={`flex opacity-0 flex-col items-center w-fit ${animate}`}
+          style={{
+            transform: "scale(0.9)",
+          }} >
             <div className="w-[420px]">
               <img
                 src="/Headline.svg"
@@ -166,16 +151,20 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
           <div style={{
             display: "flex",
             flexDirection: "column",
+            width: "380px",
+            rowGap: "64px",
+            marginRight: "64px",
+            transform: "scale(0.9)",
           }}>
-          {infoCards.map((card, index) => (
-            <InfoCard
-              key={card.title}
-              {...card}
-              opacity={infoCardStates[index === 0 ? 'left' : 'right'].opacity}
-              transform={infoCardStates[index === 0 ? 'left' : 'right'].transform}
-            />
-          ))}
-        </div>
+            {infoCards.map((card, index) => (
+              <InfoCard
+                key={card.title}
+                {...card}
+                opacity={infoCardStates[index === 0 ? 'left' : 'right'].opacity}
+                transform={infoCardStates[index === 0 ? 'left' : 'right'].transform}
+              />
+            ))}
+          </div>
         </div>
       ) : null}
       {deviceType !== "desktop" ? (
@@ -197,7 +186,10 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
         </div>
       ) : null}
 
-      <LightStrip animateLight={LightStripHeight} />
+      <LightStrip 
+        animateLight={LightStripHeight} 
+        deviceType={deviceType}
+      />
     </div>
   );
 };
