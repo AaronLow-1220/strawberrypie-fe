@@ -30,13 +30,17 @@ export const Slogan = ({ title, secondTitle }) => {
     <div className=" mx-auto ">
       <div
         className="text-white  text-center weight-[900] leading-none"
-        style={{ fontSize: fontSize }}
+        style={{ fontSize: fontSize, fontFamily: "B" }}
       >
         {secondTitle}
       </div>
       <div
         className="text-primary-color text-center weight-[900] leading-none text-nowrap"
-        style={{ fontSize: titleFontSize, marginTop: titleMarginTop }}
+        style={{
+          fontSize: titleFontSize,
+          marginTop: titleMarginTop,
+          fontFamily: "B",
+        }}
       >
         {title}
       </div>

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
   const [windowWidthTrue, setWindowWidthTrue] = useState(false);
-  const [WindowWidth, setWindowWidth] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -12,7 +11,6 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
         setWindowWidthTrue(true);
       } else {
         setWindowWidthTrue(true);
-        setWindowWidth(true);
       }
     };
     handleResize();
@@ -28,52 +26,46 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
         {title}
       </div>
       {img3 != null ? (
-        WindowWidth === true ? (
-          <div className="w-full mt-[1.5rem]">
-            <div className="flex justify-center overflow-auto">
-              <img
-                src={img}
-                className="me-[4rem]"
-                alt="Image 1"
-                style={{ width: imgWidth }}
-              />
-              <img
-                src={img2}
-                className="me-[4rem]"
-                alt="Image 2"
-                style={{ width: imgWidth }}
-              />
-              <img
-                src={img3}
-                className="me-[4rem]"
-                alt="Image 3"
-                style={{ width: imgWidth }}
-              />
-              <img src={img4} alt="Image 4" style={{ width: imgWidth }} />
-            </div>
+        <div className="w-full mt-[1.5rem]">
+          <div className="flex flex-wrap justify-center ">
+            <img
+              src={img}
+              alt="Image 1"
+              style={{
+                width: imgWidth,
+                marginLeft: "1.5rem",
+                marginRight: "1.5rem",
+              }}
+            />
+            <img
+              src={img2}
+              alt="Image 2"
+              style={{
+                width: imgWidth,
+                marginLeft: "1.5rem",
+                marginRight: "1.5rem",
+              }}
+            />
+            <img
+              src={img3}
+              alt="Image 3"
+              style={{
+                width: imgWidth,
+                marginLeft: "1.5rem",
+                marginRight: "1.5rem",
+              }}
+            />
+            <img
+              src={img4}
+              alt="Image 4"
+              style={{
+                width: imgWidth,
+                marginLeft: "1.5rem",
+                marginRight: "1.5rem",
+              }}
+            />
           </div>
-        ) : (
-          <div className="w-full mt-[1.5rem]">
-            <div className="flex justify-center">
-              <img
-                src={img}
-                className="me-[4rem]"
-                alt="Image 1"
-                style={{ width: imgWidth }}
-              />
-              <img src={img2} alt="Image 2" style={{ width: imgWidth }} />
-            </div>
-            <div className="flex justify-center">
-              <img
-                src={img3}
-                className="me-[4rem]"
-                alt="Image 3"
-                style={{ width: imgWidth }}
-              />
-              <img src={img4} alt="Image 4" style={{ width: imgWidth }} />
-            </div>
-          </div>
-        )
+        </div>
       ) : (
         <div className="h-[7.5rem] mx-auto mt-[1.5rem] flex flex-row-reverse justify-center">
           <img
@@ -102,14 +94,14 @@ export const Unit = ({ title, img, img2, img3, img4, imgWidth }) => {
         {title}
       </div>
       {img3 != null ? (
-        <div class="custom-scroll-container">
-          <div class="scroll-content first">
+        <div className="custom-scroll-container">
+          <div className="scroll-content first">
             <img src={img} alt="Image 1" />
             <img src={img2} alt="Image 2" />
             <img src={img3} alt="Image 3" />
             <img src={img4} alt="Image 4" />
           </div>
-          <div class="scroll-content second">
+          <div className="scroll-content second">
             <img src={img} alt="Image 1" />
             <img src={img2} alt="Image 2" />
             <img src={img3} alt="Image 3" />

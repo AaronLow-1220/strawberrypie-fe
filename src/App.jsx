@@ -72,32 +72,34 @@ function App() {
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
         {windowTrue ? (
           windowDesktop ? (
-            <div className="flex justify-center space-x-[4.5rem] mt-[5.375rem]">
-              <IpModel
-                title="互動"
-                secondTitle="Digital Experience"
-                img="/互動_web.png"
-              />
-              <IpModel
-                title="遊戲"
-                secondTitle="Game Design"
-                img="/遊戲_web.png"
-              />
-              <IpModel
-                title="影視"
-                secondTitle="Film Production"
-                img="/影視_web.png"
-              />
-              <IpModel
-                title="行銷"
-                secondTitle="Marketing"
-                img="/行銷_web.png"
-              />
-              <IpModel
-                title="動畫"
-                secondTitle="Animation"
-                img="/動畫_web.png"
-              />
+            <div className="mt-[5.375rem] ">
+              <div className="max-w-[83rem] mx-auto flex justify-between ">
+                <IpModel
+                  title="互動"
+                  secondTitle="Digital Experience"
+                  img="/互動_web.png"
+                />
+                <IpModel
+                  title="遊戲"
+                  secondTitle="Game Design"
+                  img="/遊戲_web.png"
+                />
+                <IpModel
+                  title="影視"
+                  secondTitle="Film Production"
+                  img="/影視_web.png"
+                />
+                <IpModel
+                  title="行銷"
+                  secondTitle="Marketing"
+                  img="/行銷_web.png"
+                />
+                <IpModel
+                  title="動畫"
+                  secondTitle="Animation"
+                  img="/動畫_web.png"
+                />
+              </div>
             </div>
           ) : (
             <div className="ipModelScroll">
@@ -204,12 +206,13 @@ function App() {
               </div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
                 <DateMap
-                  backgroundColor="#FFFFFF"
-                  color="#E04AA9"
-                  title="校內展"
-                  date="04.07"
-                  secondDate="04.11"
-                  place="元智大學•五館三樓 / 六館玻璃屋"
+                  backgroundColor="#E04AA9"
+                  color="#FFFFFF"
+                  title="校外展"
+                  date="04.25"
+                  secondDate="04.28"
+                  place="松三文創園區• 三號倉庫"
+                  reverseRow="true"
                 />
               </div>
             </div>
@@ -295,34 +298,65 @@ function App() {
       >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
         {windowTrue === true ? (
-          <>
-            <div className="w-[35.25rem] flex justify-between mx-auto">
+          windowDesktop ? (
+            <>
+              <div className="w-[35.25rem] flex justify-between mx-auto">
+                <Unit
+                  title="主辦單位"
+                  img="/元智大學資訊傳播學系.svg"
+                  imgWidth="15.625rem"
+                />
+                <Unit
+                  title="執行單位"
+                  img="/第28屆畢業展覽籌備會.svg"
+                  imgWidth="15.625rem"
+                />
+              </div>
               <Unit
-                title="主辦單位"
-                img="/元智大學資訊傳播學系.svg"
+                title="贊助單位"
+                img="/華視文教基金會.png"
+                img2="/教育部高等深耕教育計劃.png"
                 imgWidth="15.625rem"
               />
               <Unit
-                title="執行單位"
-                img="/第28屆畢業展覽籌備會.svg"
+                title="指導單位"
+                img="/桃園市政府.svg"
+                img2="/桃園市政府青年事務局.png"
+                img3="/桃園市議會.svg"
+                img4="/元智大學-資訊學院.svg"
                 imgWidth="15.625rem"
               />
-            </div>
-            <Unit
-              title="贊助單位"
-              img="/華視文教基金會.png"
-              img2="/教育部高等深耕教育計劃.png"
-              imgWidth="15.625rem"
-            />
-            <Unit
-              title="指導單位"
-              img="/桃園市政府.svg"
-              img2="/桃園市政府青年事務局.png"
-              img3="/桃園市議會.svg"
-              img4="/元智大學-資訊學院.svg"
-              imgWidth="15.625rem"
-            />
-          </>
+            </>
+          ) : (
+            <>
+              <div className="w-[35.25rem] flex justify-between mx-auto">
+                <Unit
+                  title="主辦單位"
+                  img="/元智大學資訊傳播學系.svg"
+                  imgWidth="15.625rem"
+                />
+                <Unit
+                  title="執行單位"
+                  img="/第28屆畢業展覽籌備會.svg"
+                  imgWidth="15.625rem"
+                />
+              </div>
+              <Unit
+                title="贊助單位"
+                img="/華視文教基金會.png"
+                img2="/教育部高等深耕教育計劃.png"
+                imgWidth="15.625rem"
+              />
+              <Unit
+                title="指導單位"
+                img="/桃園市政府.svg"
+                img2="/桃園市政府青年事務局.png"
+                img3="/桃園市議會.svg"
+                img4="/元智大學-資訊學院.svg"
+                imgWidth="15.625rem"
+              />
+            </>
+          )
         ) : (
           <>
             <Unit title="主辦單位" img="/元智大學資訊傳播學系.svg" />
