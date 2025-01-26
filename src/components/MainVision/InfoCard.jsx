@@ -23,8 +23,19 @@ export const InfoCard = ({
           fontSize: "28px",
         }
       };
-    } else {  // 平板版和桌面版
+    } else if (width < 1536) {  // 平板版和桌面版
       setDeviceType("tablet");
+      return {
+        container: {
+          fontSize: "28px",
+        },
+        date: {
+          fontSize: "36px",
+          letterSpacing: "2px"
+        }
+      };
+    } else {  // 桌面版
+      setDeviceType("desktop");
       return {
         container: {
           fontSize: "28px",
