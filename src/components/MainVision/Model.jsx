@@ -144,7 +144,7 @@ export const Model = ({ logoAnimation }) => {
               />
             </div>
             <div className="mt-4 text-center flex flex-col items-center">
-              <p className="text-white text-[42px] tracking-[8px]">
+              <p className="text-white text-[42px] tracking-[8px]" style={{fontFamily: 'H'}}>
                 元智大學資訊傳播學系
               </p>
               <img className="w-[360px] mt-4" src="/畢業展28.svg" alt="" />
