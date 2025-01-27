@@ -123,7 +123,8 @@ export const Model = ({ logoAnimation }) => {
             minWidth: "1540px",
             maxWidth: "2000px",
             padding: "0 5%",
-            transform: "translateY(-55%)",
+            left: "50%",
+            transform: "translate(-50%, -55%)",
           }}
         >
           <div
