@@ -189,11 +189,11 @@ function App() {
         {windowTrue === true ? (
           <>
             <div className="wave-container ">
-              <div className="img-container">
+              <div className="img-container wave_0">
                 <img src="/wave_0.webp" alt="" className="wave" />
                 <img src="/wave_0.webp" alt="" className="wave" />
               </div>
-              <div className="img-container">
+              <div className="img-container wave_1">
                 <img src="/wave_1.webp" alt="" className="wave" />
                 <img src="/wave_1.webp" alt="" className="wave" />
               </div>
@@ -209,7 +209,7 @@ function App() {
               </div>
             </div>
             <div className="wave-container absolute left-1/2 transform -translate-x-1/2 -translate-y-[30%]">
-              <div className="img-container">
+              <div className="img-container wave_2">
                 <img src="/wave_2.webp" alt="" className="wave" />
                 <img src="/wave_2.webp" alt="" className="wave" />
               </div>
@@ -234,7 +234,7 @@ function App() {
                 overflow: "hidden",
               }}
             >
-              <div className="img-container" style={{ position: "relative" }}>
+              <div className="img-container wave_3" style={{ position: "relative" }}>
                 <img src="/wave_3.webp" alt="" className="wave" />
                 <img src="/wave_3.webp" alt="" className="wave" />
               </div>
@@ -244,11 +244,11 @@ function App() {
         ) : (
           <>
             <div className="wave-container absolute left-1/2 transform -translate-x-1/2">
-              <div className="img-container">
+              <div className="img-container wave_0">
                 <img src="/wave_0.webp" alt="" className="wave" />
                 <img src="/wave_0.webp" alt="" className="wave" />
               </div>
-              <div className="img-container">
+              <div className="img-container wave_1">
                 <img src="/wave_1.webp" alt="" className="wave" />
                 <img src="/wave_1.webp" alt="" className="wave" />
               </div>
@@ -264,7 +264,7 @@ function App() {
               </div>
             </div>
             <div className="wave-container absolute left-1/2 transform -translate-x-1/2 -translate-y-[27%]">
-              <div className="img-container">
+              <div className="img-container wave_2">
                 <img src="/wave_2.webp" alt="" className="wave" />
                 <img src="/wave_2.webp" alt="" className="wave" />
               </div>
@@ -290,7 +290,7 @@ function App() {
                 overflow: "hidden",
               }}
             >
-              <div className="img-container" style={{ position: "relative" }}>
+              <div className="img-container wave_3" style={{ position: "relative" }}>
                 <img src="/wave_3.webp" alt="" className="wave" />
                 <img src="/wave_3.webp" alt="" className="wave" />
               </div>
