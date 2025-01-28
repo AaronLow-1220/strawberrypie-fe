@@ -230,8 +230,6 @@ function App() {
               style={{
                 height: "230px",
                 transform: " translateY(-155%)",
-                background:
-                  "linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 100%)",
                 position: "relative",
                 overflow: "hidden",
               }}
