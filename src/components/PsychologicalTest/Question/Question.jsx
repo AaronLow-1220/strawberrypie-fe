@@ -4,13 +4,14 @@ export const Question = () => {
   const Questions = [
     {
       id: 1,
-      question: "裝飾用草莓<br>會想要去哪裡買呢?",
+      question: "你會想要製作<br>什麼樣的草莓派呢?",
       options: [
         "派皮上只有草莓，滿滿的草莓",
         "白色的卡士達與紅色的草莓衝擊視覺",
         "將草莓打成果醬混入乳酪呈現櫻花粉",
         "加入堅果、藍莓，增加口感與色彩層次",
       ],
+      img: "/IMG_1996.PNG",
     },
     {
       id: 2,
@@ -21,6 +22,7 @@ export const Question = () => {
         "很chill隨意照自己想法做，能吃都沒問題",
         "自己瞎搞看看，說不定變成更好吃的東西",
       ],
+      img: "/IMG_1995.PNG",
     },
     {
       id: 3,
@@ -31,6 +33,7 @@ export const Question = () => {
         "全部都丟到水槽等等再一起洗就行了",
         "我覺得......等等應該會有小精靈",
       ],
+      img: "/IMG_1994.PNG",
     },
     {
       id: 4,
@@ -41,6 +44,7 @@ export const Question = () => {
         "多選幾間水果攤挑選一下吧！或許能買到更好吃的！",
         "草莓當然是要去大湖啦，順便逛逛苗栗",
       ],
+      img: "/IMG_1993.PNG",
     },
     {
       id: 5,
@@ -51,6 +55,7 @@ export const Question = () => {
         "派皮混入可可粉或肉桂粉，增添創意",
         "加少許白蘭地或香橙酒，增加成熟風味",
       ],
+      img: "/IMG_1991.PNG",
     },
     {
       id: 6,
@@ -61,10 +66,13 @@ export const Question = () => {
         "靜置冷藏，麵團才能好好放鬆，否則會變形",
         "烘烤前小細節，派皮底部戳些洞，避免爆炸",
       ],
+      img: "/IMG_1990.PNG",
     },
   ];
 
   const [windowWidthTrue, setWindowWidthTrue] = useState(false);
+  const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false);
+  const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0); //題數
   const [selectedOptions, setSelectedOptions] = useState(
     new Array(Questions.length).fill(null)
@@ -73,11 +81,19 @@ export const Question = () => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
+        //手機
         setWindowWidthTrue(false);
       } else if (window.innerWidth < 1024) {
+        //平板直立
+        setWindowWidthTrue(false);
+        setIpadWindowWidthTrue(true);
+      } else if (window.innerWidth < 1584) {
+        //平板
         setWindowWidthTrue(true);
       } else {
+        //電腦
         setWindowWidthTrue(true);
+        setDesTopWindowWidthTrue(true);
       }
     };
     handleResize();
@@ -99,111 +115,220 @@ export const Question = () => {
   return (
     <>
       {windowWidthTrue === true ? (
-        <div className="max-w-[28.75rem] w-[35%] mx-auto">
-          <div className=" mx-auto mt-[60px] mb-[20px] overflow-hidden relative">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-              {Questions.map((question, index) => (
-                <div key={index} className="min-w-full flex-shrink-0">
-                  <p
-                    className="text-[2rem] leading-none mb-[10px] text-white"
-                    style={{ fontFamily: "B" }}
-                    dangerouslySetInnerHTML={{ __html: question.question }}
-                  ></p>
-                  {question.options.map((option, i) => (
-                    <button
-                      key={i}
-                      className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#52202a]
-                      
-                      `}
-                      onClick={() => handleNextQuestion(i)}
-                    >
-                      <div
-                        className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] ${
-                          selectedOptions[currentIndex] === i
-                            ? "bg-secondary-color"
-                            : ""
-                        }`}
-                      ></div>
-                      <p className="text-[1rem]">{option}</p>
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
+        <div className="flex justify-between items-center h-screen">
+          <div className="max-w-[33.75rem] w-full mx-auto aspect-[4/3] ">
+            {Questions[currentIndex].img && (
+              <img
+                className="w-full h-full object-cover"
+                src={Questions[currentIndex].img}
+                alt=""
+              />
+            )}
           </div>
-          <div className="flex justify-center items-center mt-[5%]">
-            {Questions.map((_, index) => (
-              <div key={index} className="mx-1">
-                <button onClick={() => setCurrentIndex(index)}>
-                  {currentIndex === index ? (
-                    <img
-                      src="/strawberry.svg"
-                      alt="strawberry"
-                      className="w-5 h-5 transition-all duration-300"
-                    />
-                  ) : (
-                    <div className="w-3 h-3 bg-gray-400 rounded-full transition-all duration-300"></div>
-                  )}
-                </button>
+          <div
+            className={
+              desTopWindowWidthTrue
+                ? "w-full max-w-[39rem] mx-auto"
+                : "w-full max-w-[28.75rem] mx-auto"
+            }
+          >
+            <div className=" mx-auto mt-[60px] mb-[20px] overflow-hidden relative">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                {Questions.map((question, index) => {
+                  const opacity = index === currentIndex ? 1 : 0;
+                  return (
+                    <div
+                      key={index}
+                      className="min-w-full"
+                      style={{
+                        opacity,
+                        transition:
+                          "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+                      }}
+                    >
+                      <p
+                        className="text-[2rem] leading-none mb-[10px] text-white"
+                        style={{ fontFamily: "B" }}
+                        dangerouslySetInnerHTML={{ __html: question.question }}
+                      ></p>
+                      {question.options.map((option, i) => (
+                        <button
+                          key={i}
+                          className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#52202a]
+                          
+                          `}
+                          onClick={() => handleNextQuestion(i)}
+                        >
+                          <div
+                            className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] ${
+                              selectedOptions[currentIndex] === i
+                                ? "bg-secondary-color"
+                                : ""
+                            }`}
+                          ></div>
+                          <p className="text-[1rem]">{option}</p>
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+            </div>
+
+            <div className="flex justify-between items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%]">
+              {Questions.map((_, index) => {
+                let bgColor = index === 1 ? "#51181E" : "#6C2028";
+
+                return (
+                  <div key={index} className="mx-2">
+                    <button onClick={() => setCurrentIndex(index)}>
+                      {currentIndex === index ? (
+                        <img
+                          src="/strawberry.svg"
+                          alt="strawberry"
+                          className="transition-all duration-300 "
+                          style={{
+                            width: "11px",
+                            height: "13px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      ) : currentIndex >= index ? (
+                        <img
+                          src="/strawberry.svg"
+                          alt="strawberry"
+                          className="transition-all duration-300 opacity-[0.6] "
+                          style={{
+                            width: "9px",
+                            height: "10px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          className="w-[8px] h-[8px] rounded-full transition-all duration-300"
+                          style={{ backgroundColor: bgColor }}
+                        ></div>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       ) : (
         <div>
-          <div className="w-[90%] mx-auto mt-[20px] mb-[20px] overflow-hidden relative">
+          <div
+            className={
+              ipadWindowWidthTrue
+                ? "max-w-[33.75rem] mx-auto  mt-[4rem] aspect-[4/3]"
+                : "w-full mt-[4rem] aspect-[4/3]"
+            }
+          >
+            {Questions[currentIndex].img && (
+              <img
+                className="w-full h-full object-cover"
+                src={Questions[currentIndex].img}
+                alt=""
+              />
+            )}
+          </div>
+          <div
+            className={
+              ipadWindowWidthTrue
+                ? "w-full max-w-[26.25rem] mx-auto mt-[20px] mb-[20px] overflow-hidden relative"
+                : "w-full max-w-[22.5rem] mx-auto mt-[20px] mb-[20px] overflow-hidden relative"
+            }
+          >
             <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              className="flex transition-transform duration-500 ease-in-out carousel-container"
+              style={{
+                transform: `translateX(-${currentIndex * 100}%)`,
+              }}
             >
-              {Questions.map((question, index) => (
-                <div key={index} className="min-w-full flex-shrink-0">
-                  <p
-                    className="text-[2rem] leading-none mb-[10px] text-white"
-                    style={{ fontFamily: "B" }}
-                    dangerouslySetInnerHTML={{ __html: question.question }}
-                  ></p>
-                  {question.options.map((option, i) => (
-                    <button
-                      key={i}
-                      className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#52202a]
-                      
-                      `}
-                      onClick={() => handleNextQuestion(i)}
-                    >
-                      <div
-                        className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] ${
-                          selectedOptions[currentIndex] === i
-                            ? "bg-secondary-color"
-                            : ""
-                        }`}
-                      ></div>
-                      <p className="text-[1rem]">{option}</p>
-                    </button>
-                  ))}
-                </div>
-              ))}
+              {Questions.map((question, index) => {
+                const opacity = index === currentIndex ? 1 : 0;
+                return (
+                  <div
+                    key={index}
+                    className="min-w-full "
+                    style={{
+                      opacity,
+                      transition:
+                        "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
+                    }}
+                  >
+                    <p
+                      className="text-[2rem] leading-none mb-[10px] text-white"
+                      style={{ fontFamily: "B" }}
+                      dangerouslySetInnerHTML={{ __html: question.question }}
+                    ></p>
+                    {question.options.map((option, i) => (
+                      <button
+                        key={i}
+                        className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#52202a]`}
+                        onClick={() => handleNextQuestion(i)}
+                      >
+                        <div
+                          className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] ${
+                            selectedOptions[currentIndex] === i
+                              ? "bg-secondary-color"
+                              : ""
+                          }`}
+                        ></div>
+                        <p className="text-[1rem]">{option}</p>
+                      </button>
+                    ))}
+                  </div>
+                );
+              })}
             </div>
           </div>
-          <div className="flex justify-center items-center">
-            {Questions.map((_, index) => (
-              <div key={index} className="mx-1">
-                <button onClick={() => setCurrentIndex(index)}>
-                  {currentIndex === index ? (
-                    <img
-                      src="/strawberry.svg"
-                      alt="strawberry"
-                      className="w-5 h-5 transition-all duration-300"
-                    />
-                  ) : (
-                    <div className="w-3 h-3 bg-gray-400 rounded-full transition-all duration-300"></div>
-                  )}
-                </button>
-              </div>
-            ))}
+          <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
+            <div className="flex justify-between items-center w-[9.625rem] h-[2rem] mx-auto">
+              {Questions.map((_, index) => {
+                let bgColor = index === 1 ? "#51181E" : "#6C2028";
+
+                return (
+                  <div key={index} className="mx-2">
+                    <button onClick={() => setCurrentIndex(index)}>
+                      {currentIndex === index ? (
+                        <img
+                          src="/strawberry.svg"
+                          alt="strawberry"
+                          className="transition-all duration-300 "
+                          style={{
+                            width: "11px",
+                            height: "13px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      ) : currentIndex >= index ? (
+                        <img
+                          src="/strawberry.svg"
+                          alt="strawberry"
+                          className="transition-all duration-300 opacity-[0.6] "
+                          style={{
+                            width: "9px",
+                            height: "10px",
+                            objectFit: "contain",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          className="w-[8px] h-[8px] rounded-full transition-all duration-300"
+                          style={{ backgroundColor: bgColor }}
+                        ></div>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

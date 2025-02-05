@@ -1,24 +1,30 @@
 import { useState, useEffect } from "react";
-
-//HomePage
 import { Model } from "./MainVision/Model";
+import { Logo } from "./MainVision/Logo";
 import { Slogan } from "./IntroduceComponents/Slogan";
 import { IpModel } from "./IntroduceComponents/IpModel";
 import { DateMap } from "./DateMapComponents/DateMap";
 import { Unit } from "./UnitComponents/Unit";
 
-export const HomePage = ({ handleLogoAnimation }) => {
+export const HomePage = () => {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false);
+  const [animate, setAnimate] = useState(false);
   const [unitWindowHeight, setUnitWindowHeight] = useState("68rem");
   const [windowTrue, setWindowTrue] = useState(false);
   const [windowDesktop, setWindowDesktop] = useState(false);
   const [marginBottom, setMarginBottom] = useState("3rem");
 
+  // Logo 動畫觸發方法
+  const handleLogoAnimation = () => {
+    doAnimation();
+  };
+  const doAnimation = () => {
+    setAnimate(true);
+  };
   // 處理動畫結束回調
   const handleAnimationEnd = () => {
     setIsAnimationComplete(true);
   };
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -53,7 +59,7 @@ export const HomePage = ({ handleLogoAnimation }) => {
   }, [isAnimationComplete]);
 
   return (
-    <div>
+    <div className="">
       <div>
         <div className="bg-pink-radial">
           <div className="w-full h-full relative flex justify-center items-center">
@@ -65,6 +71,7 @@ export const HomePage = ({ handleLogoAnimation }) => {
             />
           </div>
         </div>
+        <Logo beginAnimation={animate} />
         <Model
           onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調
           logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
