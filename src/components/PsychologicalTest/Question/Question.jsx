@@ -115,11 +115,11 @@ export const Question = () => {
   return (
     <>
       {windowWidthTrue === true ? (
-        <div className="flex justify-between items-center h-screen">
-          <div className="max-w-[33.75rem] w-full mx-auto aspect-[4/3] ">
+        <div className="flex justify-center items-center h-screen space-x-[8rem]">
+          <div className="max-w-[33.75rem] w-full  aspect-[4/3] ">
             {Questions[currentIndex].img && (
               <img
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-[1rem]"
                 src={Questions[currentIndex].img}
                 alt=""
               />
@@ -128,8 +128,8 @@ export const Question = () => {
           <div
             className={
               desTopWindowWidthTrue
-                ? "w-full max-w-[39rem] mx-auto"
-                : "w-full max-w-[28.75rem] mx-auto"
+                ? "w-full max-w-[39rem] "
+                : "w-full max-w-[28.75rem] "
             }
           >
             <div className=" mx-auto mt-[60px] mb-[20px] overflow-hidden relative">
@@ -178,18 +178,23 @@ export const Question = () => {
               </div>
             </div>
 
-            <div className="flex justify-between items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%]">
+            <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%] ">
               {Questions.map((_, index) => {
                 let bgColor = index === 1 ? "#51181E" : "#6C2028";
-
                 return (
-                  <div key={index} className="mx-2">
-                    <button onClick={() => setCurrentIndex(index)}>
+                  <div
+                    key={index}
+                    className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
+                  >
+                    <button
+                      onClick={() => setCurrentIndex(index)}
+                      className="flex items-center justify-center w-full h-full"
+                    >
                       {currentIndex === index ? (
                         <img
                           src="/strawberry.svg"
                           alt="strawberry"
-                          className="transition-all duration-300 "
+                          className="transition-all duration-300"
                           style={{
                             width: "11px",
                             height: "13px",
@@ -200,7 +205,7 @@ export const Question = () => {
                         <img
                           src="/strawberry.svg"
                           alt="strawberry"
-                          className="transition-all duration-300 opacity-[0.6] "
+                          className="transition-all duration-300 opacity-[0.6]"
                           style={{
                             width: "9px",
                             height: "10px",
@@ -221,7 +226,7 @@ export const Question = () => {
           </div>
         </div>
       ) : (
-        <div>
+        <div className="overflow-hidden">
           <div
             className={
               ipadWindowWidthTrue
@@ -231,7 +236,11 @@ export const Question = () => {
           >
             {Questions[currentIndex].img && (
               <img
-                className="w-full h-full object-cover"
+                className={
+                  ipadWindowWidthTrue
+                    ? "w-full h-full  object-cover rounded-[1rem]"
+                    : "w-full h-full  object-cover"
+                }
                 src={Questions[currentIndex].img}
                 alt=""
               />
@@ -240,12 +249,12 @@ export const Question = () => {
           <div
             className={
               ipadWindowWidthTrue
-                ? "w-full max-w-[26.25rem] mx-auto mt-[20px] mb-[20px] overflow-hidden relative"
-                : "w-full max-w-[22.5rem] mx-auto mt-[20px] mb-[20px] overflow-hidden relative"
+                ? "w-full max-w-[26.25rem] mx-auto px-[24px] mt-[40px] mb-[20px]  relative "
+                : "w-full max-w-[22.5rem] mx-auto px-[24px] mt-[20px] mb-[20px]  relative "
             }
           >
             <div
-              className="flex transition-transform duration-500 ease-in-out carousel-container"
+              className="flex transition-transform duration-500 ease-in-out carousel-container "
               style={{
                 transform: `translateX(-${currentIndex * 100}%)`,
               }}
@@ -289,18 +298,23 @@ export const Question = () => {
             </div>
           </div>
           <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
-            <div className="flex justify-between items-center w-[9.625rem] h-[2rem] mx-auto">
+            <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto">
               {Questions.map((_, index) => {
                 let bgColor = index === 1 ? "#51181E" : "#6C2028";
-
                 return (
-                  <div key={index} className="mx-2">
-                    <button onClick={() => setCurrentIndex(index)}>
+                  <div
+                    key={index}
+                    className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
+                  >
+                    <button
+                      onClick={() => setCurrentIndex(index)}
+                      className="flex items-center justify-center w-full h-full"
+                    >
                       {currentIndex === index ? (
                         <img
                           src="/strawberry.svg"
                           alt="strawberry"
-                          className="transition-all duration-300 "
+                          className="transition-all duration-300"
                           style={{
                             width: "11px",
                             height: "13px",
@@ -311,7 +325,7 @@ export const Question = () => {
                         <img
                           src="/strawberry.svg"
                           alt="strawberry"
-                          className="transition-all duration-300 opacity-[0.6] "
+                          className="transition-all duration-300 opacity-[0.6]"
                           style={{
                             width: "9px",
                             height: "10px",

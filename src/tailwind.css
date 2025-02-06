@@ -172,7 +172,12 @@
     }
   }
 
+  .navHeight {
+    height: clamp(20px, 18vh, 64px);
+  }
+
   .carousel-container {
+    overscroll-behavior: none;
     scroll-padding: 0px 20px;
     scroll-snap-type: x mandatory;
     scroll-snap-align: center;

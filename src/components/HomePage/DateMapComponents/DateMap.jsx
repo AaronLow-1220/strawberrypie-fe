@@ -35,7 +35,7 @@ export const DateMap = ({
       <div className=" flex items-center justify-center space-x-[2rem]">
         {reverseRowTrue === "true" ? (
           <>
-            <div className=" w-[22.5rem] h-[16.25rem]  bg-white rounded-[10px]"></div>
+            <div className=" w-[22.5rem] h-[16.25rem]  bg-black rounded-[10px] "></div>
             <div className="flex items-center justify-center">
               <InfoCard
                 title={title}
@@ -87,7 +87,7 @@ export const DateMap = ({
                 <div className="text-[1.25rem] mt-[1rem]">{place}</div>
               </InfoCard>
             </div>
-            <div className=" w-[22.5rem] h-[16.25rem]  bg-white rounded-[10px]"></div>
+            <div className=" w-[22.5rem] h-[16.25rem]  bg-black rounded-[10px]"></div>
           </>
         )}
       </div>
