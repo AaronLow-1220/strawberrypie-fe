@@ -115,7 +115,13 @@ export const Question = () => {
   return (
     <>
       {windowWidthTrue === true ? (
-        <div className="flex justify-center items-center h-screen space-x-[8rem]">
+        <div
+          className={
+            desTopWindowWidthTrue
+              ? "flex justify-center items-center h-screen space-x-[8rem]"
+              : "flex justify-center items-center h-screen space-x-[4rem]"
+          }
+        >
           <div className="max-w-[33.75rem] w-full  aspect-[4/3] ">
             {Questions[currentIndex].img && (
               <img
@@ -157,13 +163,13 @@ export const Question = () => {
                       {question.options.map((option, i) => (
                         <button
                           key={i}
-                          className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#52202a]
+                          className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]
                           
                           `}
                           onClick={() => handleNextQuestion(i)}
                         >
                           <div
-                            className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] ${
+                            className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] box-border ${
                               selectedOptions[currentIndex] === i
                                 ? "bg-secondary-color"
                                 : ""
@@ -279,11 +285,11 @@ export const Question = () => {
                     {question.options.map((option, i) => (
                       <button
                         key={i}
-                        className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#52202a]`}
+                        className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]`}
                         onClick={() => handleNextQuestion(i)}
                       >
                         <div
-                          className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] ${
+                          className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] box-border ${
                             selectedOptions[currentIndex] === i
                               ? "bg-secondary-color"
                               : ""

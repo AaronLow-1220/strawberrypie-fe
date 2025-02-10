@@ -33,7 +33,7 @@ export const Header = () => {
   return (
     <>
       {windowWidthTrue == true ? (
-        <div className="fixed top-0 left-0 right-0 z-[100]">
+        <div className="fixed top-0 left-0 right-0 z-[999]">
           <div
             className="w-full h-[4rem] flex justify-center items-center px-[1rem]"
             style={{
@@ -42,7 +42,7 @@ export const Header = () => {
             }}
           >
             <div
-              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] mx-[1.6875rem] mt-[1rem]"
+              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem]  mx-[1.6875rem] "
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
               }}
@@ -50,14 +50,14 @@ export const Header = () => {
               組別介紹
             </div>
             <div
-              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] mx-[1.6875rem] mt-[1rem]"
+              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] ms-[1.6875rem] me-[4.5rem] "
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
               }}
             >
               集章兌換
             </div>
-            {!isHome && ( // 如果不是首頁才顯示
+            {!isHome && ( // 如果不是首頁才顯示(
               <img
                 src="/Headline.svg"
                 alt="Example"
@@ -70,7 +70,7 @@ export const Header = () => {
               />
             )}
             <div
-              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] mx-[1.6875rem] mt-[1rem]"
+              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] me-[1.6875rem] ms-[4.5rem] "
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
               }}
@@ -78,7 +78,7 @@ export const Header = () => {
               心理測驗
             </div>
             <div
-              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] mx-[1.6875rem] mt-[1rem]"
+              className="text-[#838383] hover:text-[#FFFFFF] text-[1.5rem] mx-[1.6875rem] "
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
               }}
