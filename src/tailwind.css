@@ -172,8 +172,9 @@
     }
   }
 
-  .navHeight {
-    height: clamp(20px, 18vh, 64px);
+  .navMargin {
+    margin-top: clamp(20px, 18vh, 64px);
+    margin-bottom: clamp(20px, 18vh, 64px);
   }
 
   .carousel-container {

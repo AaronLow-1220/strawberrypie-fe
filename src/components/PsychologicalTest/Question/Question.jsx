@@ -119,7 +119,7 @@ export const Question = () => {
           <div className="max-w-[33.75rem] w-full  aspect-[4/3] ">
             {Questions[currentIndex].img && (
               <img
-                className="w-full h-full object-cover rounded-[1rem]"
+                className="w-full h-full object-cover rounded-[1rem] navMargin"
                 src={Questions[currentIndex].img}
                 alt=""
               />
