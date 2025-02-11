@@ -1,0 +1,127 @@
+import { useState, useEffect } from "react";
+import { Card } from "./Card/Card";
+import { Nav } from "./Nav/Nav";
+
+export const Group = () => {
+  const [windowWidthTrue, setWindowWidthTrue] = useState(true);
+  const [selectedFilter, setSelectedFilter] = useState("全部");
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidthTrue(window.innerWidth >= 1584);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 模擬的 Card 資料
+  const cards = [
+    {
+      category: "互動",
+      img: "/遊戲_web.png",
+      title: "完了！！怎麼辦！！青春戀愛攻防戰",
+      content:
+        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+      secondTitle: "Timeout Studio",
+    },
+    {
+      category: "行銷",
+      img: "",
+      title: "行銷策略大揭秘",
+      content: "探討最新的數位行銷策略，如何吸引目標受眾，創造品牌影響力。",
+      secondTitle: "Marketing Pro",
+    },
+    {
+      category: "互動",
+      img: "/影視_web.png",
+      title: "完了！！怎麼辦！！青春戀愛攻防戰",
+      content:
+        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+      secondTitle: "Timeout Studio",
+    },
+    {
+      category: "互動",
+      img: "",
+      title: "完了！！怎麼辦！！青春戀愛攻防戰",
+      content:
+        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+      secondTitle: "Timeout Studio",
+    },
+    {
+      category: "互動",
+      img: "",
+      title: "完了！！怎麼辦！！青春戀愛攻防戰",
+      content:
+        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+      secondTitle: "Timeout Studio",
+    },
+  ];
+
+  const filteredCategories = [...new Set(cards.map((card) => card.category))];
+
+  const filteredCards =
+    selectedFilter === "全部"
+      ? cards
+      : cards.filter((card) => card.category === selectedFilter);
+
+  return windowWidthTrue ? (
+    <div></div>
+  ) : (
+    <div className="mt-[5rem]">
+      <Nav onFilterChange={setSelectedFilter} />
+
+      {selectedFilter != "全部" ? (
+        <>
+          <div className="grid grid-cols-2 gap-4 mt-[2.5rem] px-[1rem]">
+            {filteredCards.map((card, index) => (
+              <Card
+                TitleFontSize="1rem"
+                secondTitleFontSize="14px"
+                ContentFontSize="0px"
+                key={index}
+                img={card.img}
+                title={card.title}
+                content={card.content}
+                secondTitle={card.secondTitle}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          {filteredCategories.map((item, index) => (
+            <div key={index}>
+              <div className="flex mt-[2.5rem]">
+                <div
+                  className="text-[28px] text-white ps-[1rem] pe-[0.5rem] pb-[0.1rem]"
+                  style={{ fontFamily: "B" }}
+                >
+                  {item}
+                </div>
+                <img src="/arrow_forward_ios.svg" alt="" />
+              </div>
+              <div className="cardScroll">
+                {filteredCards
+                  .filter((card) => card.category === item)
+                  .map((card, index) => (
+                    <Card
+                      TitleFontSize="20px"
+                      secondTitleFontSize="1rem"
+                      ContentFontSize="15px"
+                      key={index}
+                      img={card.img}
+                      title={card.title}
+                      content={card.content}
+                      secondTitle={card.secondTitle}
+                      selectedFilter={selectedFilter}
+                    />
+                  ))}
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+  );
+};

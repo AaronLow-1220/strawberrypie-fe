@@ -6,6 +6,8 @@ import { Header } from "./components/Header";
 import { PsychologicalTest } from "./components/PsychologicalTest/Main";
 //HomePage
 import { HomePage } from "./components/HomePage/Main";
+//Group
+import { Group } from "./components/Group/Main";
 
 function App() {
   const [animate, setAnimate] = useState(false);
@@ -23,6 +25,7 @@ function App() {
           element={<HomePage handleLogoAnimation={handleLogoAnimation} />}
         />
         <Route path="/PsychologicalTest" element={<PsychologicalTest />} />
+        <Route path="/Group" element={<Group />} />
       </Routes>
     </Router>
   );
