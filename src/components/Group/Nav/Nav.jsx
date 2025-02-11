@@ -11,7 +11,11 @@ export const Nav = ({ onFilterChange }) => {
 
   return (
     <div
-      className="w-full max-w-[25rem] flex mt-[2rem] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
+      className={
+        window.innerWidth < 1024
+          ? "w-full min-w-[25rem] flex mt-[2rem] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
+          : "w-full  flex justify-center mt-[3rem] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
+      }
       style={{ scrollbarWidth: "none" }}
     >
       {["全部", "互動", "行銷", "動畫", "遊戲", "影視"].map((item) => (

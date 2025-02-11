@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 export const Card = ({
   img,
   title,
@@ -8,7 +10,22 @@ export const Card = ({
   ContentFontSize,
   selectedFilter,
 }) => {
-  console.log(selectedFilter);
+  const [windowWidth, setWindowWidth] = useState("w-auto h-auto");
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setWindowWidth("w-auto h-auto");
+      } else if (window.innerWidth < 1024) {
+        setWindowWidth("w-[300px] h-[215px]");
+      } else {
+        setWindowWidth("w-[300px] h-[215px]");
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <div className="-z-0 max-h-[27.8125rem] max-w-[18.75rem] w-full h-auto bg-white rounded-[12px]">
       <div className="relative h-full flex flex-col justify-center group">
@@ -18,9 +35,7 @@ export const Card = ({
         <div
           className={`bg-[#361014] p-[1rem] rounded-b-[12px] flex flex-col flex-grow 
               ${
-                selectedFilter == "全部"
-                  ? "w-[300px] h-[215px]"
-                  : "h-auto w-auto"
+                selectedFilter == "全部" ? "w-[300px] h-[215px]" : windowWidth
               }`}
         >
           <div
