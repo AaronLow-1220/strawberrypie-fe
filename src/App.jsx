@@ -8,6 +8,8 @@ import { PsychologicalTest } from "./components/PsychologicalTest/Main";
 import { HomePage } from "./components/HomePage/Main";
 //Group
 import { Group } from "./components/Group/Main";
+//Result
+import { Result } from "./components/Result/Main";
 
 function App() {
   const [animate, setAnimate] = useState(false);
@@ -26,6 +28,8 @@ function App() {
         />
         <Route path="/PsychologicalTest" element={<PsychologicalTest />} />
         <Route path="/Group" element={<Group />} />
+        <Route path="/Result" element={<Result />} />
+        {/* <Route path="/Result/:id" element={<Result />} /> */}
       </Routes>
     </Router>
   );

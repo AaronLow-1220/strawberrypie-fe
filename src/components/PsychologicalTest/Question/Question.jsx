@@ -74,6 +74,7 @@ export const Question = () => {
   const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false);
   const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0); //題數
+  const [isAnswer, setIsAnswer] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(
     new Array(Questions.length).fill(null)
   );
@@ -108,10 +109,12 @@ export const Question = () => {
     setTimeout(() => {
       if (currentIndex < Questions.length - 1) {
         setCurrentIndex(currentIndex + 1);
+      } else {
+        setIsAnswer(true);
       }
     }, 500);
   };
-
+  console.log(currentIndex);
   return (
     <>
       {windowWidthTrue === true ? (
@@ -184,51 +187,64 @@ export const Question = () => {
               </div>
             </div>
 
-            <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%] ">
-              {Questions.map((_, index) => {
-                let bgColor = index === 1 ? "#51181E" : "#6C2028";
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
-                  >
-                    <button
-                      onClick={() => setCurrentIndex(index)}
-                      className="flex items-center justify-center w-full h-full"
+            {isAnswer == false ? (
+              <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%]">
+                {Questions.map((_, index) => {
+                  let bgColor = index === 1 ? "#51181E" : "#6C2028";
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
                     >
-                      {currentIndex === index ? (
-                        <img
-                          src="/strawberry.svg"
-                          alt="strawberry"
-                          className="transition-all duration-300"
-                          style={{
-                            width: "11px",
-                            height: "13px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      ) : currentIndex >= index ? (
-                        <img
-                          src="/strawberry.svg"
-                          alt="strawberry"
-                          className="transition-all duration-300 opacity-[0.6]"
-                          style={{
-                            width: "9px",
-                            height: "10px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      ) : (
-                        <div
-                          className="w-[8px] h-[8px] rounded-full transition-all duration-300"
-                          style={{ backgroundColor: bgColor }}
-                        ></div>
-                      )}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+                      <button
+                        onClick={() => setCurrentIndex(index)}
+                        className="flex items-center justify-center w-full h-full"
+                      >
+                        {currentIndex === index ? (
+                          <img
+                            src="/strawberry.svg"
+                            alt="strawberry"
+                            className="transition-all duration-300"
+                            style={{
+                              width: "11px",
+                              height: "13px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : currentIndex >= index ? (
+                          <img
+                            src="/strawberry.svg"
+                            alt="strawberry"
+                            className="transition-all duration-300 opacity-[0.6]"
+                            style={{
+                              width: "9px",
+                              height: "10px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            className="w-[8px] h-[8px] rounded-full transition-all duration-300"
+                            style={{ backgroundColor: bgColor }}
+                          ></div>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="w-full flex justify-center ">
+                <button
+                  className="flex justify-center items-center w-fit h-[41px] px-[22px] bg-secondary-color text-white text-[14px] rounded-[999px]"
+                  onClick={() => {
+                    window.location.href = "/Result";
+                  }}
+                >
+                  填答完成，查看結果
+                </button>
+              </div>
+            )}
           </div>
         </div>
       ) : (
@@ -303,53 +319,66 @@ export const Question = () => {
               })}
             </div>
           </div>
-          <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
-            <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto">
-              {Questions.map((_, index) => {
-                let bgColor = index === 1 ? "#51181E" : "#6C2028";
-                return (
-                  <div
-                    key={index}
-                    className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
-                  >
-                    <button
-                      onClick={() => setCurrentIndex(index)}
-                      className="flex items-center justify-center w-full h-full"
+          {isAnswer == false ? (
+            <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
+              <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto">
+                {Questions.map((_, index) => {
+                  let bgColor = index === 1 ? "#51181E" : "#6C2028";
+                  return (
+                    <div
+                      key={index}
+                      className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
                     >
-                      {currentIndex === index ? (
-                        <img
-                          src="/strawberry.svg"
-                          alt="strawberry"
-                          className="transition-all duration-300"
-                          style={{
-                            width: "11px",
-                            height: "13px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      ) : currentIndex >= index ? (
-                        <img
-                          src="/strawberry.svg"
-                          alt="strawberry"
-                          className="transition-all duration-300 opacity-[0.6]"
-                          style={{
-                            width: "9px",
-                            height: "10px",
-                            objectFit: "contain",
-                          }}
-                        />
-                      ) : (
-                        <div
-                          className="w-[8px] h-[8px] rounded-full transition-all duration-300"
-                          style={{ backgroundColor: bgColor }}
-                        ></div>
-                      )}
-                    </button>
-                  </div>
-                );
-              })}
+                      <button
+                        onClick={() => setCurrentIndex(index)}
+                        className="flex items-center justify-center w-full h-full"
+                      >
+                        {currentIndex === index ? (
+                          <img
+                            src="/strawberry.svg"
+                            alt="strawberry"
+                            className="transition-all duration-300"
+                            style={{
+                              width: "11px",
+                              height: "13px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : currentIndex >= index ? (
+                          <img
+                            src="/strawberry.svg"
+                            alt="strawberry"
+                            className="transition-all duration-300 opacity-[0.6]"
+                            style={{
+                              width: "9px",
+                              height: "10px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            className="w-[8px] h-[8px] rounded-full transition-all duration-300"
+                            style={{ backgroundColor: bgColor }}
+                          ></div>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
+              <button
+                className="flex justify-center items-center w-fit h-[41px] px-[22px] bg-secondary-color text-white text-[14px] rounded-[999px]"
+                onClick={() => {
+                  window.location.href = "/Result";
+                }}
+              >
+                填答完成，查看結果
+              </button>
+            </div>
+          )}
         </div>
       )}
     </>

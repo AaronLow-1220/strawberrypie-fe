@@ -45,7 +45,7 @@ export const Card = ({
             {secondTitle}
           </div>
           <div
-            className="text-[#FFFFFF] leading-none mt-[3px] "
+            className="text-[#FFFFFF] leading-normal mt-[3px] "
             style={{ fontFamily: "B", fontSize: TitleFontSize }}
           >
             {title}

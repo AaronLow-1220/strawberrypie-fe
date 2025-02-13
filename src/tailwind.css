@@ -1,6 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-family: "Noto Sans TC", sans-serif;
+}
+
+@font-face {
+  font-family: "Thin";
+  src: url("/font/ChenYuluoyan-Thin.ttf") format("truetype");
+  font-weight: 0;
+  font-style: normal;
+}
 
 @font-face {
   font-family: "B";
@@ -177,6 +189,20 @@
     margin-bottom: clamp(20px, 18vh, 64px);
   }
 
+  .navHover {
+    color: #838383;
+    transition: color 0.5s ease-in-out;
+  }
+
+  .navHover:hover {
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  .navContainer:has(.navHover:hover) .navHover:not(:hover) {
+    opacity: 0.5;
+    transition: opacity 0.5s ease-in-out;
+  }
   .carousel-container {
     overscroll-behavior: none;
     scroll-padding: 0px 20px;
@@ -215,7 +241,7 @@
       padding-right: 1rem;
     }
   }
-  @media (max-width: 1536px) {
+  @media (min-width: 1024px) and (max-width: 1536px) {
     .cardScroll {
       width: 100%;
       display: flex;
@@ -229,6 +255,41 @@
       -ms-overflow-style: none;
       padding-left: 128px;
       padding-right: 128px;
+    }
+  }
+
+  .arrowPositionLeft {
+    left: 100px;
+  }
+  .arrowPositionRight {
+    right: 100px;
+  }
+  @media (max-width: 1024px) {
+    .arrowPositionLeft {
+      left: 0px;
+    }
+    .arrowPositionRight {
+      right: 0px;
+    }
+  }
+  @media (min-width: 1024px) and (max-width: 1536px) {
+    .arrowPositionLeft {
+      left: 100px;
+    }
+    .arrowPositionRight {
+      right: 100px;
+    }
+  }
+
+  .svgAnimation svg path {
+    stroke-dasharray: 500;
+    stroke-dashoffset: 500;
+    animation: draw 1s ease-out forwards;
+    animation-delay: 0.5s;
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
     }
   }
 }

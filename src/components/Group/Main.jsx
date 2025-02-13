@@ -185,7 +185,8 @@ export const Group = () => {
             <div className="relative" key={index}>
               {buttonVisibility[item]?.showLeftButton && (
                 <div
-                  className="absolute top-1/2 left-0 -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer"
+                  className={`absolute arrowPositionLeft -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out`}
+                  style={{ top: "calc(50% + 30px)" }}
                   onClick={() => scroll(item, "left")}
                 >
                   <img
@@ -203,13 +204,16 @@ export const Group = () => {
               <div
                 className={
                   window.innerWidth < 1024
-                    ? "flex mt-[2.5rem]"
-                    : "flex mt-[2.5rem] px-[128px]"
+                    ? "flex mt-[2.5rem] px-[1rem]"
+                    : window.innerWidth < 1536
+                    ? "flex mt-[2.5rem] px-[128px]"
+                    : "flex mt-[2.5rem] px-[256px]"
                 }
               >
                 <div
-                  className="text-[28px] text-white ps-[1rem] pe-[0.5rem] pb-[0.1rem]"
+                  className="text-[28px] text-white  pe-[0.5rem] pb-[0.1rem]"
                   style={{ fontFamily: "B" }}
+                  onClick={() => setSelectedFilter(item)}
                 >
                   {item}
                 </div>
@@ -240,7 +244,8 @@ export const Group = () => {
 
               {buttonVisibility[item]?.showRightButton && (
                 <div
-                  className="absolute top-1/2 right-0 -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer"
+                  className="absolute  arrowPositionRight -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
+                  style={{ top: "calc(50% + 30px)" }}
                   onClick={() => scroll(item, "right")}
                 >
                   <img
@@ -283,10 +288,11 @@ export const Group = () => {
         <>
           {filteredCategories.map((item, index) => (
             <div key={index}>
-              <div className="flex mt-[2.5rem]">
+              <div className="flex mt-[2.5rem] px-[1rem]">
                 <div
-                  className="text-[28px] text-white ps-[1rem] pe-[0.5rem] pb-[0.1rem]"
+                  className="text-[28px] text-white  pe-[0.5rem] pb-[0.1rem]"
                   style={{ fontFamily: "B" }}
+                  onClick={() => setSelectedFilter(item)}
                 >
                   {item}
                 </div>

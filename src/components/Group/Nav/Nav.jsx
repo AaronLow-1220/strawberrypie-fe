@@ -14,40 +14,45 @@ export const Nav = ({ onFilterChange }) => {
       className={
         window.innerWidth < 1024
           ? "w-full min-w-[25rem] flex mt-[2rem] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
-          : "w-full  flex justify-center mt-[3rem] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
+          : "w-full flex justify-center mt-[3rem] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
       }
-      style={{ scrollbarWidth: "none" }}
+      style={{ scrollbarWidth: "none", scrollSnapType: "x mandatory" }}
     >
       {["全部", "互動", "行銷", "動畫", "遊戲", "影視"].map((item) => (
         <div
           key={item}
-          className={
+          className={`relative flex h-[2.25rem] rounded-[39px] items-center justify-center transition-all duration-1000 ease-in-out
+          ${
             filter === item
-              ? "min-w-[4.75rem] h-[2.25rem] bg-primary-color rounded-[39px] flex items-center justify-center transition-all duration-500 ease-in-out"
-              : "min-w-[4.75rem] h-[2.25rem] bg-[#51181E] rounded-[39px] flex items-center justify-center transition-all duration-500 ease-in-out"
-          }
+              ? "bg-primary-color min-w-[5rem] max-w-[12rem]"
+              : "bg-[#51181E] min-w-[3.5rem] max-w-[8rem]"
+          }`}
           onClick={() => handleFilterChange(item)}
         >
           {filter === item ? (
-            <div className="flex w-full justify-center items-center space-x-1">
-              <div
-                className="text-[1rem] text-white "
-                style={{ fontFamily: "B" }}
-              >
-                {item}
-              </div>
-              {item !== "全部" && (
-                <div>
-                  <img src="/close.svg" alt="" />
+            <>
+              {item !== "全部" ? (
+                <div className="flex w-fit justify-center items-center space-x-1 px-[22px] ">
+                  <div className="text-[1rem] text-white font-medium leading-none">
+                    {item}
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <img src="/close.svg" alt="close" />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex min-w-[5rem] justify-center items-center space-x-1 px-[22px] ">
+                  <div className="text-[1rem] text-white font-medium leading-none">
+                    {item}
+                  </div>
                 </div>
               )}
-            </div>
+            </>
           ) : (
-            <div
-              className="text-[1rem] text-white "
-              style={{ fontFamily: "B" }}
-            >
-              {item}
+            <div className="flex w-fit justify-center items-center space-x-1 px-[22px] ">
+              <div className="text-[1rem] text-white font-medium leading-none ">
+                {item}
+              </div>
             </div>
           )}
         </div>
