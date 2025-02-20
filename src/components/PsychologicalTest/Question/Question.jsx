@@ -109,12 +109,12 @@ export const Question = () => {
     setTimeout(() => {
       if (currentIndex < Questions.length - 1) {
         setCurrentIndex(currentIndex + 1);
+        setCurrentQuestion(currentQuestion + 1);
       } else {
         setIsAnswer(true);
       }
     }, 500);
   };
-  console.log(currentIndex);
   return (
     <>
       {windowWidthTrue === true ? (
@@ -125,7 +125,13 @@ export const Question = () => {
               : "flex justify-center items-center h-screen space-x-[4rem]"
           }
         >
-          <div className="max-w-[33.75rem] w-full  aspect-[4/3] ">
+          <div
+            className={
+              desTopWindowWidthTrue
+                ? "max-w-[39.375rem] w-full  aspect-[4/3] "
+                : "max-w-[33.75rem] w-full  aspect-[4/3] "
+            }
+          >
             {Questions[currentIndex].img && (
               <img
                 className="w-full h-full object-cover rounded-[1rem] navMargin"
@@ -159,26 +165,40 @@ export const Question = () => {
                       }}
                     >
                       <p
-                        className="text-[2rem] leading-none mb-[10px] text-white"
+                        className={
+                          desTopWindowWidthTrue
+                            ? "text-[3rem] leading-none mb-[10px] text-white"
+                            : "text-[2rem] leading-none mb-[10px] text-white"
+                        }
                         style={{ fontFamily: "B" }}
                         dangerouslySetInnerHTML={{ __html: question.question }}
                       ></p>
                       {question.options.map((option, i) => (
                         <button
                           key={i}
-                          className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]
-                          
-                          `}
+                          className={
+                            desTopWindowWidthTrue
+                              ? "my-[0.625rem] flex items-center w-full text-left p-[15px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]"
+                              : "my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]"
+                          }
                           onClick={() => handleNextQuestion(i)}
                         >
                           <div
-                            className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] box-border ${
+                            className={`w-[12px] h-[12px] rounded-[50%]  border border-white me-[0.625rem] box-border ${
                               selectedOptions[currentIndex] === i
-                                ? "bg-secondary-color"
-                                : ""
+                                ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
+                                : " opacity-[60%]"
                             }`}
                           ></div>
-                          <p className="text-[1rem]">{option}</p>
+                          <p
+                            className={
+                              desTopWindowWidthTrue
+                                ? "text-[24px]"
+                                : "text-[1rem]"
+                            }
+                          >
+                            {option}
+                          </p>
                         </button>
                       ))}
                     </div>
@@ -187,14 +207,36 @@ export const Question = () => {
               </div>
             </div>
 
-            {isAnswer == false ? (
-              <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%]">
+            {isAnswer != false &&
+            selectedOptions.every((option) => option !== null) ? (
+              <div className="w-full flex justify-center ">
+                <button
+                  className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
+                  onClick={() => {
+                    window.location.href = "/Result";
+                  }}
+                >
+                  查看你的專屬角色
+                </button>
+              </div>
+            ) : (
+              <div
+                className={
+                  desTopWindowWidthTrue
+                    ? "flex justify-center items-center w-[9.625rem] h-[48px] mx-auto mt-[5%]"
+                    : "flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto mt-[5%]"
+                }
+              >
                 {Questions.map((_, index) => {
                   let bgColor = index === 1 ? "#51181E" : "#6C2028";
                   return (
                     <div
                       key={index}
-                      className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
+                      className={
+                        desTopWindowWidthTrue
+                          ? "flex items-center justify-center mx-1 w-[1.5rem] h-[1.5rem]"
+                          : "flex items-center justify-center mx-1 w-[1.5rem] h-[1.5rem]"
+                      }
                     >
                       <button
                         onClick={() => setCurrentIndex(index)}
@@ -224,7 +266,11 @@ export const Question = () => {
                           />
                         ) : (
                           <div
-                            className="w-[8px] h-[8px] rounded-full transition-all duration-300"
+                            className={
+                              desTopWindowWidthTrue
+                                ? "w-[12px] h-[12px] rounded-full transition-all duration-300"
+                                : "w-[8px] h-[8px] rounded-full transition-all duration-300"
+                            }
                             style={{ backgroundColor: bgColor }}
                           ></div>
                         )}
@@ -232,17 +278,6 @@ export const Question = () => {
                     </div>
                   );
                 })}
-              </div>
-            ) : (
-              <div className="w-full flex justify-center ">
-                <button
-                  className="flex justify-center items-center w-fit h-[41px] px-[22px] bg-secondary-color text-white text-[14px] rounded-[999px]"
-                  onClick={() => {
-                    window.location.href = "/Result";
-                  }}
-                >
-                  填答完成，查看結果
-                </button>
               </div>
             )}
           </div>
@@ -305,10 +340,10 @@ export const Question = () => {
                         onClick={() => handleNextQuestion(i)}
                       >
                         <div
-                          className={`w-[12px] h-[12px] rounded-[50%] border border-white me-[0.625rem] box-border ${
+                          className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border border-white me-[0.625rem] box-border ${
                             selectedOptions[currentIndex] === i
-                              ? "bg-secondary-color"
-                              : ""
+                              ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
+                              : " opacity-[60%]"
                           }`}
                         ></div>
                         <p className="text-[1rem]">{option}</p>
@@ -319,7 +354,19 @@ export const Question = () => {
               })}
             </div>
           </div>
-          {isAnswer == false ? (
+          {isAnswer != false &&
+          selectedOptions.every((option) => option !== null) ? (
+            <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
+              <button
+                className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
+                onClick={() => {
+                  window.location.href = "/Result";
+                }}
+              >
+                查看你的專屬角色
+              </button>
+            </div>
+          ) : (
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto">
                 {Questions.map((_, index) => {
@@ -366,17 +413,6 @@ export const Question = () => {
                   );
                 })}
               </div>
-            </div>
-          ) : (
-            <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
-              <button
-                className="flex justify-center items-center w-fit h-[41px] px-[22px] bg-secondary-color text-white text-[14px] rounded-[999px]"
-                onClick={() => {
-                  window.location.href = "/Result";
-                }}
-              >
-                填答完成，查看結果
-              </button>
             </div>
           )}
         </div>

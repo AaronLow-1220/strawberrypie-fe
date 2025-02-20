@@ -123,40 +123,45 @@ export const Header = () => {
         // 桌機版 Header
         <div className="fixed top-0 left-0 right-0 z-[999]">
           <div
-            className="w-full h-[4rem] flex justify-center items-center px-[1rem] navContainer"
+            className={
+              window.innerWidth < 1584
+                ? "w-full h-[4rem] flex justify-center items-center px-[1rem] navContainer"
+                : "w-full h-[7rem] flex justify-center items-center px-[1rem] navContainer"
+            }
             style={{
               background:
                 "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
             }}
           >
-            <div
+            <a
               className="navHover text-[1.5rem] mx-[1.6875rem]"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
                 fontFamily: "B",
               }}
+              href="/group"
             >
               組別介紹
-            </div>
-            <div
+            </a>
+            <a
               className="navHover text-[1.5rem] ms-[1.6875rem] me-[4.5rem]"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
                 fontFamily: "B",
               }}
+              href="/collect"
             >
               集章兌換
-            </div>
+            </a>
             {!isHome && (
               <img
                 src="/Headline.svg"
                 alt="Headline"
-                style={{
-                  width: "7.5rem",
-                  height: "auto",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
+                className={
+                  window.innerWidth < 1584
+                    ? "w-[7.5rem] h-auto backface-hidden"
+                    : "w-[9.5rem] h-auto backface-hidden mt-[-30px]"
+                }
               />
             )}
             <a
@@ -225,7 +230,6 @@ export const Header = () => {
             />
           </div>
 
-          {/* 這個容器包覆 NavBackground 與選單選項，且會根據 menuOpen 做展開/收合動畫 */}
           <div
             className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${
               menuOpen
@@ -239,7 +243,7 @@ export const Header = () => {
               style={{ fontFamily: "B" }}
             >
               <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/">
+                <a href="/group">
                   <div className="flex items-center">
                     <div>組別介紹</div>
                     <div className="ms-[1rem]">
@@ -249,7 +253,7 @@ export const Header = () => {
                 </a>
               </li>
               <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/about">
+                <a href="/collect">
                   <div className="flex items-center">
                     <div>集章兌換</div>
                     <div className="ms-[1rem]">
@@ -259,7 +263,7 @@ export const Header = () => {
                 </a>
               </li>
               <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/PsychologicalTest">
+                <a href="/psychologicalTest">
                   <div className="flex items-center">
                     <div>心裏測驗</div>
                     <div className="ms-[1rem]">

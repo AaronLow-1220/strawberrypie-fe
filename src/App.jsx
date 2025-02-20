@@ -11,6 +11,8 @@ import { Group } from "./components/Group/Main";
 //Result
 import { Result } from "./components/Result/Main";
 
+import { Collect } from "./components/Collect/Main";
+
 function App() {
   const [animate, setAnimate] = useState(false);
   // Logo 動畫觸發方法
@@ -26,9 +28,10 @@ function App() {
           path="/"
           element={<HomePage handleLogoAnimation={handleLogoAnimation} />}
         />
-        <Route path="/PsychologicalTest" element={<PsychologicalTest />} />
-        <Route path="/Group" element={<Group />} />
-        <Route path="/Result" element={<Result />} />
+        <Route path="/psychologicalTest" element={<PsychologicalTest />} />
+        <Route path="/group" element={<Group />} />
+        <Route path="/result" element={<Result />} />
+        <Route path="/collect" element={<Collect />} />
         {/* <Route path="/Result/:id" element={<Result />} /> */}
       </Routes>
     </Router>
