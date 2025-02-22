@@ -150,7 +150,7 @@ export const Collect = () => {
               <div
                 className={
                   expandedItems[index]
-                    ? "grid grid-cols-3 gap-4 mt-[15px]"
+                    ? "grid grid-cols-3 gap-4 mt-[15px] place-items-center"
                     : "flex items-center mt-[15px]"
                 }
               >

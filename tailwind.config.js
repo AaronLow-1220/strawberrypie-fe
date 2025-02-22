@@ -18,6 +18,8 @@ export default withMT({
         IpadLogo: "IpadLogo 1s ease-out forwards",
         WindowLogo: "WindowLogo 1s cubic-bezier(0.33, 1, 0.66, 1) forwards",
         LogoSide: "LogoSide 1s ease-in-out forwards",
+        CardFade: "FadeIn 1s ease-in-out",
+        CardFadeOut: "FadeOut 1s ease-in-out",
       },
       keyframes: {
         // 跑馬燈動畫
@@ -50,6 +52,14 @@ export default withMT({
         InfoCard: {
           "0%": { transform: "translateY(40px)", opacity: 0 },
           "100%": { transform: "translateY(0px)", opacity: 1 },
+        },
+        FadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
+        FadeOut: {
+          "0%": { opacity: 1 },
+          "100%": { opacity: 0 },
         },
       },
     },

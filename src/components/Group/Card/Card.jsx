@@ -9,6 +9,10 @@ export const Card = ({
   secondTitleFontSize,
   ContentFontSize,
   selectedFilter,
+  detailedContent,
+  member,
+  teachers,
+  onClick,
 }) => {
   const [windowWidth, setWindowWidth] = useState("w-auto h-auto");
 
@@ -26,8 +30,27 @@ export const Card = ({
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick({
+        img,
+        title,
+        content,
+        secondTitle,
+        detailedContent,
+        member,
+        teachers,
+      }); // 傳遞資料給父元件
+    }
+  };
+
   return (
-    <div className="-z-0 max-h-[27.8125rem] max-w-[18.75rem] w-full h-auto bg-white rounded-[12px]">
+    <div
+      className="-z-0 max-h-[27.8125rem] max-w-[18.75rem] w-full h-auto bg-white rounded-[12px]"
+      onClick={handleCardClick}
+      style={{ cursor: "pointer" }}
+    >
       <div className="relative h-full flex flex-col justify-center group">
         <div className="w-full aspect-[4/3] overflow-hidden rounded-t-[12px]">
           <img className="w-full h-full object-cover" src={img} alt="img" />
@@ -39,17 +62,18 @@ export const Card = ({
               }`}
         >
           <div
-            className="text-secondary-color"
-            style={{ fontSize: secondTitleFontSize }}
-          >
-            {secondTitle}
-          </div>
-          <div
             className="text-[#FFFFFF] leading-normal mt-[3px] "
             style={{ fontFamily: "B", fontSize: TitleFontSize }}
           >
             {title}
           </div>
+          <div
+            className="text-secondary-color"
+            style={{ fontSize: secondTitleFontSize }}
+          >
+            {secondTitle}
+          </div>
+
           <div
             className="text-white mt-[5px]  overflow-hidden flex-1 opacity-[72%]"
             style={{ fontSize: ContentFontSize }}

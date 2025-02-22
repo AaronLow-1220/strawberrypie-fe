@@ -15,21 +15,28 @@ import { Collect } from "./components/Collect/Main";
 
 function App() {
   const [animate, setAnimate] = useState(false);
+  const [focus, setFocus] = useState(false);
   // Logo 動畫觸發方法
   const handleLogoAnimation = () => {
     setAnimate(true);
   };
 
+  const handleFocus = (target) => {
+    setFocus(target);
+  };
+
   return (
     <Router>
-      <Header />
+      <div className={focus == true ? "opacity-[60%]" : ""}>
+        <Header />
+      </div>
       <Routes>
         <Route
           path="/"
           element={<HomePage handleLogoAnimation={handleLogoAnimation} />}
         />
         <Route path="/psychologicalTest" element={<PsychologicalTest />} />
-        <Route path="/group" element={<Group />} />
+        <Route path="/group" element={<Group focus={handleFocus} />} />
         <Route path="/result" element={<Result />} />
         <Route path="/collect" element={<Collect />} />
         {/* <Route path="/Result/:id" element={<Result />} /> */}
