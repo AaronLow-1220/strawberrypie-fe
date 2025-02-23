@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ProgressBar } from "./ProgressBar/ProgressBar";
-
+import { GroupBlock2 } from "./GroupBlock2";
 export const Collect = () => {
   // 使用物件來追蹤每個項目的展開狀態
   const [expandedItems, setExpandedItems] = useState({});
@@ -109,67 +109,11 @@ export const Collect = () => {
         }
       >
         {array.map((item, index) => (
-          <div
-            key={index}
-            className={`w-full rounded-[1rem] p-[16px_20px_20px_20px] mt-[1rem] transition-all duration-500 ${
-              expandedItems[index] ? "bg-[#6C2028]" : "bg-[#361014]"
-            }`}
-          >
-            {/* Header */}
-            <div className="flex justify-between items-center">
-              <div className="flex items-center">
-                <div
-                  className="text-white text-[20px]"
-                  style={{ fontFamily: "H" }}
-                >
-                  {item.name}
-                </div>
-                <div
-                  className="text-secondary-color text-[20px] ms-[5px]"
-                  style={{ fontFamily: "R" }}
-                >
-                  {item.num}/{item.num}
-                </div>
-              </div>
-              <div
-                className={`transform transition-transform duration-500 cursor-pointer ${
-                  expandedItems[index] ? "rotate-[-90deg]" : "rotate-90"
-                }`}
-                onClick={() => toggleExpand(index)}
-              >
-                <img src="/arrow_forward_ios.svg" alt="Toggle" />
-              </div>
-            </div>
-
-            {/* 展開 / 閉合內容區塊 */}
-            <div
-              className={` transition-all duration-700 ${
-                expandedItems[index] ? "max-h-[300px]" : "max-h-[60px]"
-              }`}
-            >
-              <div
-                className={
-                  expandedItems[index]
-                    ? "grid grid-cols-3 gap-4 mt-[15px] place-items-center"
-                    : "flex items-center mt-[15px]"
-                }
-              >
-                {Array.from({ length: item.num }).map((_, idx) => (
-                  <div
-                    key={idx}
-                    className={`h-[48px] w-[48px] bg-white rounded-[50%] flex items-center justify-center transition-all duration-500 ${
-                      expandedItems[index] ? "" : idx !== 0 ? "-ml-[15px]" : ""
-                    }`}
-                    style={{ zIndex: item.num - idx }}
-                  >
-                    <img className="w-[36px]" src="/遊戲_web.png" alt="" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <GroupBlock2 key={index} num={item.num} />
         ))}
       </div>
     </div>
   );
 };
+
+//   expandedItems[index] ? "rotate-[-90deg]" : "rotate-90"

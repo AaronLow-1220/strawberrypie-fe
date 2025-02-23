@@ -297,4 +297,113 @@ body {
     background-color: #fff;
     box-shadow: inset 0 0 38.7px 10px rgba(0, 0, 0, 0.25);
   }
+
+  /* -------------------------- */
+
+  .group-block {
+    background-color: #361014;
+    row-gap: 1em;
+    width: 100%;
+    max-width: 540px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 0.8em;
+    font-size: 20px;
+  }
+
+  .group-block__header {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .group-block__header__dropdown {
+    display: flex;
+    transition: transform 0.5s ease;
+    opacity: 0.6;
+  }
+
+  .group-block__header__dropdown.expand {
+    transform: rotate(180deg);
+  }
+
+  .group-block__header__dropdown img {
+    margin: auto 0;
+    width: 1em;
+    height: 1em;
+  }
+
+  .group-block__body {
+    display: flex;
+  }
+
+  .group-block__body.scrollable {
+    margin: 0 -1em;
+    padding: 0 1em;
+    padding-right: 1.6em;
+  }
+
+  .group-block__body.expand {
+    overflow-x: visible;
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1em;
+    row-gap: 1.4em;
+  }
+
+  .group-block__body.expand .group-block-item {
+    margin-right: 0;
+  }
+
+  .group-block__body.expand .group-block-item__icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .group-block__body.expand p {
+    height: initial;
+    text-align: center;
+    opacity: 1;
+    margin-top: 1em;
+    width: initial;
+  }
+
+  .group-block-item {
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    column-gap: 0.5em;
+    margin-right: -0.6em;
+    min-width: 48px;
+    min-height: 48px;
+    position: relative;
+  }
+
+  .group-block-item__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 100%;
+    width: 48px;
+    height: 48px;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .group-block-item__icon img {
+    width: 80%;
+    height: 80%;
+  }
+
+  .group-block-item p {
+    height: 0;
+    width: 0;
+    opacity: 0;
+    font-size: 12px;
+    color: white;
+  }
 }
