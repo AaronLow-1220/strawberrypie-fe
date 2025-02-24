@@ -184,7 +184,7 @@ export const Question = () => {
                           onClick={() => handleNextQuestion(i)}
                         >
                           <div
-                            className={`w-[12px] h-[12px] rounded-[50%]  border border-white me-[0.625rem] box-border ${
+                            className={`w-[12px] h-[12px] rounded-[50%]  border  me-[0.625rem] box-border ${
                               selectedOptions[currentIndex] === i
                                 ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                                 : " opacity-[60%]"
@@ -340,7 +340,7 @@ export const Question = () => {
                         onClick={() => handleNextQuestion(i)}
                       >
                         <div
-                          className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border border-white me-[0.625rem] box-border ${
+                          className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border  me-[0.625rem] box-border ${
                             selectedOptions[currentIndex] === i
                               ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                               : " opacity-[60%]"

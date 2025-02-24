@@ -230,8 +230,8 @@ export const Group = ({ focus }) => {
                     window.innerWidth < 1024
                       ? "grid grid-cols-2 gap-4 mt-[2.5rem] px-[1rem]"
                       : window.innerWidth < 1536
-                      ? "grid grid-cols-3 gap-4 mt-[2.5rem] px-[1rem]"
-                      : "grid grid-cols-4 gap-4 mt-[2.5rem] px-[1rem]"
+                      ? "grid grid-cols-3 gap-4  px-[1rem]"
+                      : "grid grid-cols-4 gap-4  px-[1rem]"
                   }
                 >
                   {filteredCards.map((card, index) => (
@@ -259,7 +259,7 @@ export const Group = ({ focus }) => {
                     {buttonVisibility[item]?.showLeftButton && (
                       <div
                         className={`absolute arrowPositionLeft -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out`}
-                        style={{ top: "calc(50% + 30px)" }}
+                        style={{ top: "calc(50% + 30px)", left: "220px" }}
                         onClick={() => scroll(item, "left")}
                       >
                         <img
@@ -279,8 +279,8 @@ export const Group = ({ focus }) => {
                         window.innerWidth < 1024
                           ? "flex mt-[2.5rem] px-[1rem]"
                           : window.innerWidth < 1536
-                          ? "flex mt-[2.5rem] px-[128px]"
-                          : "flex mt-[2.5rem] px-[256px]"
+                          ? "flex  px-[128px]"
+                          : "flex  px-[256px]"
                       }
                     >
                       <div
@@ -322,7 +322,7 @@ export const Group = ({ focus }) => {
                     {buttonVisibility[item]?.showRightButton && (
                       <div
                         className="absolute  arrowPositionRight -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
-                        style={{ top: "calc(50% + 30px)" }}
+                        style={{ top: "calc(50% + 30px)", right: "220px" }}
                         onClick={() => scroll(item, "right")}
                       >
                         <img
@@ -365,8 +365,8 @@ export const Group = ({ focus }) => {
                   window.innerWidth < 1024
                     ? "grid grid-cols-2 gap-4 mt-[2.5rem] px-[1rem]"
                     : window.innerWidth < 1536
-                    ? "grid grid-cols-3 gap-4 mt-[2.5rem] px-[1rem]"
-                    : "grid grid-cols-4 gap-4 mt-[2.5rem] px-[1rem]"
+                    ? "grid grid-cols-3 gap-4  px-[1rem]"
+                    : "grid grid-cols-4 gap-4  px-[1rem]"
                 }
               >
                 {filteredCards.map((card, index) => (
@@ -394,7 +394,7 @@ export const Group = ({ focus }) => {
                   {buttonVisibility[item]?.showLeftButton && (
                     <div
                       className={`absolute arrowPositionLeft -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out`}
-                      style={{ top: "calc(50% + 30px)" }}
+                      style={{ top: "calc(50% + 30px)", left: "220px" }}
                       onClick={() => scroll(item, "left")}
                     >
                       <img
@@ -414,12 +414,12 @@ export const Group = ({ focus }) => {
                       window.innerWidth < 1024
                         ? "flex mt-[2.5rem] px-[1rem]"
                         : window.innerWidth < 1536
-                        ? "flex mt-[2.5rem] px-[128px]"
-                        : "flex mt-[2.5rem] px-[256px]"
+                        ? "flex  px-[128px]"
+                        : "flex  px-[256px]"
                     }
                   >
                     <div
-                      className="text-[28px] text-white  pe-[0.5rem] pb-[0.1rem]"
+                      className="text-[28px] text-white  pe-[8px] leading-none"
                       style={{ fontFamily: "B" }}
                       onClick={() => setSelectedFilter(item)}
                     >
@@ -457,7 +457,7 @@ export const Group = ({ focus }) => {
                   {buttonVisibility[item]?.showRightButton && (
                     <div
                       className="absolute  arrowPositionRight -translate-y-1/2 w-[56px] h-[56px] rounded-[28px] bg-[#6C2028] flex items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
-                      style={{ top: "calc(50% + 30px)" }}
+                      style={{ top: "calc(50% + 30px)", right: "220px" }}
                       onClick={() => scroll(item, "right")}
                     >
                       <img
@@ -491,7 +491,7 @@ export const Group = ({ focus }) => {
             <Nav onFilterChange={setSelectedFilter} />
             {selectedFilter != "全部" ? (
               <>
-                <div className="grid grid-cols-2 gap-4 mt-[2.5rem]  px-[1rem]">
+                <div className="grid grid-cols-2 gap-4 mt-[2.5rem] px-[20px]">
                   {filteredCards.map((card, index) => (
                     <Card
                       TitleFontSize="1rem"
@@ -514,9 +514,9 @@ export const Group = ({ focus }) => {
               <>
                 {filteredCategories.map((item, index) => (
                   <div key={index}>
-                    <div className="flex mt-[2.5rem]  px-[1rem]">
+                    <div className="flex mt-[2.5rem]  px-[20px]">
                       <div
-                        className="text-[28px] text-white  pe-[0.5rem] pb-[0.1rem]"
+                        className="text-[28px] text-white pe-[8px] leading-none"
                         style={{ fontFamily: "B" }}
                         onClick={() => setSelectedFilter(item)}
                       >
@@ -569,7 +569,7 @@ export const Group = ({ focus }) => {
           <Nav onFilterChange={setSelectedFilter} />
           {selectedFilter != "全部" ? (
             <>
-              <div className="grid grid-cols-2 gap-4 mt-[2.5rem] px-[1rem]">
+              <div className="grid grid-cols-2 gap-4 mt-[2.5rem] px-[20px]">
                 {filteredCards.map((card, index) => (
                   <Card
                     TitleFontSize="1rem"
@@ -592,9 +592,9 @@ export const Group = ({ focus }) => {
             <>
               {filteredCategories.map((item, index) => (
                 <div key={index}>
-                  <div className="flex mt-[2.5rem] px-[1rem]">
+                  <div className="flex  px-[20px]">
                     <div
-                      className="text-[28px] text-white  pe-[0.5rem] pb-[0.1rem]"
+                      className="text-[28px] text-white pe-[8px] leading-none"
                       style={{ fontFamily: "B" }}
                       onClick={() => setSelectedFilter(item)}
                     >

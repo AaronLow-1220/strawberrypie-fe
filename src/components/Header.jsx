@@ -121,168 +121,172 @@ export const Header = () => {
     <>
       {windowWidthTrue ? (
         // 桌機版 Header
-        <div className="fixed top-0 left-0 right-0 z-[999]">
-          <div
-            className={
-              window.innerWidth < 1584
-                ? "w-full h-[4rem] flex justify-center items-center px-[1rem] navContainer"
-                : "w-full h-[7rem] flex justify-center items-center px-[1rem] navContainer"
-            }
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
-            }}
-          >
-            <a
-              className="navHover text-[1.5rem] mx-[1.6875rem]"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-              href="/group"
-            >
-              組別介紹
-            </a>
-            <a
-              className="navHover text-[1.5rem] ms-[1.6875rem] me-[4.5rem]"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-              href="/collect"
-            >
-              集章兌換
-            </a>
-            {!isHome && (
-              <img
-                src="/Headline.svg"
-                alt="Headline"
-                className={
-                  window.innerWidth < 1584
-                    ? "w-[7.5rem] h-auto backface-hidden"
-                    : "w-[9.5rem] h-auto backface-hidden mt-[-30px]"
-                }
-              />
-            )}
-            <a
-              className="navHover text-[1.5rem] me-[1.6875rem] ms-[4.5rem]"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-              href="/PsychologicalTest"
-            >
-              心理測驗
-            </a>
+        <div
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
+          }}
+        >
+          <div className="fixed top-0 left-0 right-0 z-[999]">
             <div
-              className="navHover text-[1.5rem] mx-[1.6875rem]"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
+              className={
+                window.innerWidth < 1584
+                  ? "w-full h-[4rem] flex justify-center items-center px-[1rem] navContainer"
+                  : "w-full  flex justify-center mt-[48px] px-[1rem] navContainer"
+              }
             >
-              意見回饋
+              <a
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+                href="/group"
+              >
+                組別介紹
+              </a>
+              <a
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+                href="/collect"
+              >
+                集章兌換
+              </a>
+              {!isHome && (
+                <img
+                  src="/Headline.svg"
+                  alt="Headline"
+                  className={
+                    window.innerWidth < 1584
+                      ? "w-[7.5rem] h-auto backface-hidden mx-[14.4px]"
+                      : "w-[9.5rem] h-auto backface-hidden mt-[-30px] mx-[14.4px]"
+                  }
+                />
+              )}
+              <a
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+                href="/PsychologicalTest"
+              >
+                心理測驗
+              </a>
+              <div
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+              >
+                意見回饋
+              </div>
             </div>
           </div>
         </div>
       ) : (
         // 行動版 Header
-        <div className="fixed top-0 left-0 right-0 z-[100]">
-          <div
-            className="w-full h-[4rem] flex justify-between items-center px-[1rem]"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
-            }}
-          >
-            <img
-              src="/menu.svg"
-              alt="Menu"
-              style={{
-                width: "28px",
-                height: "auto",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-              onClick={() => setMenuOpen(!menuOpen)}
-            />
-            {!isHome && (
+        <div
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
+          }}
+        >
+          <div className="fixed top-0 left-0 right-0 z-[100]">
+            <div className="w-full h-[4rem] flex justify-between items-center px-[1rem]">
               <img
-                src="/Headline.svg"
-                alt="Headline"
+                src="/menu.svg"
+                alt="Menu"
                 style={{
-                  width: "7.5rem",
+                  width: "28px",
+                  height: "auto",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+                onClick={() => setMenuOpen(!menuOpen)}
+              />
+              {!isHome && (
+                <img
+                  src="/Headline.svg"
+                  alt="Headline"
+                  style={{
+                    width: "7.5rem",
+                    height: "auto",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                />
+              )}
+              <img
+                src="/collect.svg"
+                alt="Collect"
+                style={{
+                  width: "28px",
                   height: "auto",
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                 }}
               />
-            )}
-            <img
-              src="/collect.svg"
-              alt="Collect"
-              style={{
-                width: "28px",
-                height: "auto",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-            />
-          </div>
+            </div>
 
-          <div
-            className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${
-              menuOpen
-                ? "scale-y-100 opacity-100 translate-y-0"
-                : "scale-y-0 opacity-100 -translate-y-10"
-            }`}
-          >
-            <NavBackground menuOpen={menuOpen} />
-            <ul
-              className="relative z-10 flex flex-col items-center justify-center h-full text-white"
-              style={{ fontFamily: "B" }}
+            <div
+              className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${
+                menuOpen
+                  ? "scale-y-100 opacity-100 translate-y-0"
+                  : "scale-y-0 opacity-100 -translate-y-10"
+              }`}
             >
-              <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/group">
-                  <div className="flex items-center">
-                    <div>組別介紹</div>
-                    <div className="ms-[1rem]">
-                      <img src="/category.svg" alt="Category" />
+              <NavBackground menuOpen={menuOpen} />
+              <ul
+                className="relative z-10 flex flex-col items-center justify-center h-full text-white"
+                style={{ fontFamily: "B" }}
+              >
+                <li className="pb-[2.25rem] text-[2rem]">
+                  <a href="/group">
+                    <div className="flex items-center">
+                      <div>組別介紹</div>
+                      <div className="ms-[1rem]">
+                        <img src="/category.svg" alt="Category" />
+                      </div>
                     </div>
-                  </div>
-                </a>
-              </li>
-              <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/collect">
-                  <div className="flex items-center">
-                    <div>集章兌換</div>
-                    <div className="ms-[1rem]">
-                      <img src="/feedback.svg" alt="Feedback" />
+                  </a>
+                </li>
+                <li className="pb-[2.25rem] text-[2rem]">
+                  <a href="/collect">
+                    <div className="flex items-center">
+                      <div>集章兌換</div>
+                      <div className="ms-[1rem]">
+                        <img src="/feedback.svg" alt="Feedback" />
+                      </div>
                     </div>
-                  </div>
-                </a>
-              </li>
-              <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/psychologicalTest">
-                  <div className="flex items-center">
-                    <div>心裏測驗</div>
-                    <div className="ms-[1rem]">
-                      <img src="/psychology.svg" alt="Psychology" />
+                  </a>
+                </li>
+                <li className="pb-[2.25rem] text-[2rem]">
+                  <a href="/psychologicalTest">
+                    <div className="flex items-center">
+                      <div>心裏測驗</div>
+                      <div className="ms-[1rem]">
+                        <img src="/psychology.svg" alt="Psychology" />
+                      </div>
                     </div>
-                  </div>
-                </a>
-              </li>
-              <li className="text-[2rem]">
-                <a href="/contact">
-                  <div className="flex items-center">
-                    <div>意見回饋</div>
-                    <div className="ms-[1rem]">
-                      <img src="/stamp.svg" alt="Stamp" />
+                  </a>
+                </li>
+                <li className="text-[2rem]">
+                  <a href="/contact">
+                    <div className="flex items-center">
+                      <div>意見回饋</div>
+                      <div className="ms-[1rem]">
+                        <img src="/stamp.svg" alt="Stamp" />
+                      </div>
                     </div>
-                  </div>
-                </a>
-              </li>
-            </ul>
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       )}

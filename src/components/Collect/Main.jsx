@@ -1,17 +1,6 @@
-import { useState } from "react";
 import { ProgressBar } from "./ProgressBar/ProgressBar";
 import { GroupBlock2 } from "./GroupBlock2";
 export const Collect = () => {
-  // 使用物件來追蹤每個項目的展開狀態
-  const [expandedItems, setExpandedItems] = useState({});
-
-  const toggleExpand = (index) => {
-    setExpandedItems((prev) => ({
-      ...prev,
-      [index]: !prev[index], // 切換特定項目的展開狀態
-    }));
-  };
-
   const array = [
     { name: "遊戲", num: 6 },
     { name: "互動", num: 11 },

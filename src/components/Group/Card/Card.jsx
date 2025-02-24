@@ -56,7 +56,7 @@ export const Card = ({
           <img className="w-full h-full object-cover" src={img} alt="img" />
         </div>
         <div
-          className={`bg-[#361014] p-[1rem] rounded-b-[12px] flex flex-col flex-grow 
+          className={`bg-[#361014] p-[18px_24px_32px_24px] rounded-b-[12px] flex flex-col flex-grow 
               ${
                 selectedFilter == "全部" ? "w-[300px] h-[215px]" : windowWidth
               }`}
