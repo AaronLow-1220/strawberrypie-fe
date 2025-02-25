@@ -89,11 +89,11 @@ export const HomePage = () => {
           logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
         />
       </div>
-      <div className="w-full " style={{ marginBottom: marginBottom }}>
+      <div className="w-full mt-[4rem]" style={{ marginBottom: marginBottom }}>
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
         {windowTrue ? (
           windowLargeDesktop ? (
-            <div className="mt-[5.375rem] flex justify-center">
+            <div className="pt-[5.375rem] flex justify-center">
               <div className="flex w-fit gap-[4.5rem]">
                 <IpModel
                   title="互動"
@@ -123,7 +123,7 @@ export const HomePage = () => {
               </div>
             </div>
           ) : windowDesktop ? (
-            <div className="mt-[5.375rem] flex justify-start px-[4.5rem] overflow-scroll">
+            <div className="pt-[5.375rem] flex justify-start px-[4.5rem] overflow-x-scroll overflow-y-visible">
               <div className="flex w-fit gap-[4.5rem]">
                 <IpModel
                   title="互動"
@@ -348,7 +348,7 @@ export const HomePage = () => {
         )}
       </div>
       <div
-        className="w-full  mt-[7.125rem]"
+        className="w-full  mt-[7.125rem] mb-[4rem]"
         style={{ height: unitWindowHeight }}
       >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
