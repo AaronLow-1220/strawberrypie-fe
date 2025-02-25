@@ -297,7 +297,7 @@ export const HomePage = () => {
                 <img src="/wave_1.webp" alt="" className="wave" />
                 <img src="/wave_1.webp" alt="" className="wave" />
               </div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full px-[20px] max-w-[380px] w-[100vw]">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[380px] w-[100vw]">
                 <DateMap
                   backgroundColor="#FFFFFF"
                   color="#F748C1"
@@ -348,7 +348,7 @@ export const HomePage = () => {
         )}
       </div>
       <div
-        className="w-full  mt-[7.125rem] mb-[4rem]"
+        className="w-full mt-[20rem] md:mt-[7.125rem] mb-[4rem]"
         style={{ height: unitWindowHeight }}
       >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
