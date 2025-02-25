@@ -297,7 +297,7 @@ export const HomePage = () => {
                 <img src="/HomePage/wave_1.webp" alt="" className="wave" />
                 <img src="/HomePage/wave_1.webp" alt="" className="wave" />
               </div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-[380px] w-[100vw]">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  max-w-[380px] w-[100vw]">
                 <DateMap
                   backgroundColor="#FFFFFF"
                   color="#F748C1"
@@ -313,7 +313,7 @@ export const HomePage = () => {
                 <img src="/HomePage/wave_2.webp" alt="" className="wave" />
                 <img src="/HomePage/wave_2.webp" alt="" className="wave" />
               </div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full px-[20px] max-w-[380px] w-[100vw]">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 px-[20px] max-w-[380px] w-[100vw]">
                 <DateMap
                   backgroundColor="#F748C1"
                   color="#FFFFFF"
