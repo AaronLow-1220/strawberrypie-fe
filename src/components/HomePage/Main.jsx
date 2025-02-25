@@ -93,8 +93,8 @@ export const HomePage = () => {
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
         {windowTrue ? (
           windowLargeDesktop ? (
-            <div className="mt-[5.375rem] ">
-              <div className="max-w-[83rem] mx-auto flex justify-between ">
+            <div className="mt-[5.375rem] flex justify-center">
+              <div className="flex w-fit gap-[4.5rem]">
                 <IpModel
                   title="互動"
                   secondTitle="Digital Experience"
@@ -123,8 +123,8 @@ export const HomePage = () => {
               </div>
             </div>
           ) : windowDesktop ? (
-            <div className="mt-[5.375rem] ">
-              <div className="max-w-[75rem] mx-auto flex justify-between ">
+            <div className="mt-[5.375rem] flex justify-start px-[4.5rem] overflow-scroll">
+              <div className="flex w-fit gap-[4.5rem]">
                 <IpModel
                   title="互動"
                   secondTitle="Digital Experience"
