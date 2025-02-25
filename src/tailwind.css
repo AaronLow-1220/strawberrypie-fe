@@ -69,22 +69,6 @@ body {
     height: 100svh;
   }
   .bg-pink-radial {
-<<<<<<< HEAD
-=======
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    mix-blend-mode: plus-lighter;
-  }
-  .wave-container {
-    position: relative;
-    width: 100%;
-    background-color: #1b080a; /* 背景色 */
-    overflow: hidden;
-  }
-
-  .wave {
->>>>>>> f560d55 (refactor: enhance responsiveness of Logo component and update animation logic;)
     position: absolute;
     width: 100%;
     height: 100%;
