@@ -26,6 +26,7 @@ function App() {
   };
 
   return (
+<<<<<<< HEAD
     <Router>
       <div className={focus == true ? "opacity-[60%]" : ""}>
         <Header />
@@ -34,6 +35,15 @@ function App() {
         <Route
           path="/"
           element={<HomePage handleLogoAnimation={handleLogoAnimation} />}
+=======
+    <div className="">
+      <div>
+        <div className="bg-pink-radial"></div>
+        <Logo beginAnimation={animate} />
+        <Model
+          onAnimationEnd={handleAnimationEnd} // 傳遞動畫結束回調
+          logoAnimation={handleLogoAnimation} // 傳遞 Logo 動畫觸發方法
+>>>>>>> f560d55 (refactor: enhance responsiveness of Logo component and update animation logic;)
         />
         <Route path="/psychologicalTest" element={<PsychologicalTest />} />
         <Route path="/group" element={<Group focus={handleFocus} />} />

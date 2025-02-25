@@ -8,7 +8,7 @@ export const InfoCard = ({
   containerWidth = "5rem",
   containerHeight = "2rem",
   fontSize = "1rem",
-  dateTextSize = "1.5rem",
+  dateTextSize = "28px",
   children,
 }) => {
   const containerStyle = (backgroundColor) => ({
@@ -27,7 +27,7 @@ export const InfoCard = ({
   const dateStyle = {
     color: "#FFFFFF",
     fontSize: dateTextSize,
-    marginTop: "0.75rem",
+    marginTop: "8px",
     textAlign: "center",
     whiteSpace: "nowrap",
   };

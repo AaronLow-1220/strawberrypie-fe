@@ -25,7 +25,7 @@ export const SlidingCamera = ({ onAnimationStart }) => {
 
   // 設定起始和結束角度（轉換為弧度）
   var startRotation = 15 * (Math.PI / 180);  // 100度
-  var endRotation = -3 * (Math.PI / 180);     // 90度
+  var endRotation = -5 * (Math.PI / 180);     // 90度
 
   // 設定不同尺寸的 FOV
   useEffect(() => {
