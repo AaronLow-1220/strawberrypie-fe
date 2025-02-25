@@ -1,0 +1,295 @@
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+
+// NavBackground 元件：根據 menuOpen 狀態改變 SVG 路徑動畫
+const NavBackground = ({ menuOpen }) => {
+  const pathRef = useRef(null);
+
+  useEffect(() => {
+    const path = pathRef.current;
+    if (!path) return;
+
+    // 定義展開與關閉的 SVG 路徑
+    const openPath =
+      "M416 429.5C416 429.5 381.771 466.366 333.102 466.366C284.433 466.366 261.119 529 205.813 529C150.508 529 161.958 472 102.057 494C42.1567 516 -14 396.5 -14 396.5L-14 -9.99998L416 -9.99994L416 429.5Z";
+    const closedPath =
+      "M416 409.264C416 409.264 375.756 391.753 327.086 391.753C278.417 391.753 263.338 429.772 208.033 429.772C152.727 429.772 128.161 452.785 63.8621 429.772C-0.436921 406.76 -14 414.768 -14 414.768L-14 -10L416 -9.99996L416 409.264Z";
+
+    // 當 menuOpen 為 true 時，執行展開動畫，否則回復關閉狀態
+    gsap.to(path, {
+      duration: 0.8,
+      ease: "power3.inOut",
+      attr: { d: menuOpen ? openPath : closedPath },
+    });
+  }, [menuOpen]);
+
+  return (
+    <svg
+      className="nav-bg"
+      width="100%"
+      height="450"
+      viewBox="0 0 400 450" // 保持原始比例
+      preserveAspectRatio="none"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{
+        overflow: "visible",
+        position: "absolute",
+        top: 0,
+        left: 0,
+      }}
+    >
+      <defs>
+        <filter
+          id="filter0_i_2695_15960"
+          x="-14"
+          y="-10"
+          width="430"
+          height="800"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="BackgroundImageFix"
+            result="shape"
+          />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dx="6" dy="1" />
+          <feGaussianBlur stdDeviation="8.9" />
+          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="shape"
+            result="effect1_innerShadow_2695_15960"
+          />
+        </filter>
+      </defs>
+      <g style={{ overflow: "visible" }}>
+        <g filter="url(#filter0_i_2695_15960)">
+          <path
+            ref={pathRef}
+            d="M416 409.264C416 409.264 375.756 391.753 327.086 391.753C278.417 391.753 263.338 429.772 208.033 429.772C152.727 429.772 128.161 452.785 63.8621 429.772C-0.436921 406.76 -14 414.768 -14 414.768L-14 -10L416 -9.99996L416 409.264Z"
+            fill="#F748C1"
+          />
+        </g>
+      </g>
+    </svg>
+  );
+};
+
+// Header 元件：根據裝置寬度與選單狀態顯示不同版型
+export const Header = () => {
+  const [isHome, setIsHome] = useState(false);
+  const [windowWidthTrue, setWindowWidthTrue] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // 判斷是否為首頁
+  useEffect(() => {
+    setIsHome(window.location.pathname === "/");
+  }, []);
+
+  // 監聽視窗寬度改變，判斷是桌機或行動版
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setWindowWidthTrue(false);
+      } else if (window.innerWidth < 1024) {
+        setWindowWidthTrue(false);
+      } else if (window.innerWidth < 1584) {
+        setWindowWidthTrue(true);
+      } else {
+        setWindowWidthTrue(true);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <>
+      {windowWidthTrue ? (
+        // 桌機版 Header
+        <div
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
+          }}
+        >
+          <div className="fixed top-0 left-0 right-0 z-[999]">
+            <div
+              className={
+                window.innerWidth < 1584
+                  ? "w-full h-[4rem] flex justify-center items-center px-[1rem] navContainer"
+                  : "w-full  flex justify-center mt-[48px] px-[1rem] navContainer"
+              }
+            >
+              <a
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+                href="/group"
+              >
+                組別介紹
+              </a>
+              <a
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+                href="/collect"
+              >
+                集章兌換
+              </a>
+              {!isHome && (
+                <img
+                  src="/Headline.svg"
+                  alt="Headline"
+                  className={
+                    window.innerWidth < 1584
+                      ? "w-[7.5rem] h-auto backface-hidden mx-[14.4px]"
+                      : "w-[9.5rem] h-auto backface-hidden mt-[-30px] mx-[14.4px]"
+                  }
+                />
+              )}
+              <a
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+                href="/PsychologicalTest"
+              >
+                心理測驗
+              </a>
+              <div
+                className="navHover text-[1.5rem] mx-[1.6875rem]"
+                style={{
+                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                  fontFamily: "B",
+                }}
+              >
+                意見回饋
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // 行動版 Header
+        <div
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
+          }}
+        >
+          <div className="fixed top-0 left-0 right-0 z-[100]">
+            <div className="w-full h-[4rem] flex justify-between items-center px-[1rem]">
+              <img
+                src="/menu.svg"
+                alt="Menu"
+                style={{
+                  width: "28px",
+                  height: "auto",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+                onClick={() => setMenuOpen(!menuOpen)}
+              />
+              {!isHome && (
+                <img
+                  src="/Headline.svg"
+                  alt="Headline"
+                  style={{
+                    width: "7.5rem",
+                    height: "auto",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                />
+              )}
+              <img
+                src="/collect.svg"
+                alt="Collect"
+                style={{
+                  width: "28px",
+                  height: "auto",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              />
+            </div>
+
+            <div
+              className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${
+                menuOpen
+                  ? "scale-y-100 opacity-100 translate-y-0"
+                  : "scale-y-0 opacity-100 -translate-y-10"
+              }`}
+            >
+              <NavBackground menuOpen={menuOpen} />
+              <ul
+                className="relative z-10 flex flex-col items-center justify-center h-full text-white"
+                style={{ fontFamily: "B" }}
+              >
+                <li className="pb-[2.25rem] text-[2rem]">
+                  <a href="/group">
+                    <div className="flex items-center">
+                      <div>組別介紹</div>
+                      <div className="ms-[1rem]">
+                        <img src="/category.svg" alt="Category" />
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li className="pb-[2.25rem] text-[2rem]">
+                  <a href="/collect">
+                    <div className="flex items-center">
+                      <div>集章兌換</div>
+                      <div className="ms-[1rem]">
+                        <img src="/feedback.svg" alt="Feedback" />
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li className="pb-[2.25rem] text-[2rem]">
+                  <a href="/psychologicalTest">
+                    <div className="flex items-center">
+                      <div>心裏測驗</div>
+                      <div className="ms-[1rem]">
+                        <img src="/psychology.svg" alt="Psychology" />
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li className="text-[2rem]">
+                  <a href="/contact">
+                    <div className="flex items-center">
+                      <div>意見回饋</div>
+                      <div className="ms-[1rem]">
+                        <img src="/stamp.svg" alt="Stamp" />
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
