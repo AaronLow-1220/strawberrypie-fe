@@ -9,6 +9,8 @@ export const InfoCard = ({
   backgroundColor,
   color,
   children,
+  customTitleSize = null,
+  customDateSize = null,
 }) => {
   const [deviceType, setDeviceType] = useState("desktop");
 
@@ -18,10 +20,10 @@ export const InfoCard = ({
       setDeviceType("mobile");
       return {
         container: {
-          fontSize: "1rem",
+          fontSize: customTitleSize || "1rem",
         },
         date: {
-          fontSize: "28px",
+          fontSize: customDateSize || "28px",
         },
       };
     } else if (width < 1536) {
@@ -29,11 +31,11 @@ export const InfoCard = ({
       setDeviceType("tablet");
       return {
         container: {
-          fontSize: "28px",
+          fontSize: customTitleSize || "28px",
         },
         date: {
-          fontSize: "36px",
-          letterSpacing: "2px",
+          fontSize: customDateSize || "36px",
+          letterSpacing: "0.07em",
         },
       };
     } else {
@@ -41,11 +43,11 @@ export const InfoCard = ({
       setDeviceType("desktop");
       return {
         container: {
-          fontSize: "28px",
+          fontSize: customTitleSize || "28px",
         },
         date: {
-          fontSize: "48px",
-          letterSpacing: "2px",
+          fontSize: customDateSize || "48px",
+          letterSpacing: "0.07em",
         },
       };
     }
@@ -69,7 +71,7 @@ export const InfoCard = ({
   const containerStyle = {
     ...styles.container,
     width: "fit-content",
-    padding: "0.2em 1em",
+    padding: "0.1em 0.75em",
     backgroundColor,
     textAlign: "center",
     display: "flex",
@@ -87,6 +89,7 @@ export const InfoCard = ({
     textAlign: "center",
     whiteSpace: "nowrap",
     lineHeight: "normal",
+    width: "100%",
   };
 
   const transitionStyle = {
@@ -97,18 +100,18 @@ export const InfoCard = ({
   };
 
   return (
-    <div style={transitionStyle}>
+    <div style={transitionStyle} className="flex flex-col justify-center">
       <div style={containerStyle}>
         <div style={{ color, fontFamily: "H" }}>{title}</div>
       </div>
-      <div className="flex justify-center items-center gap-[12px] mt-2">
+      <div className="flex justify-center items-center gap-[0.75em] mt-[1rem] w-full">
         <div style={dateStyle}>{date || children}</div>
         {deviceType === "tablet" && endDate && (
           <>
             <div
               style={{
-                height: "6px",
-                width: "30px",
+                height: "0.375em",
+                width: "1.875em",
                 backgroundColor: "white",
                 borderRadius: "100px",
               }}
@@ -120,8 +123,7 @@ export const InfoCard = ({
           <>
             <div
               style={{
-                height: "6px",
-                width: "100%",
+                height: "0.375em",
                 backgroundColor: "white",
                 borderRadius: "100px",
               }}

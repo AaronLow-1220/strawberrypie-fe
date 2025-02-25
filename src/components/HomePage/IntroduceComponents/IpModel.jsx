@@ -37,7 +37,7 @@ export const IpModel = ({
                       filter blur-[20px] z-0 transition-all duration-300 ease-in-out block
                       group-hover:h-[11.25rem] group-hover:w-[11.25rem]"
           ></div>
-          <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
+          <div className="relative h-full w-full flex items-center justify-center">
             <img
               className="relative transition-transform duration-300 ease-in-out group-hover:scale-110"
               style={{

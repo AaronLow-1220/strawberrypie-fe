@@ -126,7 +126,6 @@ body {
     height: 20rem;
     margin-top: 4rem;
     padding-top: 0.5rem;
-    justify-content: space-between;
     overflow-x: auto;
     gap: 4.5rem;
     scroll-behavior: smooth;
@@ -141,6 +140,7 @@ body {
     overflow: hidden;
     height: 650px;
     position: relative;
+    min-width: 800px;
   }
   .wave-container .img-container {
     display: flex;
@@ -176,7 +176,7 @@ body {
   @media (max-width: 768px) {
     .wave-container {
       overflow-x: hidden;
-      height: 760px;
+      height: 820px;
       position: relative;
     }
     .wave-container .img-container {
