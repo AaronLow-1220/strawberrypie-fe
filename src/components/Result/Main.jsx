@@ -30,7 +30,7 @@ export const Result = () => {
             <div>
               <div className="flex max-w-[804px] mx-auto ">
                 <div className="w-[120px] h-[120px] ">
-                  <img src="/speaker.png" alt="" />
+                  <img src="/Result/speaker.png" alt="" />
                 </div>
                 <div>
                   <div
@@ -50,7 +50,7 @@ export const Result = () => {
               <div className="flex items-center max-h-[472px] max-w-[804px] mt-[1rem] mx-auto">
                 <div className="max-w-[540px]">
                   <img
-                    src="/遊戲.png"
+                    src="/Result/遊戲.png"
                     alt=""
                     style={{ objectFit: "contain" }}
                   />
@@ -128,8 +128,8 @@ export const Result = () => {
                   >
                     特質
                   </div>
-                  <div className="absolute bottom-[0px] left-[30px] w-[112px] h-[112px]">
-                    <img src="/drawing-pad.png" alt="" />
+                  <div className="absolute bottom-[0px] left-[20px] w-[112px] h-[112px]">
+                    <img src="/Result/drawing-pad.png" alt="" />
                   </div>
                 </div>
                 <div className="bg-[#47152F] rounded-b-[12px] ">
@@ -147,7 +147,7 @@ export const Result = () => {
                     興趣
                   </div>
                   <div className="absolute bottom-[0px] right-[10px] w-[112px] h-[112px]">
-                    <img src="/console.png" alt="" />
+                    <img src="/Result/console.png" alt="" />
                   </div>
                 </div>
                 <div className="bg-[#47152F] rounded-b-[12px] ">
@@ -165,7 +165,7 @@ export const Result = () => {
             <div>
               <div className="flex max-w-[460px] mx-auto ">
                 <div className="w-[72px] h-[72px] ">
-                  <img src="/speaker.png" alt="" />
+                  <img src="/Result/speaker.png" alt="" />
                 </div>
                 <div>
                   <div
@@ -185,7 +185,7 @@ export const Result = () => {
               <div className="flex items-center  max-w-[460px] mt-[1rem] mx-auto">
                 <div className="max-w-[324px]">
                   <img
-                    src="/遊戲.png"
+                    src="/Result/遊戲.png"
                     alt=""
                     style={{ objectFit: "contain" }}
                   />
@@ -261,8 +261,8 @@ export const Result = () => {
                   >
                     特質
                   </div>
-                  <div className="absolute bottom-[0px] left-[20px] w-[77px] h-[77px]">
-                    <img src="/drawing-pad.png" alt="" />
+                  <div className="absolute bottom-[0px] left-[10px] w-[77px] h-[77px]">
+                    <img src="/Result/drawing-pad.png" alt="" />
                   </div>
                 </div>
                 <div className="bg-[#47152F] rounded-b-[12px] ">
@@ -280,7 +280,7 @@ export const Result = () => {
                     興趣
                   </div>
                   <div className="absolute bottom-[0px] right-[10px] w-[77px] h-[77px]">
-                    <img src="/console.png" alt="" />
+                    <img src="/Result/console.png" alt="" />
                   </div>
                 </div>
                 <div className="bg-[#47152F] rounded-b-[12px] ">
@@ -297,9 +297,9 @@ export const Result = () => {
   ) : (
     <div className="flex justify-center w-full ">
       <div className={window.innerWidth < 390 ? "mt-[22%]" : "mt-[17%]"}>
-        <div className="flex max-w-[542px] mx-auto ">
+        <div className="flex w-[402px] mx-auto ">
           <div className="w-[60px] h-[60px] ">
-            <img src="/speaker.png" alt="" />
+            <img src="/Result/speaker.png" alt="" />
           </div>
           <div>
             <div
@@ -315,7 +315,11 @@ export const Result = () => {
         </div>
         <div className="flex justify-center items-center max-h-[236px] max-w-[614px] mx-auto">
           <div className="max-w-[324px]">
-            <img src="/遊戲.png" alt="" style={{ objectFit: "contain" }} />
+            <img
+              src="/Result/遊戲.png"
+              alt=""
+              style={{ objectFit: "contain" }}
+            />
           </div>
           <div className="h-full me-[10px]">
             <div
@@ -387,8 +391,8 @@ export const Result = () => {
               >
                 特質
               </div>
-              <div className="absolute bottom-[0px] left-[20px] w-[70px] h-[70px]">
-                <img src="/drawing-pad.png" alt="" />
+              <div className="absolute bottom-[0px] left-[10px] w-[70px] h-[70px]">
+                <img src="/Result/drawing-pad.png" alt="" />
               </div>
             </div>
             <div className="bg-[#47152F] rounded-b-[12px] ">
@@ -406,7 +410,7 @@ export const Result = () => {
                 興趣
               </div>
               <div className="absolute bottom-[0px] right-[10px]   w-[70px] h-[70px]">
-                <img src="/console.png" alt="" />
+                <img src="/Result/console.png" alt="" />
               </div>
             </div>
             <div className="bg-[#47152F] rounded-b-[12px] ">

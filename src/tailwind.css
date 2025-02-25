@@ -64,6 +64,10 @@ body {
     height: 100vh;
     height: 100svh;
   }
+  .h-screen {
+    height: 100vh;
+    height: 100svh;
+  }
   .bg-pink-radial {
     position: absolute;
     width: 100%;
@@ -171,7 +175,6 @@ body {
 
   @media (max-width: 768px) {
     .wave-container {
-      width: 100vw;
       overflow-x: hidden;
       height: 820px;
       position: relative;
@@ -328,7 +331,7 @@ body {
   }
 
   .group-block__header__dropdown.expand {
-    transform: rotate(180deg);
+    transform: rotate(90deg);
   }
 
   .group-block__header__dropdown img {
