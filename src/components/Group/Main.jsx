@@ -277,7 +277,7 @@ export const Group = ({ focus }) => {
                     <div
                       className={
                         window.innerWidth < 1024
-                          ? "flex mt-[2.5rem] px-[1rem]"
+                          ? "flex mt-[2.5rem] px-[20px]"
                           : window.innerWidth < 1536
                           ? "flex  px-[128px]"
                           : "flex  px-[256px]"
@@ -412,7 +412,7 @@ export const Group = ({ focus }) => {
                   <div
                     className={
                       window.innerWidth < 1024
-                        ? "flex mt-[2.5rem] px-[1rem]"
+                        ? "flex mt-[2.5rem] px-[20px]"
                         : window.innerWidth < 1536
                         ? "flex  px-[128px]"
                         : "flex  px-[256px]"

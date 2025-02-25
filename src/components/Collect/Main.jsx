@@ -15,8 +15,8 @@ export const Collect = () => {
         window.innerWidth < 1024
           ? ""
           : window.innerWidth < 1536
-          ? "mt-[5%] flex justify-center  space-x-[36px] px-[86px]"
-          : "mt-[5%] flex justify-center  space-x-[96px] px-[256px] "
+          ? "mt-[5%] flex justify-center items-center  space-x-[36px] px-[86px]"
+          : "mt-[5%] flex justify-center items-center  space-x-[96px] px-[256px] "
       }
     >
       <div
@@ -24,15 +24,15 @@ export const Collect = () => {
           window.innerWidth < 390
             ? "mt-[27%] flex flex-col justify-center w-full"
             : window.innerWidth < 1024
-            ? "mt-[22%] flex flex-col  w-full"
-            : "mt-[22%] flex flex-col  w-full"
+            ? "mt-[72px] flex flex-col  w-full"
+            : "mt-[48px] flex flex-col  w-full"
         }
       >
         <ProgressBar />
         <div
           className={
             window.innerWidth < 1536
-              ? "w-[280px] mt-[-10px] mx-auto"
+              ? "w-[280px] mt-[-10px] mx-auto "
               : "w-[280px] mt-[60px] mx-auto transform scale-150"
           }
         >
@@ -43,7 +43,7 @@ export const Collect = () => {
                 style={{ border: "4px solid #FFF" }}
               ></div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-                <img src="/gifts.svg" alt="" />
+                <img src="/Collect/gifts.svg" alt="" />
               </div>
             </div>
             <div className="relative">
@@ -52,7 +52,7 @@ export const Collect = () => {
                 style={{ border: "4px solid #FFF" }}
               ></div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-                <img src="/qr_codes.svg" alt="" />
+                <img src="/Collect/qr_codes.svg" alt="" />
               </div>
             </div>
           </div>
@@ -93,8 +93,8 @@ export const Collect = () => {
           window.innerWidth < 760
             ? "px-[20px] mt-[48px] w-full"
             : window.innerWidth < 1024
-            ? "px-[147px] mt-[48px] w-full"
-            : "px-[0px] mt-[48px] w-full"
+            ? "px-[147px] mt-[48px] w-full  h-[480px]"
+            : "px-[0px] mt-[48px] w-full overflow-y-scroll h-[656px]"
         }
       >
         {array.map((item, index) => (

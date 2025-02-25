@@ -2,8 +2,8 @@ export const ProgressBar = () => {
   // 設定角度，單位：度
   const angleInDegrees = 201.6;
 
-  const radius = 120; // 大圓半徑 (240px / 2)
-  const smallCircleRadius = 13.25; // 小圓半徑 (26.5px / 2)
+  const radius = 115; // 大圓半徑 (240px / 2)
+  const smallCircleRadius = 10.5; // 小圓半徑 (26.5px / 2)
 
   // 正確轉換角度為弧度
   const radians = (angleInDegrees - 90) * (Math.PI / 180); // 減去90度以從頂部開始
@@ -15,8 +15,8 @@ export const ProgressBar = () => {
     <div
       className={
         window.innerWidth < 1536
-          ? "relative w-[240px] h-[240px] mx-auto "
-          : "relative w-[240px] h-[240px] mx-auto transform scale-150"
+          ? "relative w-[230px] h-[230px] mx-auto "
+          : "relative w-[230px] h-[230px] mx-auto transform scale-150"
       }
     >
       {/* 進度條背景（使用 conic-gradient） */}
@@ -25,7 +25,7 @@ export const ProgressBar = () => {
         style={{
           background: `conic-gradient(#FF4EC8 0deg ${angleInDegrees}deg, rgba(0,0,0,0.3) ${angleInDegrees}deg 360deg)`,
           WebkitMaskImage:
-            "radial-gradient(circle at center, transparent 0%, transparent 55%, black 47%)",
+            "radial-gradient(circle at center, transparent 0%, transparent 58%, black 47%)",
         }}
       ></div>
 
@@ -33,8 +33,8 @@ export const ProgressBar = () => {
       <div
         className="absolute rounded-full -z-20"
         style={{
-          width: "26.5px",
-          height: "26.5px",
+          width: "20.8px",
+          height: "20.8px",
           background: "#FF4EC8",
           top: "calc(0%)",
           left: "calc(45.5%)",
@@ -45,8 +45,8 @@ export const ProgressBar = () => {
       <div
         className="absolute rounded-full -z-20"
         style={{
-          width: "26.5px",
-          height: "26.5px",
+          width: "20.9px",
+          height: "20.9px",
           background: "#FF4EC8",
           top: `${y - smallCircleRadius}px`,
           left: `${x - smallCircleRadius}px`,

@@ -78,16 +78,16 @@ export const FocusCard = ({
           </div>
           <div className="flex space-x-[10px] mt-[12px]">
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/globe21.svg" alt="" />
+              <img src="/Group/globe21.svg" alt="" />
             </div>
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/instagram 1.svg" alt="" />
+              <img src="/Group/instagram 1.svg" alt="" />
             </div>
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/youtube 1.svg" alt="" />
+              <img src="/Group/youtube 1.svg" alt="" />
             </div>
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/link-45deg 1.svg" alt="" />
+              <img src="/Group/link-45deg 1.svg" alt="" />
             </div>
           </div>
           <div
@@ -99,7 +99,7 @@ export const FocusCard = ({
         </div>
         <div className="absolute top-0 right-0">
           <div className="m-[12px] cursor-pointer" onClick={click}>
-            <img src="/Close Button.svg" alt="Close Button" />
+            <img src="/Group/Close Button.svg" alt="Close Button" />
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export const FocusCard = ({
           <img className="w-full h-full object-cover" src={img} alt="img" />
           <div className="absolute top-0 right-0">
             <div className="m-[12px] cursor-pointer" onClick={click}>
-              <img src="/Close Button.svg" alt="Close Button" />
+              <img src="/Group/Close Button.svg" alt="Close Button" />
             </div>
           </div>
         </div>
@@ -130,16 +130,16 @@ export const FocusCard = ({
           </div>
           <div className="flex space-x-[10px] mt-[12px]">
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/globe21.svg" alt="" />
+              <img src="/Group/globe21.svg" alt="" />
             </div>
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/instagram 1.svg" alt="" />
+              <img src="/Group/instagram 1.svg" alt="" />
             </div>
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/youtube 1.svg" alt="" />
+              <img src="/Group/youtube 1.svg" alt="" />
             </div>
             <div className="bg-[#6C2028] w-[40px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
-              <img src="/link-45deg 1.svg" alt="" />
+              <img src="/Group/link-45deg 1.svg" alt="" />
             </div>
           </div>
           <div

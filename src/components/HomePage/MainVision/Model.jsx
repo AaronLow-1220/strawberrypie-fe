@@ -150,7 +150,11 @@ export const Model = ({ logoAnimation }) => {
               >
                 元智大學資訊傳播學系
               </p>
-              <img className="w-[360px] mt-4" src="/畢業展28.svg" alt="" />
+              <img
+                className="w-[360px] mt-4"
+                src="/HomePage/畢業展28.svg"
+                alt=""
+              />
             </div>
           </div>
           <div

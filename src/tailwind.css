@@ -171,7 +171,6 @@ body {
 
   @media (max-width: 768px) {
     .wave-container {
-      width: 100vw;
       overflow-x: hidden;
       height: 760px;
       position: relative;
@@ -328,7 +327,7 @@ body {
   }
 
   .group-block__header__dropdown.expand {
-    transform: rotate(180deg);
+    transform: rotate(90deg);
   }
 
   .group-block__header__dropdown img {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSwipeable } from "react-swipeable";
 
 export const Question = () => {
   const Questions = [
@@ -11,7 +12,7 @@ export const Question = () => {
         "將草莓打成果醬混入乳酪呈現櫻花粉",
         "加入堅果、藍莓，增加口感與色彩層次",
       ],
-      img: "/IMG_1996.PNG",
+      img: "/PsychologicalTest/IMG_1996.PNG",
     },
     {
       id: 2,
@@ -22,7 +23,7 @@ export const Question = () => {
         "很chill隨意照自己想法做，能吃都沒問題",
         "自己瞎搞看看，說不定變成更好吃的東西",
       ],
-      img: "/IMG_1995.PNG",
+      img: "/PsychologicalTest/IMG_1995.PNG",
     },
     {
       id: 3,
@@ -33,7 +34,7 @@ export const Question = () => {
         "全部都丟到水槽等等再一起洗就行了",
         "我覺得......等等應該會有小精靈",
       ],
-      img: "/IMG_1994.PNG",
+      img: "/PsychologicalTest/IMG_1994.PNG",
     },
     {
       id: 4,
@@ -44,7 +45,7 @@ export const Question = () => {
         "多選幾間水果攤挑選一下吧！或許能買到更好吃的！",
         "草莓當然是要去大湖啦，順便逛逛苗栗",
       ],
-      img: "/IMG_1993.PNG",
+      img: "/PsychologicalTest/IMG_1993.PNG",
     },
     {
       id: 5,
@@ -55,7 +56,7 @@ export const Question = () => {
         "派皮混入可可粉或肉桂粉，增添創意",
         "加少許白蘭地或香橙酒，增加成熟風味",
       ],
-      img: "/IMG_1991.PNG",
+      img: "/PsychologicalTest/IMG_1991.PNG",
     },
     {
       id: 6,
@@ -66,7 +67,7 @@ export const Question = () => {
         "靜置冷藏，麵團才能好好放鬆，否則會變形",
         "烘烤前小細節，派皮底部戳些洞，避免爆炸",
       ],
-      img: "/IMG_1990.PNG",
+      img: "/PsychologicalTest/IMG_1990.PNG",
     },
   ];
 
@@ -101,6 +102,25 @@ export const Question = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      // 往左滑動 => 下一題
+      if (currentIndex < Questions.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+        setCurrentQuestion(currentQuestion + 1);
+      }
+    },
+    onSwipedRight: () => {
+      // 往右滑動 => 回上一題（若需要回上一題）
+      if (currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+        setCurrentQuestion(currentQuestion - 1);
+      }
+    },
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false, // 電腦也能使用滑鼠拖曳模擬手勢
+  });
 
   const handleNextQuestion = (optionIndex) => {
     const newSelectedOptions = [...selectedOptions];
@@ -244,7 +264,7 @@ export const Question = () => {
                       >
                         {currentIndex === index ? (
                           <img
-                            src="/strawberry.svg"
+                            src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
                             className="transition-all duration-300"
                             style={{
@@ -255,7 +275,7 @@ export const Question = () => {
                           />
                         ) : currentIndex >= index ? (
                           <img
-                            src="/strawberry.svg"
+                            src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
                             className="transition-all duration-300 opacity-[0.6]"
                             style={{
@@ -304,6 +324,7 @@ export const Question = () => {
             )}
           </div>
           <div
+            {...swipeHandlers}
             className={
               ipadWindowWidthTrue
                 ? "w-full max-w-[26.25rem] mx-auto px-[24px] mt-[40px] mb-[20px]  relative "
@@ -382,7 +403,7 @@ export const Question = () => {
                       >
                         {currentIndex === index ? (
                           <img
-                            src="/strawberry.svg"
+                            src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
                             className="transition-all duration-300"
                             style={{
@@ -393,7 +414,7 @@ export const Question = () => {
                           />
                         ) : currentIndex >= index ? (
                           <img
-                            src="/strawberry.svg"
+                            src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
                             className="transition-all duration-300 opacity-[0.6]"
                             style={{
