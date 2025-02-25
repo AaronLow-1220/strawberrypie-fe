@@ -122,7 +122,6 @@ body {
     height: 20rem;
     margin-top: 4rem;
     padding-top: 0.5rem;
-    justify-content: space-between;
     overflow-x: auto;
     gap: 4.5rem;
     scroll-behavior: smooth;

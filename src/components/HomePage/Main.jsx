@@ -12,6 +12,7 @@ export const HomePage = () => {
   const [unitWindowHeight, setUnitWindowHeight] = useState("68rem");
   const [windowTrue, setWindowTrue] = useState(false);
   const [windowDesktop, setWindowDesktop] = useState(false);
+  const [windowLargeDesktop, setWindowLargeDesktop] = useState(false);
   const [marginBottom, setMarginBottom] = useState("3rem");
 
   // Logo 動畫觸發方法
@@ -30,15 +31,26 @@ export const HomePage = () => {
       if (window.innerWidth < 768) {
         setUnitWindowHeight("68rem");
         setWindowTrue(false);
+        setWindowDesktop(false);
+        setWindowLargeDesktop(false);
         setMarginBottom("3rem");
       } else if (window.innerWidth < 1024) {
         setUnitWindowHeight("55.25rem");
         setWindowTrue(true);
+        setWindowDesktop(false);
+        setWindowLargeDesktop(false);
         setMarginBottom("6rem");
+      } else if (window.innerWidth < 1536) {
+        setUnitWindowHeight("52rem");
+        setWindowTrue(true);
+        setWindowDesktop(true);
+        setWindowLargeDesktop(false);
+        setMarginBottom("8rem");
       } else {
         setUnitWindowHeight("52rem");
         setWindowTrue(true);
         setWindowDesktop(true);
+        setWindowLargeDesktop(true);
         setMarginBottom("8rem");
       }
     };
@@ -80,9 +92,39 @@ export const HomePage = () => {
       <div className="w-full " style={{ marginBottom: marginBottom }}>
         <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
         {windowTrue ? (
-          windowDesktop ? (
+          windowLargeDesktop ? (
             <div className="mt-[5.375rem] ">
               <div className="max-w-[83rem] mx-auto flex justify-between ">
+                <IpModel
+                  title="互動"
+                  secondTitle="Digital Experience"
+                  img="/互動_web.png"
+                />
+                <IpModel
+                  title="遊戲"
+                  secondTitle="Game Design"
+                  img="/遊戲_web.png"
+                />
+                <IpModel
+                  title="影視"
+                  secondTitle="Film Production"
+                  img="/影視_web.png"
+                />
+                <IpModel
+                  title="行銷"
+                  secondTitle="Marketing"
+                  img="/行銷_web.png"
+                />
+                <IpModel
+                  title="動畫"
+                  secondTitle="Animation"
+                  img="/動畫_web.png"
+                />
+              </div>
+            </div>
+          ) : windowDesktop ? (
+            <div className="mt-[5.375rem] ">
+              <div className="max-w-[75rem] mx-auto flex justify-between ">
                 <IpModel
                   title="互動"
                   secondTitle="Digital Experience"
@@ -311,7 +353,36 @@ export const HomePage = () => {
       >
         <Slogan title="草莓派，有夠π～" secondTitle="記住我們的名字" />
         {windowTrue === true ? (
-          windowDesktop ? (
+          windowLargeDesktop ? (
+            <>
+              <div className="w-[35.25rem] flex justify-between mx-auto">
+                <Unit
+                  title="主辦單位"
+                  img="/元智大學資訊傳播學系.svg"
+                  imgWidth="15.625rem"
+                />
+                <Unit
+                  title="執行單位"
+                  img="/第28屆畢業展覽籌備會.svg"
+                  imgWidth="15.625rem"
+                />
+              </div>
+              <Unit
+                title="贊助單位"
+                img="/華視文教基金會.png"
+                img2="/教育部高等深耕教育計劃.png"
+                imgWidth="15.625rem"
+              />
+              <Unit
+                title="指導單位"
+                img="/桃園市政府.svg"
+                img2="/桃園市政府青年事務局.png"
+                img3="/桃園市議會.svg"
+                img4="/元智大學-資訊學院.svg"
+                imgWidth="15.625rem"
+              />
+            </>
+          ) : windowDesktop ? (
             <>
               <div className="w-[35.25rem] flex justify-between mx-auto">
                 <Unit
