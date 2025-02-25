@@ -242,7 +242,7 @@ export const HomePage = () => {
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <DateMap
                   backgroundColor="#FFFFFF"
-                  color="#E04AA9"
+                  color="#F748C1"
                   title="校內展"
                   date="04.07"
                   secondDate="04.11"
@@ -257,7 +257,7 @@ export const HomePage = () => {
               </div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
                 <DateMap
-                  backgroundColor="#E04AA9"
+                  backgroundColor="#F748C1"
                   color="#FFFFFF"
                   title="校外展"
                   date="04.25"
@@ -297,10 +297,10 @@ export const HomePage = () => {
                 <img src="/wave_1.webp" alt="" className="wave" />
                 <img src="/wave_1.webp" alt="" className="wave" />
               </div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full px-[20px] max-w-[380px] w-[100vw]">
                 <DateMap
                   backgroundColor="#FFFFFF"
-                  color="#E04AA9"
+                  color="#F748C1"
                   title="校內展"
                   date="04.07"
                   secondDate="04.11"
@@ -313,14 +313,14 @@ export const HomePage = () => {
                 <img src="/wave_2.webp" alt="" className="wave" />
                 <img src="/wave_2.webp" alt="" className="wave" />
               </div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full px-[20px] max-w-[380px] w-[100vw]">
                 <DateMap
-                  backgroundColor="#FFFFFF"
-                  color="#E04AA9"
-                  title="校內展"
-                  date="04.07"
-                  secondDate="04.11"
-                  place="元智大學•五館三樓 / 六館玻璃屋"
+                  backgroundColor="#F748C1"
+                  color="#FFFFFF"
+                  title="校外展"
+                  date="04.25"
+                  secondDate="04.28"
+                  place="松三文創園區• 三號倉庫"
                 />
               </div>
             </div>
