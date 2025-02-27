@@ -127,8 +127,8 @@ export const DateMap = ({
           ></span>
           <span>{secondDate}</span>
         </div>
-        <div className="flex justify-center text-[1.25rem] mt-[1rem] text-center">{place}</div>
-        <div className="mt-[3rem] w-full aspect-[4/3] mx-auto bg-white rounded-[10px]"></div>
+        <div className="flex justify-center text-[1.25rem] mt-[1rem] text-center text-wrap leading-[1.2em]">{place}</div>
+        <div className="mt-[1.5rem] w-full aspect-[4/3] mx-auto bg-white rounded-[10px]"></div>
       </InfoCard>
     </div>
   );
