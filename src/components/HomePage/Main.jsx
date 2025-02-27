@@ -226,7 +226,7 @@ export const HomePage = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-[75.5rem]">
+      <div className="w-full overflow-x-clip h-[75.5rem]">
         <Slogan title="跨域築夢不徘徊" secondTitle="提案練習日日在" />
         {windowTrue === true ? (
           <>
@@ -329,8 +329,6 @@ export const HomePage = () => {
               style={{
                 height: "200px",
                 transform: " translateY(-190%)",
-                background:
-                  "linear-gradient(to bottom, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 1) 100%)",
                 position: "relative",
                 overflow: "hidden",
               }}
