@@ -1,34 +1,52 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
-// NavBackground 元件：根據 menuOpen 狀態改變 SVG 路徑動畫
-const NavBackground = ({ menuOpen }) => {
+const NavBackground = ({ timeline }) => {
   const pathRef = useRef(null);
-
   useEffect(() => {
     const path = pathRef.current;
     if (!path) return;
 
-    // 定義展開與關閉的 SVG 路徑
     const openPath =
       "M416 429.5C416 429.5 381.771 466.366 333.102 466.366C284.433 466.366 261.119 529 205.813 529C150.508 529 161.958 472 102.057 494C42.1567 516 -14 396.5 -14 396.5L-14 -9.99998L416 -9.99994L416 429.5Z";
     const closedPath =
       "M416 409.264C416 409.264 375.756 391.753 327.086 391.753C278.417 391.753 263.338 429.772 208.033 429.772C152.727 429.772 128.161 452.785 63.8621 429.772C-0.436921 406.76 -14 414.768 -14 414.768L-14 -10L416 -9.99996L416 409.264Z";
 
-    // 當 menuOpen 為 true 時，執行展開動畫，否則回復關閉狀態
-    gsap.to(path, {
-      duration: 0.8,
-      ease: "power3.inOut",
-      attr: { d: menuOpen ? openPath : closedPath },
-    });
-  }, [menuOpen]);
+    timeline.current = gsap.timeline({ paused: true });
+
+    gsap.set(".mobile-menu-container", { scaleY: 0, opacity: 0 });
+    gsap.set(path, { attr: { d: closedPath } });
+
+    // timeline 內容：打開時 scaleY -> 1、同時 path -> openPath
+    timeline.current
+      .to(
+        ".mobile-menu-container",
+        {
+          duration: 0.8,
+          scaleY: 1,
+          opacity: 1,
+          transformOrigin: "top",
+          ease: "power3.inOut",
+        },
+        0 // 從時間軸 0 秒開始
+      )
+      .to(
+        path,
+        {
+          duration: 0.8,
+          attr: { d: openPath },
+          ease: "power3.inOut",
+        },
+        0
+      );
+  }, [timeline]);
 
   return (
     <svg
       className="nav-bg"
       width="100%"
       height="450"
-      viewBox="0 0 400 450" // 保持原始比例
+      viewBox="0 0 400 450"
       preserveAspectRatio="none"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +80,7 @@ const NavBackground = ({ menuOpen }) => {
             result="hardAlpha"
           />
           <feOffset dx="6" dy="1" />
-          <feGaussianBlur stdDeviation="8.9" />
+          <feGaussianBlur stdDeviation="5" />
           <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
           <feColorMatrix
             type="matrix"
@@ -88,11 +106,13 @@ const NavBackground = ({ menuOpen }) => {
   );
 };
 
-// Header 元件：根據裝置寬度與選單狀態顯示不同版型
 export const Header = () => {
   const [isHome, setIsHome] = useState(false);
   const [windowWidthTrue, setWindowWidthTrue] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // 建立一個 ref，存放 GSAP Timeline（NavBackground 裡會初始化它）
+  const menuTimeline = useRef(null);
 
   // 判斷是否為首頁
   useEffect(() => {
@@ -117,10 +137,20 @@ export const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 每次 menuOpen 改變時，判斷要播放還是倒轉 timeline
+  useEffect(() => {
+    if (!menuTimeline.current) return;
+    if (menuOpen) {
+      menuTimeline.current.play();
+    } else {
+      menuTimeline.current.reverse();
+    }
+  }, [menuOpen]);
+
   return (
     <>
       {windowWidthTrue ? (
-        // 桌機版 Header
+        // 桌機版 Header （略）
         <div
           style={{
             background:
@@ -229,14 +259,17 @@ export const Header = () => {
             />
           </div>
 
+          {/* 將行動版容器的展開／收起，也交給 GSAP 控制 */}
           <div
-            className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${
-              menuOpen
-                ? "scale-y-100 opacity-100 translate-y-0"
-                : "scale-y-0 opacity-100 -translate-y-10"
-            }`}
+            className="mobile-menu-container z-[-10] absolute top-0 right-0 w-full h-[33.75rem]"
+            style={{
+              // 移除原本的 transition、scale-y-0 / scale-y-100
+              // 只保留必要定位與圖層設定
+              willChange: "transform",
+              transformOrigin: "top",
+            }}
           >
-            <NavBackground menuOpen={menuOpen} />
+            <NavBackground menuOpen={menuOpen} timeline={menuTimeline} />
             <ul
               className="relative z-10 flex flex-col items-center justify-center h-full text-white"
               style={{ fontFamily: "B" }}
@@ -264,7 +297,7 @@ export const Header = () => {
               <li className="pb-[2.25rem] text-[2rem]">
                 <a href="/psychologicalTest">
                   <div className="flex items-center">
-                    <div>心裏測驗</div>
+                    <div>心裡測驗</div>
                     <div className="ms-[1rem]">
                       <img src="/Header/psychology.svg" alt="Psychology" />
                     </div>
