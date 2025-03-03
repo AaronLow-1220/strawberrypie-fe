@@ -47,7 +47,7 @@ export const Card = ({
 
   return (
     <div
-      className="-z-0 max-h-[27.8125rem] max-w-[18.75rem] w-full h-auto bg-white rounded-[12px]"
+      className="-z-0 max-h-[27.8125rem] snap-start max-w-[18.75rem] w-full h-auto bg-white rounded-[12px]"
       onClick={handleCardClick}
       style={{ cursor: "pointer" }}
     >
