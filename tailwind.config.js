@@ -3,6 +3,13 @@ import withMT from "@material-tailwind/react/utils/withMT";
 export default withMT({
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      sm: '640px',  // 小型裝置
+      md: '768px',  // 中型裝置
+      lg: '1024px', // 大型裝置
+      xl: '1280px', // 超大型裝置
+      '2xl': '1536px', 
+    },
     extend: {
       fontFamily: {
         sans: ["GenSenRounded", "sans-serif"],
