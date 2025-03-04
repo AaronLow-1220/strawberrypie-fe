@@ -14,7 +14,7 @@ export const Nav = ({ onFilterChange }) => {
 	}
 
 	return (
-		<div className='px-[20px] mt-[72px] mb-[48px] scrollbar-hide lg:mb-[24px] 2xl:mb-[42px] lg:mt-[120px] lg:justify-center text-white flex space-x-[8px] sticky top-[64px] md:top-[0px] scroll-px-5 snap-x overflow-x-scroll whitespace-nowrap'>
+		<div className='z-10 px-[20px] mt-[72px] mb-[48px] scrollbar-hide lg:mb-[24px] 2xl:mb-[42px] lg:mt-[120px] lg:justify-center text-white flex space-x-[8px] sticky lg:relative top-[64px] md:top-[0px] scroll-px-5 snap-x overflow-x-scroll whitespace-nowrap'>
 			{navList.map((item) => (
 				<button
 					key={item}
