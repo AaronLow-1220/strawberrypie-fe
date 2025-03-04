@@ -273,7 +273,7 @@ export const Group = ({ focus }) => {
 
   // 渲染正常視圖，顯示所有類別和卡片
   const renderNormalView = () => (
-    <div className="normal-view">
+    <div className="normal-view mb-[10rem]">
       {/* 類別過濾器 */}
       <Nav onFilterChange={handleFilterChange} />
 
