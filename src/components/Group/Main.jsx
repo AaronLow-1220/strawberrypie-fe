@@ -20,6 +20,34 @@ const transitionStyles = `
     opacity: 0;
     transition: opacity 200ms;
   }
+  
+  /* FocusCard 過渡效果 */
+  .focus-card-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+  }
+  
+  .focus-card-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+  }
+  
+  .focus-card-overlay.visible {
+    opacity: 1;
+  }
+  
+  .focus-card-container.visible {
+    transform: scale(1);
+    opacity: 1;
+  }
 `;
 
 // 滾動按鈕組件
@@ -48,12 +76,12 @@ const cards = [
   {
     category: "互動",
     img: "/遊戲_web.png",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    title: "Do-NUT",
     content:
       "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
     secondTitle: "Timeout Studio",
     detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
     member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
     teachers: ["張銘", "張銘", "張銘"],
   },
@@ -153,9 +181,12 @@ export const Group = ({ focus }) => {
   const [focusedCard, setFocusedCard] = useState(null);
   // 使用外部定義的卡片資料
   const data = cards;
-  
+
   // 用於 CSS Transition 的節點引用
   const nodeRef = useRef(null);
+
+  // 用於追蹤 FocusCard 的可見性狀態
+  const [isFocusCardVisible, setIsFocusCardVisible] = useState(false);
 
   // 根據選擇的過濾類別過濾卡片
   const filteredCards = selectedFilter === "全部"
@@ -225,12 +256,24 @@ export const Group = ({ focus }) => {
   const handleCardClick = useCallback((cardData) => {
     // 設置焦點卡片資料
     setFocusedCard(cardData);
+    // 鎖定背景滾動
+    document.body.style.overflow = 'hidden';
+    // 延遲設置可見性，確保 DOM 已更新
+    setTimeout(() => {
+      setIsFocusCardVisible(true);
+    }, 50);
   }, []);
 
   // 處理取消焦點事件，返回到主畫面
   const handleCancelFocus = useCallback(() => {
-    // 清除焦點卡片資料
-    setFocusedCard(null);
+    // 先隱藏 FocusCard
+    setIsFocusCardVisible(false);
+    // 解除背景滾動鎖定
+    document.body.style.overflow = '';
+    // 等待過渡效果完成後清除焦點卡片資料
+    setTimeout(() => {
+      setFocusedCard(null);
+    }, 300);
   }, []);
 
   // 處理過濾器變更事件
@@ -280,21 +323,22 @@ export const Group = ({ focus }) => {
     if (selectedFilter !== "全部") {
       // 特定類別顯示，網格佈局
       return (
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10">
-            {filteredCards.map((card, index) => (
-              <Card
-                key={index}
-                img={card.img}
-                title={card.title}
-                content={card.content}
-                secondTitle={card.secondTitle}
-                detailedContent={card.detailedContent}
-                member={card.member}
-                teachers={card.teachers}
-                onClick={() => handleCardClick(card)}
-              />
-            ))}
+        <div className="flex justify-center group-padding">
+          <div className="w-full mx-auto">
+            <div className="card-category">
+              {filteredCards.map((card, index) => (
+                <Card
+                  img={card.img}
+                  title={card.title}
+                  content={card.content}
+                  secondTitle={card.secondTitle}
+                  detailedContent={card.detailedContent}
+                  member={card.member}
+                  teachers={card.teachers}
+                  onClick={() => handleCardClick(card)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       );
@@ -309,7 +353,7 @@ export const Group = ({ focus }) => {
                 <div
                   className="text-2xl lg:text-3xl text-white pe-2 leading-none cursor-pointer"
                   style={{ fontFamily: "B" }}
-                  onClick={() => setSelectedFilter(item)}
+                  onClick={() => handleFilterChange(item)}
                 >
                   {item}
                 </div>
@@ -346,17 +390,17 @@ export const Group = ({ focus }) => {
                     />
                   ))}
               </div>
-              
+
               {/* 左右滾動按鈕 */}
-              <ScrollArrow 
-                direction="left" 
-                isVisible={buttonVisibility[item]?.showLeftButton} 
-                onClick={() => scroll(item, "left")} 
+              <ScrollArrow
+                direction="left"
+                isVisible={buttonVisibility[item]?.showLeftButton}
+                onClick={() => scroll(item, "left")}
               />
-              <ScrollArrow 
-                direction="right" 
-                isVisible={buttonVisibility[item]?.showRightButton} 
-                onClick={() => scroll(item, "right")} 
+              <ScrollArrow
+                direction="right"
+                isVisible={buttonVisibility[item]?.showRightButton}
+                onClick={() => scroll(item, "right")}
               />
             </div>
           ))}
@@ -369,7 +413,7 @@ export const Group = ({ focus }) => {
   const renderNormalView = () => (
     <div className="normal-view mb-[10rem]">
       {/* 類別過濾器 */}
-      <Nav onFilterChange={handleFilterChange} />
+      <Nav filter={selectedFilter} onFilterChange={handleFilterChange} />
 
       {/* 類別內容區塊 - 使用 SwitchTransition 和 CSSTransition 實現淡入淡出效果 */}
       <div className="category-content">
@@ -391,48 +435,34 @@ export const Group = ({ focus }) => {
     </div>
   );
 
-  // 渲染焦點卡片視圖，顯示卡片詳細資訊
+  // 修改渲染焦點卡片視圖，使用自定義的過渡效果
   const renderFocusCardView = () => (
     <>
-      {/* 保持正常視圖在背景中 */}
-      <div className="normal-view mb-[10rem] pointer-events-none opacity-50">
-        {/* 類別過濾器 */}
-        <Nav onFilterChange={handleFilterChange} />
-
-        {/* 類別內容區塊 */}
-        <div className="category-content">
-          <style>{transitionStyles}</style>
-          <SwitchTransition mode="out-in">
-            <CSSTransition
-              key={selectedFilter}
-              nodeRef={nodeRef}
-              timeout={500}
-              classNames="fade"
-              unmountOnExit
-            >
-              <div ref={nodeRef}>
-                {renderCategoryContent()}
-              </div>
-            </CSSTransition>
-          </SwitchTransition>
-        </div>
+      <div className={`focus-card-overlay ${isFocusCardVisible ? 'visible' : ''}`}></div>
+      <div className={`focus-card-container flex items-center justify-center overflow-y-auto ${isFocusCardVisible ? 'visible' : ''}`}>
+        {focusedCard && (
+          <FocusCard
+            img={focusedCard.img}
+            title={focusedCard.title}
+            secondTitle={focusedCard.secondTitle}
+            detailedContent={focusedCard.detailedContent}
+            member={focusedCard.member}
+            teachers={focusedCard.teachers}
+            onCancel={handleCancelFocus}
+          />
+        )}
       </div>
-
-      {/* 焦點卡片作為對話框顯示在頂層 */}
-      {focusedCard && (
-        <FocusCard
-          img={focusedCard.img}
-          title={focusedCard.title}
-          secondTitle={focusedCard.secondTitle}
-          detailedContent={focusedCard.detailedContent}
-          member={focusedCard.member}
-          teachers={focusedCard.teachers}
-          onCancel={handleCancelFocus}
-        />
-      )}
     </>
   );
 
   // 根據焦點狀態渲染不同視圖
-  return focusedCard ? renderFocusCardView() : renderNormalView();
+  return (
+    <>
+      <style>{transitionStyles}</style>
+      <div className={focusedCard ? 'pointer-events-none' : ''}>
+        {renderNormalView()}
+      </div>
+      {focusedCard && renderFocusCardView()}
+    </>
+  );
 };

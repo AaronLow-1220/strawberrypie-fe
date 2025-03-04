@@ -32,24 +32,25 @@ export const Card = ({
 
   return (
     <div
-      className="w-[calc(100vw-40px)] max-w-[300px] shrink-0 snap-start bg-white overflow-hidden rounded-[12px] cursor-pointer"
+      className={`${selectedFilter === '全部' ? "w-[calc(100vw-40px)] max-w-[300px]" : "w-full"}
+        shrink-0 snap-start  bg-[#361014]  overflow-hidden rounded-[12px] cursor-pointer`}
       onClick={handleCardClick}
     >
       {/* 卡片容器，使用 flex 佈局 */}
-      <div className="relative flex flex-col justify-center group">
+      <div className="relative  flex flex-col justify-center group">
         {/* 卡片圖片區域 */}
-        <div className="w-full aspect-[4/3] overflow-hidden">
+        <div className="max-w-full bg-white aspect-[4/3] overflow-hidden">
           <img className="w-full h-full object-cover" src={img} alt={title || "卡片圖片"} />
         </div>
         
         {/* 卡片內容區域 */}
         <div
-          className="bg-[#361014] p-[18px_24px_48px_24px] flex flex-col flex-grow"
+          className="card-content p-[18px_24px_48px_24px] flex flex-col flex-grow"
         >
           {/* 卡片標題 - 根據字數動態調整字體大小 */}
           <div
             className="text-[#FFFFFF] leading-[1.3em] mb-[3px] font-bold"
-            style={{ fontSize: titleFontSize }}
+            style={{ fontSize: titleFontSize, fontFamily: "B" }}
           >
             {title}
           </div>
@@ -64,7 +65,7 @@ export const Card = ({
 
           {/* 卡片內容摘要 - 固定 15px */}
           <div
-            className="text-white overflow-hidden flex-1 opacity-[72%]"
+            className="card-content-summary text-white overflow-hidden flex-1 opacity-[72%]"
             style={{ fontSize: "15px" }}
           >
             {content}
