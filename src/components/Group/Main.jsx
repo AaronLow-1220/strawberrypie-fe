@@ -2,6 +2,25 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Card } from "./Card/Card";
 import { FocusCard } from "./Card/FocusCard";
 import { Nav } from "./Nav/Nav";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
+
+// 添加 CSS 過渡樣式
+const transitionStyles = `
+  .fade-enter {
+    opacity: 0;
+  }
+  .fade-enter-active {
+    opacity: 1;
+    transition: opacity 200ms;
+  }
+  .fade-exit {
+    opacity: 1;
+  }
+  .fade-exit-active {
+    opacity: 0;
+    transition: opacity 200ms;
+  }
+`;
 
 // 滾動按鈕組件
 const ScrollArrow = ({ direction, isVisible, onClick }) => {
@@ -134,6 +153,9 @@ export const Group = ({ focus }) => {
   const [focusedCard, setFocusedCard] = useState(null);
   // 使用外部定義的卡片資料
   const data = cards;
+  
+  // 用於 CSS Transition 的節點引用
+  const nodeRef = useRef(null);
 
   // 根據選擇的過濾類別過濾卡片
   const filteredCards = selectedFilter === "全部"
@@ -253,23 +275,95 @@ export const Group = ({ focus }) => {
     };
   }, [handleResize, initializeButtonVisibility]);
 
-  // 渲染焦點卡片視圖，顯示卡片詳細資訊
-  const renderFocusCardView = () => (
-    <div className="focus-card-view">
-      {focusedCard && (
-        <FocusCard
-          img={focusedCard.img}
-          title={focusedCard.title}
-          content={focusedCard.content}
-          secondTitle={focusedCard.secondTitle}
-          detailedContent={focusedCard.detailedContent}
-          member={focusedCard.member}
-          teachers={focusedCard.teachers}
-          onCancel={handleCancelFocus}
-        />
-      )}
-    </div>
-  );
+  // 渲染類別內容
+  const renderCategoryContent = () => {
+    if (selectedFilter !== "全部") {
+      // 特定類別顯示，網格佈局
+      return (
+        <div className="flex justify-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10">
+            {filteredCards.map((card, index) => (
+              <Card
+                key={index}
+                img={card.img}
+                title={card.title}
+                content={card.content}
+                secondTitle={card.secondTitle}
+                detailedContent={card.detailedContent}
+                member={card.member}
+                teachers={card.teachers}
+                onClick={() => handleCardClick(card)}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    } else {
+      // 全部類別顯示，依類別分組並水平滾動展示
+      return (
+        <>
+          {filteredCategories.map((item, index) => (
+            <div key={index} className="relative">
+              {/* 類別標題 */}
+              <div className="flex mt-10 group-padding">
+                <div
+                  className="text-2xl lg:text-3xl text-white pe-2 leading-none cursor-pointer"
+                  style={{ fontFamily: "B" }}
+                  onClick={() => setSelectedFilter(item)}
+                >
+                  {item}
+                </div>
+                <img src="/arrow_forward_ios.svg" alt="" />
+              </div>
+
+              {/* 可橫向滾動的卡片容器 */}
+              <div
+                className="flex relative mt-4 gap-[14px] overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
+                ref={(el) => {
+                  // 設置滾動容器參考
+                  scrollContainerRefs.current[item] = el;
+                  // 初始化時檢查按鈕可見性
+                  if (el) updateButtonVisibility(item);
+                }}
+                // 監聽滾動事件以更新按鈕可見性
+                onScroll={() => updateButtonVisibility(item)}
+              >
+                {/* 渲染該類別的卡片 */}
+                {filteredCards
+                  .filter((card) => card.category === item)
+                  .map((card, index) => (
+                    <Card
+                      key={index}
+                      img={card.img}
+                      title={card.title}
+                      content={card.content}
+                      secondTitle={card.secondTitle}
+                      selectedFilter={selectedFilter}
+                      detailedContent={card.detailedContent}
+                      member={card.member}
+                      teachers={card.teachers}
+                      onClick={() => handleCardClick(card)}
+                    />
+                  ))}
+              </div>
+              
+              {/* 左右滾動按鈕 */}
+              <ScrollArrow 
+                direction="left" 
+                isVisible={buttonVisibility[item]?.showLeftButton} 
+                onClick={() => scroll(item, "left")} 
+              />
+              <ScrollArrow 
+                direction="right" 
+                isVisible={buttonVisibility[item]?.showRightButton} 
+                onClick={() => scroll(item, "right")} 
+              />
+            </div>
+          ))}
+        </>
+      );
+    }
+  };
 
   // 渲染正常視圖，顯示所有類別和卡片
   const renderNormalView = () => (
@@ -277,95 +371,66 @@ export const Group = ({ focus }) => {
       {/* 類別過濾器 */}
       <Nav onFilterChange={handleFilterChange} />
 
-      {/* 類別內容區塊 */}
+      {/* 類別內容區塊 - 使用 SwitchTransition 和 CSSTransition 實現淡入淡出效果 */}
       <div className="category-content">
-        {selectedFilter !== "全部" ? (
-          // 特定類別顯示，網格佈局
-          <>
-            <div className="flex justify-center">
-              {/* 使用 Tailwind 的響應式類別替代 JavaScript 條件判斷 */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10">
-                {filteredCards.map((card, index) => (
-                  <Card
-                    key={index}
-                    img={card.img}
-                    title={card.title}
-                    content={card.content}
-                    secondTitle={card.secondTitle}
-                    detailedContent={card.detailedContent}
-                    member={card.member}
-                    teachers={card.teachers}
-                    onClick={() => handleCardClick(card)}
-                  />
-                ))}
-              </div>
+        <style>{transitionStyles}</style>
+        <SwitchTransition mode="out-in">
+          <CSSTransition
+            key={selectedFilter}
+            nodeRef={nodeRef}
+            timeout={200}
+            classNames="fade"
+            unmountOnExit
+          >
+            <div ref={nodeRef}>
+              {renderCategoryContent()}
             </div>
-          </>
-        ) : (
-          // 全部類別顯示，依類別分組並水平滾動展示
-          <>
-            {filteredCategories.map((item, index) => (
-              <div key={index} className="relative">
-                {/* 類別標題 */}
-                <div className="flex mt-10 group-padding">
-                  <div
-                    className="text-2xl lg:text-3xl text-white pe-2 leading-none cursor-pointer"
-                    style={{ fontFamily: "B" }}
-                    onClick={() => setSelectedFilter(item)}
-                  >
-                    {item}
-                  </div>
-                  <img src="/arrow_forward_ios.svg" alt="" />
-                </div>
-
-                {/* 可橫向滾動的卡片容器 */}
-                <div
-                  className="flex relative mt-4 gap-[14px] overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
-                  ref={(el) => {
-                    // 設置滾動容器參考
-                    scrollContainerRefs.current[item] = el;
-                    // 初始化時檢查按鈕可見性
-                    if (el) updateButtonVisibility(item);
-                  }}
-                  // 監聽滾動事件以更新按鈕可見性
-                  onScroll={() => updateButtonVisibility(item)}
-                >
-                  {/* 渲染該類別的卡片 */}
-                  {filteredCards
-                    .filter((card) => card.category === item)
-                    .map((card, index) => (
-                      <Card
-                        key={index}
-                        img={card.img}
-                        title={card.title}
-                        content={card.content}
-                        secondTitle={card.secondTitle}
-                        selectedFilter={selectedFilter}
-                        detailedContent={card.detailedContent}
-                        member={card.member}
-                        teachers={card.teachers}
-                        onClick={() => handleCardClick(card)}
-                      />
-                    ))}
-                </div>
-                
-                {/* 左右滾動按鈕 */}
-                <ScrollArrow 
-                  direction="left" 
-                  isVisible={buttonVisibility[item]?.showLeftButton} 
-                  onClick={() => scroll(item, "left")} 
-                />
-                <ScrollArrow 
-                  direction="right" 
-                  isVisible={buttonVisibility[item]?.showRightButton} 
-                  onClick={() => scroll(item, "right")} 
-                />
-              </div>
-            ))}
-          </>
-        )}
+          </CSSTransition>
+        </SwitchTransition>
       </div>
     </div>
+  );
+
+  // 渲染焦點卡片視圖，顯示卡片詳細資訊
+  const renderFocusCardView = () => (
+    <>
+      {/* 保持正常視圖在背景中 */}
+      <div className="normal-view mb-[10rem] pointer-events-none opacity-50">
+        {/* 類別過濾器 */}
+        <Nav onFilterChange={handleFilterChange} />
+
+        {/* 類別內容區塊 */}
+        <div className="category-content">
+          <style>{transitionStyles}</style>
+          <SwitchTransition mode="out-in">
+            <CSSTransition
+              key={selectedFilter}
+              nodeRef={nodeRef}
+              timeout={500}
+              classNames="fade"
+              unmountOnExit
+            >
+              <div ref={nodeRef}>
+                {renderCategoryContent()}
+              </div>
+            </CSSTransition>
+          </SwitchTransition>
+        </div>
+      </div>
+
+      {/* 焦點卡片作為對話框顯示在頂層 */}
+      {focusedCard && (
+        <FocusCard
+          img={focusedCard.img}
+          title={focusedCard.title}
+          secondTitle={focusedCard.secondTitle}
+          detailedContent={focusedCard.detailedContent}
+          member={focusedCard.member}
+          teachers={focusedCard.teachers}
+          onCancel={handleCancelFocus}
+        />
+      )}
+    </>
   );
 
   // 根據焦點狀態渲染不同視圖
