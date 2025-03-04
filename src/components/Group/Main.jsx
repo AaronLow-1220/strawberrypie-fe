@@ -3,6 +3,27 @@ import { Card } from "./Card/Card";
 import { FocusCard } from "./Card/FocusCard";
 import { Nav } from "./Nav/Nav";
 
+// 滾動按鈕組件
+const ScrollArrow = ({ direction, isVisible, onClick }) => {
+  return (
+    <div
+      className={`absolute ${direction === 'left' ? 'left-0 -translate-x-1/2' : 'right-0 translate-x-1/2'} 
+        hidden lg:flex top-[50%] group-arrow w-14 h-14
+        items-center justify-center z-10 cursor-pointer
+        transition-all duration-300 ease-in-out group/arrow
+        ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      onClick={onClick}
+    >
+      <div className="absolute inset-0 bg-[#6C2028] hover:bg-[#D84050] hover:scale-150 rounded-full transition-all duration-500 ease-in-out"></div>
+      <img
+        className={`relative z-20 pointer-events-none w-6 h-6 opacity-80 group-hover/arrow:opacity-100 transition-opacity duration-300 ${direction === 'left' ? 'transform rotate-180 -translate-x-[1px]' : 'translate-x-[1px]'}`}
+        src="/arrow_forward_ios.svg"
+        alt={`向${direction === 'left' ? '左' : '右'}滾動`}
+      />
+    </div>
+  );
+};
+
 // 模擬的 Card 資料
 const cards = [
   {
@@ -266,10 +287,6 @@ export const Group = ({ focus }) => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-10">
                 {filteredCards.map((card, index) => (
                   <Card
-                    // 使用 Tailwind 的響應式類別設置字體大小
-                    TitleFontSize="text-base lg:text-xl"
-                    secondTitleFontSize="text-sm lg:text-base"
-                    ContentFontSize="hidden lg:block lg:text-sm"
                     key={index}
                     img={card.img}
                     title={card.title}
@@ -300,11 +317,10 @@ export const Group = ({ focus }) => {
                   </div>
                   <img src="/arrow_forward_ios.svg" alt="" />
                 </div>
-                {/* 卡片水平捲動容器 */}
 
                 {/* 可橫向滾動的卡片容器 */}
                 <div
-                  className="flex relative mt-4 space-x-4 overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
+                  className="flex relative mt-4 gap-[14px] overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
                   ref={(el) => {
                     // 設置滾動容器參考
                     scrollContainerRefs.current[item] = el;
@@ -319,9 +335,6 @@ export const Group = ({ focus }) => {
                     .filter((card) => card.category === item)
                     .map((card, index) => (
                       <Card
-                        TitleFontSize="text-base lg:text-xl"
-                        secondTitleFontSize="text-sm lg:text-base"
-                        ContentFontSize="hidden lg:block lg:text-sm"
                         key={index}
                         img={card.img}
                         title={card.title}
@@ -335,33 +348,18 @@ export const Group = ({ focus }) => {
                       />
                     ))}
                 </div>
-                {/* 左滾動按鈕，僅在可向左滾動時顯示 */}
-                {buttonVisibility[item]?.showLeftButton && (
-                    <div
-                      className="absolute left-0 hidden lg:flex top-[50%] group-arrow -translate-x-1/2 w-14 h-14 rounded-full bg-[#6C2028] items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
-                      onClick={() => scroll(item, "left")}
-                    >
-                      <img
-                        className="w-6 h-6 transform rotate-180"
-                        src="/arrow_forward_ios.svg"
-                        alt="向左滾動"
-                      />
-                    </div>
-                  )}
-
-                  {/* 右滾動按鈕，僅在可向右滾動時顯示 */}
-                  {buttonVisibility[item]?.showRightButton && (
-                    <div
-                      className="absolute hidden lg:flex top-[50%] group-arrow right-0 translate-x-1/2 w-14 h-14 rounded-full bg-[#6C2028] items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
-                      onClick={() => scroll(item, "right")}
-                    >
-                      <img
-                        className="w-6 h-6"
-                        src="/arrow_forward_ios.svg"
-                        alt="向右滾動"
-                      />
-                    </div>
-                  )}
+                
+                {/* 左右滾動按鈕 */}
+                <ScrollArrow 
+                  direction="left" 
+                  isVisible={buttonVisibility[item]?.showLeftButton} 
+                  onClick={() => scroll(item, "left")} 
+                />
+                <ScrollArrow 
+                  direction="right" 
+                  isVisible={buttonVisibility[item]?.showRightButton} 
+                  onClick={() => scroll(item, "right")} 
+                />
               </div>
             ))}
           </>
@@ -372,27 +370,4 @@ export const Group = ({ focus }) => {
 
   // 根據焦點狀態渲染不同視圖
   return focusedCard ? renderFocusCardView() : renderNormalView();
-};
-
-export const GroupNew = () => {
-  // 用於追蹤當前選擇的過濾類別
-  const [selectedFilter, setSelectedFilter] = useState("全部");
-
-  // 處理過濾器變更的回調函數
-  const handleFilterChange = useCallback((filterValue) => {
-    setSelectedFilter(filterValue);
-    console.log("選擇的過濾類別:", filterValue);
-  }, []);
-
-  return (
-    <div className="relative">
-      {/* 將回調函數傳遞給 Filter 元件 */}
-      <Nav onFilterChange={handleFilterChange} />
-
-      {/* 顯示當前選擇的過濾類別（可選） */}
-      <div className="p-4 text-white">
-        當前選擇: {selectedFilter}
-      </div>
-    </div>
-  );
 };
