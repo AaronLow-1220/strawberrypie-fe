@@ -3,104 +3,104 @@ import { Card } from "./Card/Card";
 import { FocusCard } from "./Card/FocusCard";
 import { Nav } from "./Nav/Nav";
 
-    // 模擬的 Card 資料
-  const cards = [
-    {
-      category: "互動",
-      img: "/遊戲_web.png",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "互動",
-      img: "",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "互動",
-      img: "",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "互動",
-      img: "",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "行銷",
-      img: "",
-      title: "行銷策略大揭秘",
-      content: "探討最新的數位行銷策略，如何吸引目標受眾，創造品牌影響力。",
-      secondTitle: "Marketing Pro",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "互動",
-      img: "/影視_web.png",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "互動",
-      img: "",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-    {
-      category: "互動",
-      img: "",
-      title: "完了！！怎麼辦！！青春戀愛攻防戰",
-      content:
-        "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-      secondTitle: "Timeout Studio",
-      detailedContent:
-        "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-      member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-      teachers: ["張銘", "張銘", "張銘"],
-    },
-  ];
+// 模擬的 Card 資料
+const cards = [
+  {
+    category: "互動",
+    img: "/遊戲_web.png",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "互動",
+    img: "",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "互動",
+    img: "",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "互動",
+    img: "",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "行銷",
+    img: "",
+    title: "行銷策略大揭秘",
+    content: "探討最新的數位行銷策略，如何吸引目標受眾，創造品牌影響力。",
+    secondTitle: "Marketing Pro",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "互動",
+    img: "/影視_web.png",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "互動",
+    img: "",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+  {
+    category: "互動",
+    img: "",
+    title: "完了！！怎麼辦！！青春戀愛攻防戰",
+    content:
+      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
+    secondTitle: "Timeout Studio",
+    detailedContent:
+      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
+    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
+    teachers: ["張銘", "張銘", "張銘"],
+  },
+];
 
 export const Group = ({ focus }) => {
   // 用於追蹤各類別的滾動容器參考
@@ -121,7 +121,7 @@ export const Group = ({ focus }) => {
 
   // 獲取所有唯一的類別
   const categories = [...new Set(data.map(item => item.category))];
-  
+
   // 獲取需要顯示的類別（用於分類顯示模式）
   const filteredCategories = selectedFilter === "全部"
     ? [...new Set(data.map(item => item.category))]
@@ -137,7 +137,7 @@ export const Group = ({ focus }) => {
     const canScrollLeft = container.scrollLeft > 0;
     // 檢查是否可以向右滾動（總寬度 - 已滾動寬度 - 可見寬度 > 1）
     const canScrollRight = container.scrollWidth - container.scrollLeft - container.clientWidth > 1;
-    
+
     // 使用函數式更新，確保使用最新的狀態
     setButtonVisibility(prev => {
       // 檢查是否與之前的狀態相同，如果相同則不更新
@@ -145,13 +145,13 @@ export const Group = ({ focus }) => {
       if (prevState.showLeftButton === canScrollLeft && prevState.showRightButton === canScrollRight) {
         return prev;
       }
-      
+
       // 只有在狀態真正變更時才返回新狀態
       return {
         ...prev,
-        [category]: { 
-          showLeftButton: canScrollLeft, 
-          showRightButton: canScrollRight 
+        [category]: {
+          showLeftButton: canScrollLeft,
+          showRightButton: canScrollRight
         }
       };
     });
@@ -167,13 +167,13 @@ export const Group = ({ focus }) => {
     const scrollAmount = container.clientWidth / 2;
     // 根據方向設定滾動目標位置
     const scrollTarget = container.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
-    
+
     // 使用平滑滾動效果移動到目標位置
     container.scrollTo({
       left: scrollTarget,
       behavior: 'smooth'
     });
-    
+
     // 滾動後更新按鈕可見性
     setTimeout(() => updateButtonVisibility(category), 300);
   }, [updateButtonVisibility]);
@@ -221,10 +221,10 @@ export const Group = ({ focus }) => {
     const timer = setTimeout(() => {
       initializeButtonVisibility();
     }, 0);
-    
+
     // 添加視窗大小變更事件監聽器
     window.addEventListener('resize', handleResize);
-    
+
     // 元件卸載時清理事件監聽器和計時器
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -255,7 +255,7 @@ export const Group = ({ focus }) => {
     <div className="normal-view">
       {/* 類別過濾器 */}
       <Nav onFilterChange={handleFilterChange} />
-      
+
       {/* 類別內容區塊 */}
       <div className="category-content">
         {selectedFilter !== "全部" ? (
@@ -288,7 +288,7 @@ export const Group = ({ focus }) => {
           // 全部類別顯示，依類別分組並水平滾動展示
           <>
             {filteredCategories.map((item, index) => (
-              <div key={index}>
+              <div key={index} className="relative">
                 {/* 類別標題 */}
                 <div className="flex mt-10 group-padding">
                   <div
@@ -301,11 +301,44 @@ export const Group = ({ focus }) => {
                   <img src="/arrow_forward_ios.svg" alt="" />
                 </div>
                 {/* 卡片水平捲動容器 */}
-                  {/* 左滾動按鈕，僅在可向左滾動時顯示 */}
-                  {buttonVisibility[item]?.showLeftButton && (
+
+                {/* 可橫向滾動的卡片容器 */}
+                <div
+                  className="flex relative mt-4 space-x-4 overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
+                  ref={(el) => {
+                    // 設置滾動容器參考
+                    scrollContainerRefs.current[item] = el;
+                    // 初始化時檢查按鈕可見性
+                    if (el) updateButtonVisibility(item);
+                  }}
+                  // 監聽滾動事件以更新按鈕可見性
+                  onScroll={() => updateButtonVisibility(item)}
+                >
+                  {/* 渲染該類別的卡片 */}
+                  {filteredCards
+                    .filter((card) => card.category === item)
+                    .map((card, index) => (
+                      <Card
+                        TitleFontSize="text-base lg:text-xl"
+                        secondTitleFontSize="text-sm lg:text-base"
+                        ContentFontSize="hidden lg:block lg:text-sm"
+                        key={index}
+                        img={card.img}
+                        title={card.title}
+                        content={card.content}
+                        secondTitle={card.secondTitle}
+                        selectedFilter={selectedFilter}
+                        detailedContent={card.detailedContent}
+                        member={card.member}
+                        teachers={card.teachers}
+                        onClick={() => handleCardClick(card)}
+                      />
+                    ))}
+                </div>
+                {/* 左滾動按鈕，僅在可向左滾動時顯示 */}
+                {buttonVisibility[item]?.showLeftButton && (
                     <div
-                      className="absolute hidden lg:flex -translate-y-1/2 w-14 h-14 rounded-full bg-[#6C2028] items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
-                      style={{ top: "50%", left: "1rem" }}
+                      className="absolute left-0 hidden lg:flex top-[50%] group-arrow -translate-x-1/2 w-14 h-14 rounded-full bg-[#6C2028] items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
                       onClick={() => scroll(item, "left")}
                     >
                       <img
@@ -316,45 +349,10 @@ export const Group = ({ focus }) => {
                     </div>
                   )}
 
-                  {/* 可橫向滾動的卡片容器 */}
-                  <div
-                    className="flex mt-4 space-x-4 w-[100vw] overflow-x-auto scrollbar-hide group-scroll-padding"
-                    ref={(el) => {
-                      // 設置滾動容器參考
-                      scrollContainerRefs.current[item] = el;
-                      // 初始化時檢查按鈕可見性
-                      if (el) updateButtonVisibility(item);
-                    }}
-                    // 監聽滾動事件以更新按鈕可見性
-                    onScroll={() => updateButtonVisibility(item)}
-                  >
-                    {/* 渲染該類別的卡片 */}
-                    {filteredCards
-                      .filter((card) => card.category === item)
-                      .map((card, index) => (
-                        <Card
-                          TitleFontSize="text-base lg:text-xl"
-                          secondTitleFontSize="text-sm lg:text-base"
-                          ContentFontSize="hidden lg:block lg:text-sm"
-                          key={index}
-                          img={card.img}
-                          title={card.title}
-                          content={card.content}
-                          secondTitle={card.secondTitle}
-                          selectedFilter={selectedFilter}
-                          detailedContent={card.detailedContent}
-                          member={card.member}
-                          teachers={card.teachers}
-                          onClick={() => handleCardClick(card)}
-                        />
-                      ))}
-                  </div>
-
                   {/* 右滾動按鈕，僅在可向右滾動時顯示 */}
                   {buttonVisibility[item]?.showRightButton && (
                     <div
-                      className="absolute hidden lg:flex -translate-y-1/2 w-14 h-14 rounded-full bg-[#6C2028] items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
-                      style={{ top: "50%", right: "1rem" }}
+                      className="absolute hidden lg:flex top-[50%] group-arrow right-0 translate-x-1/2 w-14 h-14 rounded-full bg-[#6C2028] items-center justify-center z-10 cursor-pointer hover:bg-[#D84050] transition-all duration-1000 ease-in-out"
                       onClick={() => scroll(item, "right")}
                     >
                       <img
@@ -390,7 +388,7 @@ export const GroupNew = () => {
     <div className="relative">
       {/* 將回調函數傳遞給 Filter 元件 */}
       <Nav onFilterChange={handleFilterChange} />
-      
+
       {/* 顯示當前選擇的過濾類別（可選） */}
       <div className="p-4 text-white">
         當前選擇: {selectedFilter}

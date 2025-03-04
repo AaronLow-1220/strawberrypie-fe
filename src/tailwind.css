@@ -429,11 +429,23 @@ body {
   }
 }
 
+@media all and (min-width: 768px) {
+  .group-arrow {
+    margin: 0 clamp(64px, -15px);
+  }
+}
+
+@media all and (min-width: 1024px) {
+  .group-arrow {
+    margin: 0 calc(clamp(8rem, -8rem + 25vw, 16rem) - 15px);
+  }
+}
+
 .group-scroll-padding {
   scroll-padding: 0 20px;
   padding: 0 20px;
-  scroll-snap-type: x mandatory;
-  scroll-snap-align: start;
+  scrollbar-width: none;
+
 }
 
 @media all and (min-width: 768px) {
@@ -448,4 +460,12 @@ body {
     scroll-padding: 0 clamp(8rem, -8rem + 25vw, 16rem);
     padding: 0 clamp(8rem, -8rem + 25vw, 16rem);
   }
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
