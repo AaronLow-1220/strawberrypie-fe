@@ -1,62 +1,36 @@
-import { useState } from "react";
+import React from 'react'
 
-export const Nav = ({ onFilterChange }) => {
-  const [filter, setFilter] = useState("全部");
+const navList = ["全部", "互動", "行銷", "動畫", "遊戲", "影視"]
 
-  const handleFilterChange = (newFilter) => {
-    const updatedFilter = newFilter === filter ? "全部" : newFilter;
-    setFilter(updatedFilter);
-    onFilterChange(updatedFilter);
-  };
+export const Nav = ({ filter, onFilterChange }) => {
+	const handleFilterChange = (newFilter) => {
+		const updatedFilter = newFilter === filter ? "全部" : newFilter;
+		if (onFilterChange) {
+			onFilterChange(updatedFilter);
+		}
+	}
 
-  return (
-    <div
-      className={
-        window.innerWidth < 1024
-          ? "w-full min-w-[25rem] flex mt-[2rem] mb-[42px] px-[20px] space-x-[8px] overflow-x-auto whitespace-nowrap"
-          : "w-full flex justify-center mt-[128px] mb-[42px] px-[1rem] space-x-[8px] overflow-x-auto whitespace-nowrap"
-      }
-      style={{ scrollbarWidth: "none", scrollSnapType: "x mandatory" }}
-    >
-      {["全部", "互動", "行銷", "動畫", "遊戲", "影視"].map((item) => (
-        <div
-          key={item}
-          className={`relative flex min-w-[76px] h-[2.25rem] rounded-[50px] items-center justify-center transition-all duration-1000 ease-in-out
-          ${
-            filter === item
-              ? "bg-primary-color min-w-[5rem] max-w-[12rem]"
-              : "bg-[#51181E] min-w-[3.5rem] max-w-[8rem]"
-          }`}
-          onClick={() => handleFilterChange(item)}
-        >
-          {filter === item ? (
-            <>
-              {item !== "全部" ? (
-                <div className="flex w-fit justify-center items-center space-x-1 px-[22px] ">
-                  <div className="text-[1rem] text-white font-medium leading-none">
-                    {item}
-                  </div>
-                  <div className="flex items-center justify-center">
-                    <img src="/close.svg" alt="close" />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex min-w-[5rem] justify-center items-center space-x-1 px-[22px] ">
-                  <div className="text-[1rem] text-white font-medium leading-none">
-                    {item}
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="flex w-fit justify-center items-center space-x-1 px-[22px] ">
-              <div className="text-[1rem] text-white font-medium leading-none ">
-                {item}
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
+	return (
+		<div className={`z-10 group-padding mt-[72px] scrollbar-hide lg:mb-[24px]  lg:mt-[120px] lg:justify-center text-white flex space-x-[8px] sticky lg:relative top-[64px] lg:top-[0px] scroll-px-5 snap-x overflow-x-scroll whitespace-nowrap transition-all duration-300 ease-in-out
+		${filter === "全部" ? "mb-[48px] 2xl:mb-[42px]" : "mb-[24px] lg:mb-[36px] 2xl:mb-[42px]"}`}>
+			{navList.map((item) => (
+				<button
+					key={item}
+					onClick={() => handleFilterChange(item)}
+					className={`
+            flex items-center px-[22px] py-[6px] min-w-fit rounded-[50px] snap-start transition-all duration-300 ease-in-out
+            ${filter === item ? `bg-primary-color gap-[4px] ${item !== "全部" && "pr-[12px]"}` : "bg-[#51181E] hover:bg-[#83181E]"}
+          `}
+				>
+					<p className='text-base'>{item}</p>
+
+					{item !== "全部" && (
+						<img className={`transition-all duration-300 ease-in-out
+          ${filter === item ? "w-[20px]" : "w-[0px]"}`}
+							src="/filter-close.svg" alt="close" />
+					)}
+				</button>
+			))}
+		</div>
+	)
+}

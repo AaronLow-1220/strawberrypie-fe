@@ -412,3 +412,107 @@ body {
     color: white;
   }
 }
+
+.group-padding {
+  padding: 0 20px;
+}
+
+@media all and (min-width: 768px) {
+  .group-padding {
+    padding: 0 64px;
+  }
+}
+
+@media all and (min-width: 1024px) {
+  .group-padding {
+    padding: 0 clamp(8rem, -24rem + 33.3333vw, 16rem);
+  }
+}
+
+@media all and (min-width: 768px) {
+  .group-arrow {
+    margin: 0 clamp(64px, -15px);
+  }
+}
+
+@media all and (min-width: 1024px) {
+  .group-arrow {
+    margin: 0 calc(clamp(8rem, -24rem + 33.3333vw, 16rem) - 15px);
+  }
+}
+
+.group-scroll-padding {
+  scroll-padding: 0 20px;
+  padding: 0 20px;
+  scrollbar-width: none;
+
+}
+
+@media all and (min-width: 768px) {
+  .group-scroll-padding {
+    scroll-padding: 0 64px;
+    padding: 0 64px;
+  }
+}
+
+@media all and (min-width: 1024px) {
+  .group-scroll-padding {
+    scroll-padding: 0 clamp(8rem, -24rem + 33.3333vw, 16rem);
+    padding: 0 clamp(8rem, -24rem + 33.3333vw, 16rem);
+  }
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.card-category {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  align-content: stretch;
+  gap: 1rem;
+  justify-items: center;
+}
+
+@media (max-width: 680px) {
+  .card-category {
+    gap: 14px;
+  }
+  
+  /* 寬度介於 501px ~ 680px 時使用此 grid 設定 */
+  .card-category {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 580px) {
+  .card-category {
+    grid-template-columns: repeat(auto-fill, minmax(max(150px, 33vw), 1fr));
+  }
+  
+  .card-category img {
+    border-radius: 8px;
+  }
+
+  .card-category > div {
+    background: none;
+    border-radius: 0;
+  }
+
+  .card-category .card-content {
+    padding: 10px 0 0 0;
+  }
+  
+  .card-category .card-content div {
+    font-size: 16px !important;
+    margin: 0;
+  }
+
+  .card-category .card-content-summary {
+    display: none;
+  }
+}
