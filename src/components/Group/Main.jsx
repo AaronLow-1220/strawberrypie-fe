@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import axios from "axios";
 import { Card } from "./Card/Card";
 import { FocusCard } from "./Card/FocusCard";
 import { Nav } from "./Nav/Nav";
@@ -54,123 +55,32 @@ const transitionStyles = `
 const ScrollArrow = ({ direction, isVisible, onClick }) => {
   return (
     <div
-      className={`absolute ${direction === 'left' ? 'left-0 -translate-x-1/2' : 'right-0 translate-x-1/2'} 
+      className={`absolute ${
+        direction === "left"
+          ? "left-0 -translate-x-1/2"
+          : "right-0 translate-x-1/2"
+      } 
         hidden lg:flex top-[50%] group-arrow w-14 h-14
         items-center justify-center z-10 cursor-pointer
         transition-all duration-300 ease-in-out group/arrow
-        ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       onClick={onClick}
     >
       <div className="absolute inset-0 bg-[#6C2028] hover:bg-[#D84050] hover:scale-150 rounded-full transition-all duration-500 ease-in-out"></div>
       <img
-        className={`relative z-20 pointer-events-none w-6 h-6 opacity-80 group-hover/arrow:opacity-100 transition-opacity duration-300 ${direction === 'left' ? 'transform rotate-180 -translate-x-[1px]' : 'translate-x-[1px]'}`}
+        className={`relative z-20 pointer-events-none w-6 h-6 opacity-80 group-hover/arrow:opacity-100 transition-opacity duration-300 ${
+          direction === "left"
+            ? "transform rotate-180 -translate-x-[1px]"
+            : "translate-x-[1px]"
+        }`}
         src="/arrow_forward_ios.svg"
-        alt={`向${direction === 'left' ? '左' : '右'}滾動`}
+        alt={`向${direction === "left" ? "左" : "右"}滾動`}
       />
     </div>
   );
 };
 
-// 模擬的 Card 資料
-const cards = [
-  {
-    category: "互動",
-    img: "/遊戲_web.png",
-    title: "Do-NUT",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "互動",
-    img: "",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "互動",
-    img: "",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "互動",
-    img: "",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "行銷",
-    img: "",
-    title: "行銷策略大揭秘",
-    content: "探討最新的數位行銷策略，如何吸引目標受眾，創造品牌影響力。",
-    secondTitle: "Marketing Pro",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "互動",
-    img: "/影視_web.png",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "互動",
-    img: "",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-  {
-    category: "互動",
-    img: "",
-    title: "完了！！怎麼辦！！青春戀愛攻防戰",
-    content:
-      "融合台灣街頭叫賣聲與現代曲風，透過聲波視覺化與音樂創作，重現庶民謀生之旅。",
-    secondTitle: "Timeout Studio",
-    detailedContent:
-      "在這個寬廣的世界中，探查那些未知的奧秘和探險世界上最危險未知現象的探險家們被稱為「StormSeeker」。 玩家將扮演其中一員，在探索過程中不得已進入一處廢棄神廟躲避災難，好奇心驅使下深入探索，發現神廟深處有一具扇子造型的寶物，靠近時不小心誤觸封印機關，跌入最深層，跌入後雖身處險境，但神器依舊被自己成功帶走，而這神器具有神力可讓使用者獲得操控風的能力，廢棄神廟充滿了機關與敵人，主角將一路解開機關，擊敗敵人逃出生天。",
-    member: ["陳嘉鴻", "張鈞", "張銘", "張銘", "張銘"],
-    teachers: ["張銘", "張銘", "張銘"],
-  },
-];
-
-export const Group = ({ focus }) => {
+export const Group = () => {
   // 用於追蹤各類別的滾動容器參考
   const scrollContainerRefs = useRef({});
   // 用於追蹤各類別的滾動按鈕可見性狀態
@@ -179,27 +89,97 @@ export const Group = ({ focus }) => {
   const [selectedFilter, setSelectedFilter] = useState("全部");
   // 用於追蹤當前焦點卡片的資料
   const [focusedCard, setFocusedCard] = useState(null);
-  // 使用外部定義的卡片資料
-  const data = cards;
-
   // 用於 CSS Transition 的節點引用
   const nodeRef = useRef(null);
+  // 後端回傳的卡片資料
+  const [cards, setCards] = useState([]);
+  const mapGenreToCategory = (genre) => {
+    const genreMap = {
+      0: "互動",
+      1: "遊戲",
+      2: "電影",
+      3: "動畫",
+      4: "行銷",
+    };
+    return genreMap[genre] || "其他";
+  };
+  const parseJsonArray = (jsonString) => {
+    try {
+      const obj = JSON.parse(jsonString);
+      return Object.values(obj);
+    } catch (error) {
+      console.error("解析 member 失敗", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+        // const token =typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+        const response = await axios.post(
+          `${apiBaseUrl}/group/search`,
+          {},
+          {
+            headers: {
+              // Authorization: `Bearer ${token}`,
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDEzNDM1NzgsImV4cCI6MTc0MTk0ODM3OCwiaWQiOiIyIiwic3ViIjoiMTA2MzY0NTc1OTY3NjY5NzYzOTgwIiwidXNlcm5hbWUiOiJcdTVlYzkiLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiJcdTVlYzkiLCJhdmF0YXIiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJa3A0T29WYVNabjdPd2ItRTZNZTZ0X1JsYVBFVkF3bE5TZDRMTjNocmlxNHY4STBnUT1zOTYtYyIsImVtYWlsIjoiMjY0MTYzODcucmVAZ21haWwuY29tIiwic3RhdHVzIjoiMSJ9.kNLAiHTmzkZ4vfO1ZPFlj8a1mkO4liDddiUtKSZ6t-U`,
+              Accept: "application/json",
+            },
+          }
+        );
+
+        const ImgResponse = await axios.get(`${apiBaseUrl}/file/download/1`, {
+          headers: {
+            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDEzNDM1NzgsImV4cCI6MTc0MTk0ODM3OCwiaWQiOiIyIiwic3ViIjoiMTA2MzY0NTc1OTY3NjY5NzYzOTgwIiwidXNlcm5hbWUiOiJcdTVlYzkiLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiJcdTVlYzkiLCJhdmF0YXIiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJa3A0T29WYVNabjdPd2ItRTZNZTZ0X1JsYVBFVkF3bE5TZDRMTjNocmlxNHY4STBnUT1zOTYtYyIsImVtYWlsIjoiMjY0MTYzODcucmVAZ21haWwuY29tIiwic3RhdHVzIjoiMSJ9.kNLAiHTmzkZ4vfO1ZPFlj8a1mkO4liDddiUtKSZ6t-U`,
+            Accept: "application/json",
+            "Content-Type": "application/octet-stream",
+          },
+          responseType: "blob", // 設定回應類型為 blob
+        });
+        const imageURL = URL.createObjectURL(ImgResponse.data);
+
+        console.log("API 回應：", response.data);
+
+        const transformedCards = response.data._data.map((card) => ({
+          category: mapGenreToCategory(card.genre),
+          img: imageURL,
+          title: card.work_name,
+          content: card.short_description,
+          secondTitle: card.name,
+          detailedContent: card.description,
+          member: parseJsonArray(card.member),
+          teachers: [],
+        }));
+
+        setCards(transformedCards);
+      } catch (error) {
+        console.error("獲取卡片資料失敗", error);
+      }
+    };
+
+    fetchCards();
+  }, []);
 
   // 用於追蹤 FocusCard 的可見性狀態
   const [isFocusCardVisible, setIsFocusCardVisible] = useState(false);
 
   // 根據選擇的過濾類別過濾卡片
-  const filteredCards = selectedFilter === "全部"
-    ? data
-    : data.filter(item => item.category === selectedFilter);
+  const filteredCards =
+    selectedFilter === "全部"
+      ? cards
+      : cards.filter((card) => card.category === selectedFilter);
 
   // 獲取所有唯一的類別
-  const categories = [...new Set(data.map(item => item.category))];
+  // const categories = [...new Set(d.map((item) => item.category))];
 
   // 獲取需要顯示的類別（用於分類顯示模式）
-  const filteredCategories = selectedFilter === "全部"
-    ? [...new Set(data.map(item => item.category))]
-    : [selectedFilter];
+  const filteredCategories =
+    selectedFilter === "全部"
+      ? [...new Set(cards.map((item) => item.category))]
+      : [selectedFilter];
 
   // 更新特定類別的左右滾動按鈕可見性
   const updateButtonVisibility = useCallback((category) => {
@@ -210,13 +190,17 @@ export const Group = ({ focus }) => {
     // 檢查是否可以向左滾動（scrollLeft > 0）
     const canScrollLeft = container.scrollLeft > 0;
     // 檢查是否可以向右滾動（總寬度 - 已滾動寬度 - 可見寬度 > 1）
-    const canScrollRight = container.scrollWidth - container.scrollLeft - container.clientWidth > 1;
+    const canScrollRight =
+      container.scrollWidth - container.scrollLeft - container.clientWidth > 1;
 
     // 使用函數式更新，確保使用最新的狀態
-    setButtonVisibility(prev => {
+    setButtonVisibility((prev) => {
       // 檢查是否與之前的狀態相同，如果相同則不更新
       const prevState = prev[category] || {};
-      if (prevState.showLeftButton === canScrollLeft && prevState.showRightButton === canScrollRight) {
+      if (
+        prevState.showLeftButton === canScrollLeft &&
+        prevState.showRightButton === canScrollRight
+      ) {
         return prev;
       }
 
@@ -225,39 +209,44 @@ export const Group = ({ focus }) => {
         ...prev,
         [category]: {
           showLeftButton: canScrollLeft,
-          showRightButton: canScrollRight
-        }
+          showRightButton: canScrollRight,
+        },
       };
     });
   }, []);
 
   // 處理滾動功能，根據指定的方向滾動特定類別的內容
-  const scroll = useCallback((category, direction) => {
-    // 獲取該類別的滾動容器元素
-    const container = scrollContainerRefs.current[category];
-    if (!container) return;
+  const scroll = useCallback(
+    (category, direction) => {
+      // 獲取該類別的滾動容器元素
+      const container = scrollContainerRefs.current[category];
+      if (!container) return;
 
-    // 計算滾動距離（容器寬度的一半）
-    const scrollAmount = container.clientWidth / 2;
-    // 根據方向設定滾動目標位置
-    const scrollTarget = container.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
+      // 計算滾動距離（容器寬度的一半）
+      const scrollAmount = container.clientWidth / 2;
+      // 根據方向設定滾動目標位置
+      const scrollTarget =
+        container.scrollLeft +
+        (direction === "left" ? -scrollAmount : scrollAmount);
 
-    // 使用平滑滾動效果移動到目標位置
-    container.scrollTo({
-      left: scrollTarget,
-      behavior: 'smooth'
-    });
+      // 使用平滑滾動效果移動到目標位置
+      container.scrollTo({
+        left: scrollTarget,
+        behavior: "smooth",
+      });
 
-    // 滾動後更新按鈕可見性
-    setTimeout(() => updateButtonVisibility(category), 300);
-  }, [updateButtonVisibility]);
+      // 滾動後更新按鈕可見性
+      setTimeout(() => updateButtonVisibility(category), 300);
+    },
+    [updateButtonVisibility]
+  );
 
   // 處理卡片點擊事件，設置焦點並顯示詳細資訊
   const handleCardClick = useCallback((cardData) => {
     // 設置焦點卡片資料
     setFocusedCard(cardData);
     // 鎖定背景滾動
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     // 延遲設置可見性，確保 DOM 已更新
     setTimeout(() => {
       setIsFocusCardVisible(true);
@@ -269,7 +258,7 @@ export const Group = ({ focus }) => {
     // 先隱藏 FocusCard
     setIsFocusCardVisible(false);
     // 解除背景滾動鎖定
-    document.body.style.overflow = '';
+    document.body.style.overflow = "";
     // 等待過渡效果完成後清除焦點卡片資料
     setTimeout(() => {
       setFocusedCard(null);
@@ -285,14 +274,14 @@ export const Group = ({ focus }) => {
   // 初始化所有類別的按鈕可見性
   const initializeButtonVisibility = useCallback(() => {
     // 獲取所有唯一的類別
-    const categories = [...new Set(data.map(item => item.category))];
+    const categories = [...new Set(cards.map((item) => item.category))];
     // 為每個類別更新按鈕可見性
-    categories.forEach(category => {
+    categories.forEach((category) => {
       if (scrollContainerRefs.current[category]) {
         updateButtonVisibility(category);
       }
     });
-  }, [data, updateButtonVisibility]);
+  }, [cards, updateButtonVisibility]);
 
   // 處理視窗大小變更事件
   const handleResize = useCallback(() => {
@@ -309,11 +298,11 @@ export const Group = ({ focus }) => {
     }, 0);
 
     // 添加視窗大小變更事件監聽器
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // 元件卸載時清理事件監聽器和計時器
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       clearTimeout(timer);
     };
   }, [handleResize, initializeButtonVisibility]);
@@ -328,6 +317,7 @@ export const Group = ({ focus }) => {
             <div className="card-category">
               {filteredCards.map((card, index) => (
                 <Card
+                  key={index}
                   img={card.img}
                   title={card.title}
                   content={card.content}
@@ -426,9 +416,7 @@ export const Group = ({ focus }) => {
             classNames="fade"
             unmountOnExit
           >
-            <div ref={nodeRef}>
-              {renderCategoryContent()}
-            </div>
+            <div ref={nodeRef}>{renderCategoryContent()}</div>
           </CSSTransition>
         </SwitchTransition>
       </div>
@@ -438,8 +426,14 @@ export const Group = ({ focus }) => {
   // 修改渲染焦點卡片視圖，使用自定義的過渡效果
   const renderFocusCardView = () => (
     <>
-      <div className={`focus-card-overlay ${isFocusCardVisible ? 'visible' : ''}`}></div>
-      <div className={`focus-card-container flex items-center justify-center overflow-y-auto ${isFocusCardVisible ? 'visible' : ''}`}>
+      <div
+        className={`focus-card-overlay ${isFocusCardVisible ? "visible" : ""}`}
+      ></div>
+      <div
+        className={`focus-card-container flex items-center justify-center overflow-y-auto ${
+          isFocusCardVisible ? "visible" : ""
+        }`}
+      >
         {focusedCard && (
           <FocusCard
             img={focusedCard.img}
@@ -459,7 +453,7 @@ export const Group = ({ focus }) => {
   return (
     <>
       <style>{transitionStyles}</style>
-      <div className={focusedCard ? 'pointer-events-none' : ''}>
+      <div className={focusedCard ? "pointer-events-none" : ""}>
         {renderNormalView()}
       </div>
       {focusedCard && renderFocusCardView()}

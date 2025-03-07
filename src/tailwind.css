@@ -411,6 +411,10 @@ body {
     font-size: 12px;
     color: white;
   }
+
+  .mobile-menu-container {
+    backface-visibility: hidden;
+  }
 }
 
 .group-padding {

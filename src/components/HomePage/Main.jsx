@@ -15,6 +15,7 @@ export const HomePage = () => {
   const [windowLargeDesktop, setWindowLargeDesktop] = useState(false);
   const [marginBottom, setMarginBottom] = useState("3rem");
 
+  console.log(window.visualViewport.width);
   // Logo 動畫觸發方法
   const handleLogoAnimation = () => {
     doAnimation();
