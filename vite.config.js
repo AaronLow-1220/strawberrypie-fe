@@ -13,9 +13,8 @@ export default defineConfig({
   },
   server: {
     allowedHosts: [
-      "4107-61-218-122-10.ngrok-free.app", // 加入 ngrok 提供的域名
+      "5652-218-32-46-141.ngrok-free.app", // 加入 ngrok 提供的域名
     ],
     host: "0.0.0.0",
-    port: 3000,
   },
 });

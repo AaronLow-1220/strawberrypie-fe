@@ -106,6 +106,7 @@ export const InfoCard = ({
       </div>
       <div className="flex justify-center items-center gap-[0.75em] mt-[1rem] w-full">
         <div style={dateStyle}>{date || children}</div>
+
         {deviceType === "tablet" && endDate && (
           <>
             <div

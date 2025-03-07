@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const DEVICE_CONFIGS = {
   mobile: {
     breakpoint: 768,
     initialPosition: 11,
     baseScale: 0.8,
-    animateClass: "animate-Logo"
+    animateClass: "animate-Logo",
   },
   tablet: {
     breakpoint: 1536,
     initialPosition: 9,
     baseScale: 1,
-    animateClass: "animate-IpadLogo"
+    animateClass: "animate-IpadLogo",
   },
   desktop: {
     initialPosition: 17,
     baseScale: 1,
-    animateClass: ""
-  }
+    animateClass: "",
+  },
 };
 
 export const useDeviceType = () => {
@@ -51,4 +51,4 @@ export const useDeviceType = () => {
   }, []);
 
   return { deviceType, config };
-}; 
+};
