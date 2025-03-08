@@ -151,7 +151,7 @@ export const Header = () => {
               </a>
               {!isHome ? (
                 <img
-                  src="/Headline.svg"
+                  src="/Header/Headline.svg"
                   alt="Headline"
                   className={
                     window.innerWidth < 1584
@@ -264,7 +264,7 @@ export const Header = () => {
               <li className="pb-[2.25rem] text-[2rem]">
                 <a href="/psychologicalTest">
                   <div className="flex items-center">
-                    <div>心裏測驗</div>
+                    <div>心裡測驗</div>
                     <div className="ms-[1rem]">
                       <img src="/Header/psychology.svg" alt="Psychology" />
                     </div>
