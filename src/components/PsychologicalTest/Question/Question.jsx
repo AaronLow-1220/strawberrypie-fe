@@ -1,140 +1,134 @@
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
+import axios from "axios";
 
 export const Question = () => {
-  const Questions = [
-    {
-      id: 1,
-      question: "你會想要製作<br>什麼樣的草莓派呢?",
-      options: [
-        "派皮上只有草莓，滿滿的草莓",
-        "白色的卡士達與紅色的草莓衝擊視覺",
-        "將草莓打成果醬混入乳酪呈現櫻花粉",
-        "加入堅果、藍莓，增加口感與色彩層次",
-      ],
-      img: "/PsychologicalTest/IMG_1996.PNG",
-    },
-    {
-      id: 2,
-      question: "在作派的過程中，<br>看不懂步驟怎麼辦?",
-      options: [
-        "馬上call out有經驗的朋友，順便聊一下天",
-        "慢慢研究，網路上一定有很多相關的資料",
-        "很chill隨意照自己想法做，能吃都沒問題",
-        "自己瞎搞看看，說不定變成更好吃的東西",
-      ],
-      img: "/PsychologicalTest/IMG_1995.PNG",
-    },
-    {
-      id: 3,
-      question: "終於快完工了!<br>怎麼收拾雜亂的桌面?",
-      options: [
-        "怎麼會到最後才收，做的時候就一邊整理了",
-        "把同類型的放在一起，比較方便啦",
-        "全部都丟到水槽等等再一起洗就行了",
-        "我覺得......等等應該會有小精靈",
-      ],
-      img: "/PsychologicalTest/IMG_1994.PNG",
-    },
-    {
-      id: 4,
-      question: "裝飾用草莓<br>要去哪裡買呢?",
-      options: [
-        "去果園自己摘的最新鮮啦~ 還可以偷吃",
-        "當然是要自己種吧~ 全程DIY超有成就感的 !",
-        "多選幾間水果攤挑選一下吧！或許能買到更好吃的！",
-        "草莓當然是要去大湖啦，順便逛逛苗栗",
-      ],
-      img: "/PsychologicalTest/IMG_1993.PNG",
-    },
-    {
-      id: 5,
-      question: "想要草莓派有不同變化，<br>該從哪下手呢?",
-      options: [
-        "加入水果切片或是杏仁片，產生口感差異或香氣",
-        "表面撒上檸檬皮屑或淋上焦糖醬，加上配料跟裝飾",
-        "派皮混入可可粉或肉桂粉，增添創意",
-        "加少許白蘭地或香橙酒，增加成熟風味",
-      ],
-      img: "/PsychologicalTest/IMG_1991.PNG",
-    },
-    {
-      id: 6,
-      question: "製作派皮時<br>會注意到的細節?",
-      options: [
-        "保持原料的低溫，冷的奶油烤起來才會又酥又脆",
-        "不要過度揉捏，不然會硬邦邦咬不下去",
-        "靜置冷藏，麵團才能好好放鬆，否則會變形",
-        "烘烤前小細節，派皮底部戳些洞，避免爆炸",
-      ],
-      img: "/PsychologicalTest/IMG_1990.PNG",
-    },
-  ];
+  const [Questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [isAnswer, setIsAnswer] = useState(false);
 
   const [windowWidthTrue, setWindowWidthTrue] = useState(false);
   const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false);
   const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0); //題數
-  const [isAnswer, setIsAnswer] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState(
-    new Array(Questions.length).fill(null)
-  );
 
+  // 監聽螢幕尺寸變化
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        //手機
         setWindowWidthTrue(false);
       } else if (window.innerWidth < 1024) {
-        //平板直立
         setWindowWidthTrue(false);
         setIpadWindowWidthTrue(true);
       } else if (window.innerWidth < 1584) {
-        //平板
         setWindowWidthTrue(true);
       } else {
-        //電腦
         setWindowWidthTrue(true);
         setDesTopWindowWidthTrue(true);
       }
     };
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 取得 API 資料
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const requestData = {
+          expand: "options", // 只帶 expand
+        };
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+        const response = await axios.post(
+          `${apiBaseUrl}/psychometric-question/search`,
+          requestData,
+          {
+            headers: {
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const transformedQuestions = await Promise.all(
+          response.data._data.map(async (question) => {
+            let imageURL = "";
+
+            if (question.image_id) {
+              try {
+                // 使用問題的 `image_id` 來獲取圖片
+                const imgResponse = await axios.get(
+                  `${apiBaseUrl}/file/download/${question.image_id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
+                      Accept: "application/json",
+                      "Content-Type": "application/octet-stream",
+                    },
+                    responseType: "blob",
+                  }
+                );
+
+                imageURL = URL.createObjectURL(imgResponse.data);
+              } catch (imgError) {
+                console.error(
+                  `無法下載圖片 (image_id: ${question.image_id})`,
+                  imgError
+                );
+              }
+            }
+
+            return {
+              id: question.id,
+              question: question.question,
+              img: imageURL, // 這裡動態設定圖片 URL
+              options: question.options,
+            };
+          })
+        );
+
+        setQuestions(transformedQuestions);
+        setSelectedOptions(new Array(transformedQuestions.length).fill(null));
+      } catch (error) {
+        console.error("獲取資料失敗", error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  // 處理滑動功能
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      // 往左滑動 => 下一題
       if (currentIndex < Questions.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-        setCurrentQuestion(currentQuestion + 1);
+        setCurrentIndex((prevIndex) => prevIndex + 1);
       }
     },
     onSwipedRight: () => {
-      // 往右滑動 => 回上一題（若需要回上一題）
       if (currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
-        setCurrentQuestion(currentQuestion - 1);
+        setCurrentIndex((prevIndex) => prevIndex - 1);
       }
     },
     preventDefaultTouchmoveEvent: true,
-    trackMouse: false, // 電腦也能使用滑鼠拖曳模擬手勢
+    trackMouse: false,
   });
 
+  // 處理選擇答案
   const handleNextQuestion = (optionIndex) => {
     const newSelectedOptions = [...selectedOptions];
     newSelectedOptions[currentIndex] = optionIndex;
     setSelectedOptions(newSelectedOptions);
+
     setTimeout(() => {
       if (currentIndex < Questions.length - 1) {
         setCurrentIndex(currentIndex + 1);
-        setCurrentQuestion(currentQuestion + 1);
       } else {
         setIsAnswer(true);
       }
     }, 500);
   };
+
   return (
     <>
       {windowWidthTrue === true ? (
@@ -152,7 +146,7 @@ export const Question = () => {
                 : "max-w-[33.75rem] w-full  aspect-[4/3] "
             }
           >
-            {Questions[currentIndex].img && (
+            {Questions.length > 0 && Questions[currentIndex].img && (
               <img
                 className="w-full h-full object-cover rounded-[1rem] navMargin"
                 src={Questions[currentIndex].img}
@@ -217,7 +211,7 @@ export const Question = () => {
                                 : "text-[1rem]"
                             }
                           >
-                            {option}
+                            {option.content}
                           </p>
                         </button>
                       ))}
@@ -311,7 +305,7 @@ export const Question = () => {
                 : "w-full mt-[4rem] aspect-[4/3]"
             }
           >
-            {Questions[currentIndex].img && (
+            {Questions.length > 0 && Questions[currentIndex].img && (
               <img
                 className={
                   ipadWindowWidthTrue
