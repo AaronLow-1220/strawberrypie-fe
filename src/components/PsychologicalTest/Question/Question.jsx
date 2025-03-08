@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 
 export const Question = () => {
+  // 問題資料陣列，包含問題、選項和圖片
   const Questions = [
     {
       id: 1,
@@ -71,38 +72,50 @@ export const Question = () => {
     },
   ];
 
-  const [windowWidthTrue, setWindowWidthTrue] = useState(false);
-  const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false);
-  const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0); //題數
-  const [isAnswer, setIsAnswer] = useState(false);
+  // 響應式設計的狀態變數
+  const [windowWidthTrue, setWindowWidthTrue] = useState(false);        // 判斷是否為寬螢幕
+  const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false); // 判斷是否為平板尺寸
+  const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false); // 判斷是否為桌面尺寸
+  
+  const [currentIndex, setCurrentIndex] = useState(0); // 目前顯示的題目索引
+  const [isAnswer, setIsAnswer] = useState(false);     // 是否已完成所有問題
+  
+  // 儲存使用者選擇的答案，初始化為全部 null 的陣列
   const [selectedOptions, setSelectedOptions] = useState(
     new Array(Questions.length).fill(null)
   );
 
+  // 監聽視窗大小變化，設定對應的響應式狀態
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        //手機
+        // 手機尺寸
         setWindowWidthTrue(false);
       } else if (window.innerWidth < 1024) {
-        //平板直立
+        // 平板直立尺寸
         setWindowWidthTrue(false);
         setIpadWindowWidthTrue(true);
       } else if (window.innerWidth < 1584) {
-        //平板
+        // 平板橫向尺寸
         setWindowWidthTrue(true);
       } else {
-        //電腦
+        // 桌面尺寸
         setWindowWidthTrue(true);
         setDesTopWindowWidthTrue(true);
       }
     };
+    
+    // 初始化時執行一次
     handleResize();
+    
+    // 添加視窗大小變化的監聽器
     window.addEventListener("resize", handleResize);
+    
+    // 組件卸載時移除監聽器
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 設定滑動手勢處理
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
       // 往左滑動 => 下一題
@@ -112,32 +125,41 @@ export const Question = () => {
       }
     },
     onSwipedRight: () => {
-      // 往右滑動 => 回上一題（若需要回上一題）
+      // 往右滑動 => 回上一題
       if (currentIndex > 0) {
         setCurrentIndex(currentIndex - 1);
         setCurrentQuestion(currentQuestion - 1);
       }
     },
-    preventDefaultTouchmoveEvent: true,
-    trackMouse: false, // 電腦也能使用滑鼠拖曳模擬手勢
+    preventDefaultTouchmoveEvent: true, // 防止預設的觸控移動事件
+    trackMouse: false, // 不追蹤滑鼠事件
   });
 
+  // 處理選擇答案並前進到下一題
   const handleNextQuestion = (optionIndex) => {
+    // 複製當前選擇的答案陣列
     const newSelectedOptions = [...selectedOptions];
+    // 更新當前題目的選擇
     newSelectedOptions[currentIndex] = optionIndex;
     setSelectedOptions(newSelectedOptions);
+    
+    // 延遲 500ms 後前進到下一題或完成測驗
     setTimeout(() => {
       if (currentIndex < Questions.length - 1) {
+        // 還有下一題，前進
         setCurrentIndex(currentIndex + 1);
         setCurrentQuestion(currentQuestion + 1);
       } else {
+        // 已是最後一題，設定完成狀態
         setIsAnswer(true);
       }
     }, 500);
   };
+  
   return (
     <>
       {windowWidthTrue === true ? (
+        // 寬螢幕版面配置（平板橫向或桌面）
         <div
           className={
             desTopWindowWidthTrue
@@ -145,21 +167,36 @@ export const Question = () => {
               : "flex justify-center items-center h-screen space-x-[4rem]"
           }
         >
+          {/* 左側圖片區域 - 使用淡入淡出效果 */}
           <div
             className={
               desTopWindowWidthTrue
-                ? "max-w-[39.375rem] w-full  aspect-[4/3] "
-                : "max-w-[33.75rem] w-full  aspect-[4/3] "
+                ? "max-w-[39.375rem] w-full aspect-[4/3] relative"
+                : "max-w-[33.75rem] w-full aspect-[4/3] relative"
             }
           >
-            {Questions[currentIndex].img && (
-              <img
-                className="w-full h-full object-cover rounded-[1rem] navMargin"
-                src={Questions[currentIndex].img}
-                alt=""
-              />
-            )}
+            {Questions.map((question, index) => (
+              <div
+                key={index}
+                className="absolute inset-0 transition-opacity duration-500 ease-in-out"
+                style={{ 
+                  opacity: index === currentIndex ? 1 : 0,
+                  zIndex: index === currentIndex ? 1 : 0,
+                  pointerEvents: index === currentIndex ? 'auto' : 'none'
+                }}
+              >
+                {question.img && (
+                  <img
+                    className="w-full h-full object-cover rounded-[1rem]"
+                    src={question.img}
+                    alt=""
+                  />
+                )}
+              </div>
+            ))}
           </div>
+          
+          {/* 右側問題與選項區域 */}
           <div
             className={
               desTopWindowWidthTrue
@@ -167,6 +204,7 @@ export const Question = () => {
                 : "w-full max-w-[28.75rem] "
             }
           >
+            {/* 問題與選項輪播容器 */}
             <div className=" mx-auto mt-[60px] mb-[20px] overflow-hidden relative">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
@@ -184,15 +222,18 @@ export const Question = () => {
                           "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
                       }}
                     >
+                      {/* 問題標題 */}
                       <p
                         className={
                           desTopWindowWidthTrue
-                            ? "text-[3rem] leading-none mb-[10px] text-white"
-                            : "text-[2rem] leading-none mb-[10px] text-white"
+                            ? "text-[3rem] leading-tight mb-[20px] text-white"
+                            : "text-[2rem] leading-tight mb-[20px] text-white"
                         }
                         style={{ fontFamily: "B" }}
                         dangerouslySetInnerHTML={{ __html: question.question }}
                       ></p>
+                      
+                      {/* 選項按鈕 */}
                       {question.options.map((option, i) => (
                         <button
                           key={i}
@@ -203,6 +244,7 @@ export const Question = () => {
                           }
                           onClick={() => handleNextQuestion(i)}
                         >
+                          {/* 選項前的圓點 */}
                           <div
                             className={`w-[12px] h-[12px] rounded-[50%]  border  me-[0.625rem] box-border ${
                               selectedOptions[currentIndex] === i
@@ -210,6 +252,8 @@ export const Question = () => {
                                 : " opacity-[60%]"
                             }`}
                           ></div>
+                          
+                          {/* 選項文字 */}
                           <p
                             className={
                               desTopWindowWidthTrue
@@ -227,8 +271,10 @@ export const Question = () => {
               </div>
             </div>
 
+            {/* 底部導航區域 */}
             {isAnswer != false &&
             selectedOptions.every((option) => option !== null) ? (
+              // 所有問題都已回答，顯示結果按鈕
               <div className="w-full flex justify-center ">
                 <button
                   className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
@@ -240,6 +286,7 @@ export const Question = () => {
                 </button>
               </div>
             ) : (
+              // 顯示問題進度指示器
               <div
                 className={
                   desTopWindowWidthTrue
@@ -263,6 +310,7 @@ export const Question = () => {
                         className="flex items-center justify-center w-full h-full"
                       >
                         {currentIndex === index ? (
+                          // 當前問題指示器
                           <img
                             src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
@@ -274,6 +322,7 @@ export const Question = () => {
                             }}
                           />
                         ) : currentIndex >= index ? (
+                          // 已完成問題指示器
                           <img
                             src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
@@ -285,6 +334,7 @@ export const Question = () => {
                             }}
                           />
                         ) : (
+                          // 未完成問題指示器
                           <div
                             className={
                               desTopWindowWidthTrue
@@ -303,26 +353,42 @@ export const Question = () => {
           </div>
         </div>
       ) : (
+        // 窄螢幕版面配置（手機或平板直立）
         <div className="overflow-hidden">
+          {/* 頂部圖片區域 - 使用淡入淡出效果 */}
           <div
             className={
               ipadWindowWidthTrue
-                ? "max-w-[33.75rem] mx-auto  mt-[4rem] aspect-[4/3]"
-                : "w-full mt-[4rem] aspect-[4/3]"
+                ? "max-w-[33.75rem] mx-auto mt-[4rem] aspect-[4/3] relative"
+                : "w-full mt-[4rem] aspect-[4/3] relative"
             }
           >
-            {Questions[currentIndex].img && (
-              <img
-                className={
-                  ipadWindowWidthTrue
-                    ? "w-full h-full  object-cover rounded-[1rem]"
-                    : "w-full h-full  object-cover"
-                }
-                src={Questions[currentIndex].img}
-                alt=""
-              />
-            )}
+            {Questions.map((question, index) => (
+              <div
+                key={index}
+                className="absolute inset-0 transition-opacity duration-500 ease-in-out"
+                style={{ 
+                  opacity: index === currentIndex ? 1 : 0,
+                  zIndex: index === currentIndex ? 1 : 0,
+                  pointerEvents: index === currentIndex ? 'auto' : 'none'
+                }}
+              >
+                {question.img && (
+                  <img
+                    className={
+                      ipadWindowWidthTrue
+                        ? "w-full h-full object-cover rounded-[1rem]"
+                        : "w-full h-full object-cover"
+                    }
+                    src={question.img}
+                    alt=""
+                  />
+                )}
+              </div>
+            ))}
           </div>
+          
+          {/* 問題與選項區域（支援滑動手勢） */}
           <div
             {...swipeHandlers}
             className={
@@ -349,17 +415,21 @@ export const Question = () => {
                         "opacity 0.5s ease-in-out, transform 0.5s ease-in-out",
                     }}
                   >
+                    {/* 問題標題 */}
                     <p
-                      className="text-[2rem] leading-none mb-[10px] text-white"
+                      className="text-[2rem] leading-tight mb-[20px] text-white"
                       style={{ fontFamily: "B" }}
                       dangerouslySetInnerHTML={{ __html: question.question }}
                     ></p>
+                    
+                    {/* 選項按鈕 */}
                     {question.options.map((option, i) => (
                       <button
                         key={i}
                         className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]`}
                         onClick={() => handleNextQuestion(i)}
                       >
+                        {/* 選項前的圓點 */}
                         <div
                           className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border  me-[0.625rem] box-border ${
                             selectedOptions[currentIndex] === i
@@ -367,6 +437,8 @@ export const Question = () => {
                               : " opacity-[60%]"
                           }`}
                         ></div>
+                        
+                        {/* 選項文字 */}
                         <p className="text-[1rem]">{option}</p>
                       </button>
                     ))}
@@ -375,8 +447,11 @@ export const Question = () => {
               })}
             </div>
           </div>
+          
+          {/* 底部導航區域 */}
           {isAnswer != false &&
           selectedOptions.every((option) => option !== null) ? (
+            // 所有問題都已回答，顯示結果按鈕
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <button
                 className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
@@ -388,6 +463,7 @@ export const Question = () => {
               </button>
             </div>
           ) : (
+            // 顯示問題進度指示器
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto">
                 {Questions.map((_, index) => {
@@ -402,6 +478,7 @@ export const Question = () => {
                         className="flex items-center justify-center w-full h-full"
                       >
                         {currentIndex === index ? (
+                          // 當前問題指示器
                           <img
                             src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
@@ -413,6 +490,7 @@ export const Question = () => {
                             }}
                           />
                         ) : currentIndex >= index ? (
+                          // 已完成問題指示器
                           <img
                             src="/PsychologicalTest/strawberry.svg"
                             alt="strawberry"
@@ -424,6 +502,7 @@ export const Question = () => {
                             }}
                           />
                         ) : (
+                          // 未完成問題指示器
                           <div
                             className="w-[8px] h-[8px] rounded-full transition-all duration-300"
                             style={{ backgroundColor: bgColor }}
