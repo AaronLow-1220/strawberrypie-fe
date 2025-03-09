@@ -6,6 +6,9 @@ export const Question = () => {
   const [Questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptionIds, setSelectedOptionIds] = useState(
+    Array(Questions.length).fill(null)
+  );
   const [isAnswer, setIsAnswer] = useState(false);
 
   const [windowWidthTrue, setWindowWidthTrue] = useState(false);
@@ -42,14 +45,15 @@ export const Question = () => {
         };
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
         const response = await axios.post(
-          `${apiBaseUrl}/psychometric-question/search`,
-          requestData,
-          {
-            headers: {
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
-              "Content-Type": "application/json",
-            },
-          }
+          `https://dev-api.strawberrypie.tw/fe/psychometric-question/search`,
+          // `${apiBaseUrl}/psychometric-question/search`,
+          requestData
+          // {
+          //   headers: {
+          //     Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
+          //     "Content-Type": "application/json",
+          //   },
+          // }
         );
         const transformedQuestions = await Promise.all(
           response.data._data.map(async (question) => {
@@ -114,19 +118,59 @@ export const Question = () => {
     trackMouse: false,
   });
 
-  // 處理選擇答案
   const handleNextQuestion = (optionIndex) => {
-    const newSelectedOptions = [...selectedOptions];
-    newSelectedOptions[currentIndex] = optionIndex;
-    setSelectedOptions(newSelectedOptions);
+    try {
+      setSelectedOptionIds((prev) => {
+        const newIds = [...prev];
+        newIds[currentIndex] = optionIndex.id; // 假設每個選項有 id 屬性
+        return newIds;
+      });
 
-    setTimeout(() => {
-      if (currentIndex < Questions.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        setIsAnswer(true);
+      let fixedString = optionIndex.weight.replace(/\\/g, "");
+      let jsonData = JSON.parse(fixedString);
+
+      let newSelectedOptions = [...selectedOptions];
+      newSelectedOptions[currentIndex] = jsonData;
+      setSelectedOptions(newSelectedOptions);
+
+      // 過 0.5 秒再切到下一題
+      setTimeout(() => {
+        if (currentIndex < Questions.length - 1) {
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+        } else {
+          setIsAnswer(true);
+        }
+      }, 500);
+    } catch (error) {
+      console.error("JSON 解析錯誤:", error);
+    }
+  };
+
+  const handleGoResult = async () => {
+    const result = selectedOptions.reduce((acc, item) => {
+      if (!item) return acc;
+      Object.keys(item).forEach((key) => {
+        acc[key] = (acc[key] || 0) + item[key];
+      });
+      return acc;
+    }, {});
+
+    const stringifiedObj = JSON.stringify(
+      Object.fromEntries(
+        Object.entries(result).map(([key, value]) => [key.toString(), value])
+      )
+    );
+
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    const response = await axios.post(
+      `${apiBaseUrl}/fe/psychometric-result/calculate`,
+      {
+        weight: stringifiedObj,
       }
-    }, 500);
+    );
+
+    const encodedData = encodeURIComponent(response.data.psychoresultid);
+    window.location.href = `/result?data=${encodedData}`;
   };
 
   return (
@@ -195,11 +239,11 @@ export const Question = () => {
                               ? "my-[0.625rem] flex items-center w-full text-left p-[15px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]"
                               : "my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]"
                           }
-                          onClick={() => handleNextQuestion(i)}
+                          onClick={() => handleNextQuestion(option)}
                         >
                           <div
                             className={`w-[12px] h-[12px] rounded-[50%]  border  me-[0.625rem] box-border ${
-                              selectedOptions[currentIndex] === i
+                              selectedOptionIds[currentIndex] === option.id
                                 ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                                 : " opacity-[60%]"
                             }`}
@@ -226,9 +270,7 @@ export const Question = () => {
               <div className="w-full flex justify-center ">
                 <button
                   className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
-                  onClick={() => {
-                    window.location.href = "/Result";
-                  }}
+                  onClick={handleGoResult}
                 >
                   查看你的專屬角色
                 </button>
@@ -352,11 +394,11 @@ export const Question = () => {
                       <button
                         key={i}
                         className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]`}
-                        onClick={() => handleNextQuestion(i)}
+                        onClick={() => handleNextQuestion(option)}
                       >
                         <div
                           className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border  me-[0.625rem] box-border ${
-                            selectedOptions[currentIndex] === i
+                            selectedOptionIds[currentIndex] === option.id
                               ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                               : " opacity-[60%]"
                           }`}
@@ -374,9 +416,7 @@ export const Question = () => {
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <button
                 className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
-                onClick={() => {
-                  window.location.href = "/Result";
-                }}
+                onClick={handleGoResult}
               >
                 查看你的專屬角色
               </button>
