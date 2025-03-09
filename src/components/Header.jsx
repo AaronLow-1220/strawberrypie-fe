@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { Link, useLocation } from "react-router-dom";
 
 // NavBackground 元件：根據 menuOpen 狀態改變 SVG 路徑動畫
 const NavBackground = ({ menuOpen }) => {
@@ -90,101 +91,58 @@ const NavBackground = ({ menuOpen }) => {
 
 // Header 元件：根據裝置寬度與選單狀態顯示不同版型
 export const Header = () => {
+  const location = useLocation();
   const [isHome, setIsHome] = useState(false);
-  const [windowWidthTrue, setWindowWidthTrue] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrollOpacity, setScrollOpacity] = useState(0); // 滾動透明度狀態
+  const is2XLScreen = windowWidth >= 1536; // 判斷是否為 2xl 及以上螢幕尺寸
 
-  // 判斷是否為首頁
   useEffect(() => {
-    setIsHome(window.location.pathname === "/");
-  }, []);
+    setIsHome(location.pathname === "/");
+  })
 
-  // 監聽視窗寬度改變，判斷是桌機或行動版
+  // 每次路由變化時重新判斷是否為首頁
+  useEffect(() => {
+    setIsHome(location.pathname === "/");
+  }, [location.pathname]);
+
+  // 監聽視窗大小變化
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setWindowWidthTrue(false);
-      } else if (window.innerWidth < 1024) {
-        setWindowWidthTrue(false);
-      } else if (window.innerWidth < 1584) {
-        setWindowWidthTrue(true);
-      } else {
-        setWindowWidthTrue(true);
-      }
+      setWindowWidth(window.innerWidth);
     };
-    handleResize();
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // 監聽滾動事件，控制 Header 透明度
+  useEffect(() => {
+    const handleScroll = () => {
+      // 如果是 2xl 及以上螢幕尺寸，則不需要透明度效果
+      if (is2XLScreen) {
+        setScrollOpacity(1); // 始終保持完全不透明
+        return;
+      }
+      
+      // 計算透明度：從 0 到 100px 的滾動範圍內，透明度從 0 變為 1
+      const scrollY = window.scrollY;
+      const maxScroll = 100; // 滾動 100px 後達到完全不透明
+      const opacity = Math.min(scrollY / maxScroll, 1);
+      setScrollOpacity(opacity);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    // 初始化時執行一次，確保正確的初始狀態
+    handleScroll();
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [is2XLScreen]); // 當螢幕尺寸類別變化時重新設置
+
   return (
     <>
-      {windowWidthTrue ? (
-        // 桌機版 Header
-        <div
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
-          }}
-        >
-          <div className="fixed top-0 left-0 right-0 z-[999]">
-            <div className="w-full  flex justify-center  mt-[48px] px-[1rem] navContainer">
-              <a
-                className="navHover text-[1.5rem] mx-[1.6875rem]  leading-none"
-                style={{
-                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                  fontFamily: "B",
-                }}
-                href="/group"
-              >
-                組別介紹
-              </a>
-              <a
-                className="navHover text-[1.5rem] mx-[1.6875rem]  leading-none"
-                style={{
-                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                  fontFamily: "B",
-                }}
-                href="/collect"
-              >
-                集章兌換
-              </a>
-              {!isHome ? (
-                <img
-                  src="/Header/Headline.svg"
-                  alt="Headline"
-                  className={
-                    window.innerWidth < 1584
-                      ? "w-[7.5rem] h-auto backface-hidden mx-[14.4px] mt-[-27.25px]"
-                      : "w-[9.5rem] h-auto backface-hidden mt-[-30px] mx-[14.4px]"
-                  }
-                />
-              ) : (
-                <div className="w-[180px]"></div>
-              )}
-              <a
-                className="navHover text-[1.5rem] mx-[1.6875rem]  leading-none "
-                style={{
-                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                  fontFamily: "B",
-                }}
-                href="/PsychologicalTest"
-              >
-                心理測驗
-              </a>
-              <div
-                className="navHover text-[1.5rem] mx-[1.6875rem]  leading-none "
-                style={{
-                  textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                  fontFamily: "B",
-                }}
-              >
-                意見回饋
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
+      {windowWidth < 768 ? (
         // 行動版 Header
         <div
           className="fixed top-0 left-0 right-0 z-[100]"
@@ -230,11 +188,10 @@ export const Header = () => {
           </div>
 
           <div
-            className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${
-              menuOpen
-                ? "scale-y-100 opacity-100 translate-y-0"
-                : "scale-y-0 opacity-100 -translate-y-10"
-            }`}
+            className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${menuOpen
+              ? "scale-y-100 opacity-100 translate-y-0"
+              : "scale-y-0 opacity-100 -translate-y-10"
+              }`}
           >
             <NavBackground menuOpen={menuOpen} />
             <ul
@@ -242,49 +199,113 @@ export const Header = () => {
               style={{ fontFamily: "B" }}
             >
               <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/group">
-                  <div className="flex items-center">
-                    <div>組別介紹</div>
-                    <div className="ms-[1rem]">
-                      <img src="/Header/category.svg" alt="Category" />
-                    </div>
+                <Link
+                  to="/group"
+                  className="flex items-center"
+                >
+                  <div>組別介紹</div>
+                  <div className="ms-[1rem]">
+                    <img src="/Header/category.svg" alt="Category" />
                   </div>
-                </a>
+                </Link>
               </li>
               <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/collect">
-                  <div className="flex items-center">
-                    <div>集章兌換</div>
-                    <div className="ms-[1rem]">
-                      <img src="/Header/feedback.svg" alt="Feedback" />
-                    </div>
+                <Link
+                  to="/collect"
+                  className="flex items-center"
+                >
+                  <div>集章兌換</div>
+                  <div className="ms-[1rem]">
+                    <img src="/Header/feedback.svg" alt="Feedback" />
                   </div>
-                </a>
+                </Link>
               </li>
               <li className="pb-[2.25rem] text-[2rem]">
-                <a href="/psychologicalTest">
-                  <div className="flex items-center">
-                    <div>心裡測驗</div>
-                    <div className="ms-[1rem]">
-                      <img src="/Header/psychology.svg" alt="Psychology" />
-                    </div>
+                <Link
+                  to="/psychologicalTest"
+                  className="flex items-center"
+                >
+                  <div>心裡測驗</div>
+                  <div className="ms-[1rem]">
+                    <img src="/Header/psychology.svg" alt="Psychology" />
                   </div>
-                </a>
+                </Link>
               </li>
               <li className="text-[2rem]">
-                <a href="/contact">
-                  <div className="flex items-center">
-                    <div>意見回饋</div>
-                    <div className="ms-[1rem]">
-                      <img src="/Header/stamp.svg" alt="Stamp" />
-                    </div>
+                <Link
+                  to="/contact"
+                  className="flex items-center"
+                >
+                  <div>意見回饋</div>
+                  <div className="ms-[1rem]">
+                    <img src="/Header/stamp.svg" alt="Stamp" />
                   </div>
-                </a>
+                </Link>
               </li>
             </ul>
+          </div>
+        </div>
+      ) : (
+        // 桌機版 Header - 根據螢幕尺寸決定是否套用透明度效果
+        <div
+          className="fixed top-0 left-0 right-0 z-[999] transition-opacity duration-300"
+          style={{ 
+            opacity: scrollOpacity,
+            background: "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)"
+          }}
+        >
+          <div className="w-full flex justify-center mt-[48px] px-[1rem] navContainer">
+            <Link
+              to="/group"
+              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              style={{
+                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                fontFamily: "B",
+              }}
+            >
+              組別介紹
+            </Link>
+            <Link
+              to="/collect"
+              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              style={{
+                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                fontFamily: "B",
+              }}
+            >
+              集章兌換
+            </Link>
+            <Link to="/">
+              <img
+                src="/Header/Headline.svg"
+                alt="Headline"
+                className={` drop-shadow-lg object-cover overflow-visible h-[60px] backface-hidden mt-[-27.25px] 2xl:mt-[-30px] w-0 mx-0 opacity-0 ${!isHome && "!w-[150px] !mx-[16px] !opacity-100"} transition-all duration-500 ease-in-out`}
+              />
+            </Link>
+            <Link
+              to="/psychological-test"
+              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              style={{
+                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                fontFamily: "B",
+              }}
+            >
+              心理測驗
+            </Link>
+            <div
+              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              style={{
+                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+                fontFamily: "B",
+              }}
+            >
+              意見回饋
+            </div>
           </div>
         </div>
       )}
     </>
   );
 };
+
+export default Header;

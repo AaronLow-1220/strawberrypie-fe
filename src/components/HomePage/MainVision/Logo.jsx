@@ -1,15 +1,24 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useDeviceType } from "./useDeviceType";
 
-export const Logo = ({ beginAnimation }) => {
+export const Logo = ({ beginAnimation, className }) => {
   const logoRef = useRef(null);
   const { deviceType, config } = useDeviceType();
   const initialPositionRef = useRef(config.initialPosition);
   const baseScaleRef = useRef(config.baseScale);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  // 控制動畫開始時機
+  useEffect(() => {
+    if (!beginAnimation || deviceType === "desktop") return;
+    setShouldAnimate(true);
+
+
+  }, [beginAnimation, deviceType]);
 
   // 處理動畫和縮放
   useEffect(() => {
-    if (!beginAnimation || deviceType === "desktop") return;
+    if (!shouldAnimate || deviceType === "desktop") return;
 
     const updateTransform = (scrollY) => {
       if (!logoRef.current) return;
@@ -36,14 +45,14 @@ export const Logo = ({ beginAnimation }) => {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [deviceType, beginAnimation, config]);
+  }, [deviceType, shouldAnimate, config]);
 
   if (deviceType === "desktop") return null;
 
   return (
     <div
       ref={logoRef}
-      className={`fixed left-[50%] z-30 ${config.animateClass}`}
+      className={`fixed md:absolute left-[50%] z-30 ${className} ${shouldAnimate ? config.animateClass : ''}`}
       style={{
         "--logo-y": `${config.initialPosition}%`,
         "--logo-scale": config.baseScale,
@@ -55,7 +64,7 @@ export const Logo = ({ beginAnimation }) => {
     >
       <div className="h-[100px]">
         <img
-          src="/Headline.svg"
+          src="/Header/Headline.svg"
           alt="Example"
           style={{
             backfaceVisibility: "hidden",
