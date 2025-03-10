@@ -231,7 +231,7 @@ export const Header = () => {
                   to="/psychologicalTest"
                   className="flex items-center"
                 >
-                  <div>心裡測驗</div>
+                  <div>心理測驗</div>
                   <div className="ms-[1rem]">
                     <img src="/Header/psychology.svg" alt="Psychology" />
                   </div>
