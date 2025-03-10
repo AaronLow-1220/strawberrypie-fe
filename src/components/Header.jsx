@@ -177,7 +177,7 @@ export const Header = () => {
               onClick={() => setMenuOpen(false)}
             ></div>
           <div
-            className={`z-[-10] absolute top-0 right-0 w-full h-[480px] transition-all duration-700 ease-in-out origin-top-right ${menuOpen
+            className={`z-[-10] absolute top-0 right-0 w-full h-[520px] transition-all duration-700 ease-in-out origin-top-right ${menuOpen
               ? "translate-y-0 opacity-100"
               : "-translate-y-3/4 opacity-0 pointer-events-none"
               }`}
@@ -223,7 +223,7 @@ export const Header = () => {
                   onClick={() => setMenuOpen(false)}
                 >
                   <div>心理測驗</div>
-                  <div className="">
+                  <div className="ms-[1rem]">
                     <img src="/Header/psychology.svg" alt="Psychology" />
                   </div>
                 </Link>
@@ -255,7 +255,7 @@ export const Header = () => {
           <div className="w-full flex justify-center mt-[48px] px-[1rem] navContainer">
             <Link
               to="/group"
-              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
                 fontFamily: "B",
@@ -265,7 +265,7 @@ export const Header = () => {
             </Link>
             <Link
               to="/collect"
-              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
                 fontFamily: "B",
@@ -277,12 +277,12 @@ export const Header = () => {
               <img
                 src="/Header/Headline.svg"
                 alt="Headline"
-                className={` drop-shadow-lg object-cover overflow-visible h-[60px] backface-hidden mt-[-27.25px] 2xl:mt-[-30px] w-0 mx-0 opacity-0 ${!isHome && "!w-[150px] !mx-[16px] !opacity-100"} transition-all duration-500 ease-in-out`}
+                className={`text-nowrap drop-shadow-lg object-cover overflow-visible h-[60px] backface-hidden mt-[-27.25px] 2xl:mt-[-30px] w-0 mx-0 opacity-0 ${!isHome && "!w-[150px] !mx-[16px] !opacity-100"} transition-all duration-500 ease-in-out`}
               />
             </Link>
             <Link
               to="/psychological-test"
-              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
                 fontFamily: "B",
@@ -291,7 +291,7 @@ export const Header = () => {
               心理測驗
             </Link>
             <div
-              className="navHover text-[1.5rem] px-[27px] leading-none text-white"
+              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
                 fontFamily: "B",
