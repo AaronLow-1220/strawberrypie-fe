@@ -122,20 +122,6 @@ export const Question = () => {
   });
 
   const handleNextQuestion = (optionIndex) => {
-<<<<<<< HEAD
-    // 複製當前選擇的答案陣列
-    const newSelectedOptions = [...selectedOptions];
-    // 更新當前題目的選擇
-    newSelectedOptions[currentIndex] = optionIndex;
-    setSelectedOptions(newSelectedOptions);
-    setTimeout(() => {
-      if (currentIndex < Questions.length - 1) {
-        // 還有下一題，前進
-        setCurrentIndex(currentIndex + 1);
-      } else {
-        // 已是最後一題，設定完成狀態
-        setIsAnswer(true);
-=======
     try {
       setSelectedOptionIds((prev) => {
         const newIds = [...prev];
@@ -183,12 +169,11 @@ export const Question = () => {
       `${apiBaseUrl}/fe/psychometric-result/calculate`,
       {
         weight: stringifiedObj,
->>>>>>> 1be9da3 (resultApi)
       }
     );
 
     const encodedData = encodeURIComponent(response.data.psychoresultid);
-    window.location.href = `/result?data=${encodedData}`;
+    window.location.href = `/result/${encodedData}`;
   };
   return (
     <>
@@ -299,15 +284,8 @@ export const Question = () => {
               // 所有問題都已回答，顯示結果按鈕
               <div className="w-full flex justify-center ">
                 <button
-<<<<<<< HEAD
-                  className="flex justify-center items-center text-[20px] w-fit px-[1.2em] py-[0.5em] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
-                  onClick={() => {
-                    window.location.href = "/Result";
-                  }}
-=======
                   className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
                   onClick={handleGoResult}
->>>>>>> 1be9da3 (resultApi)
                 >
                   查看你的專屬角色
                 </button>
@@ -469,15 +447,8 @@ export const Question = () => {
             // 所有問題都已回答，顯示結果按鈕
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <button
-<<<<<<< HEAD
-                className="flex justify-center items-center w-fit text-[16px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
-                onClick={() => {
-                  window.location.href = "/Result";
-                }}
-=======
                 className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
                 onClick={handleGoResult}
->>>>>>> 1be9da3 (resultApi)
               >
                 查看你的專屬角色
               </button>

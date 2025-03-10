@@ -20,7 +20,7 @@ function App() {
   const [focus, setFocus] = useState(false);
   // 控制 Header 顯示的狀態
   const [showHeader, setShowHeader] = useState(true);
-  
+
   // Logo 動畫觸發方法
   const handleLogoAnimation = () => {
     setAnimate(true);
@@ -34,20 +34,27 @@ function App() {
     <Router>
       {/* 只有當 showHeader 為 true 時才顯示 Header */}
       {showHeader && (
-        <div className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}>
+        <div
+          className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}
+        >
           <Header />
         </div>
       )}
       <Routes>
         <Route
           path="/"
-          element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />}
+          element={
+            <HomePage
+              handleLogoAnimation={handleLogoAnimation}
+              setShowHeader={setShowHeader}
+            />
+          }
         />
         <Route path="/psychological-test" element={<PsychologicalTest />} />
         <Route path="/group" element={<Group focus={handleFocus} />} />
-        <Route path="/result" element={<Result />} />
-        <Route path="/collect" element={<ComingSoon />} />
-        {/* <Route path="/Result/:id" element={<Result />} /> */}
+        <Route path="/result/:id" element={<Result />} />
+        <Route path="/collect" element={<Collect2 />} />
+        <Route path="/coming-soon" element={<ComingSoon />} />
       </Routes>
     </Router>
   );

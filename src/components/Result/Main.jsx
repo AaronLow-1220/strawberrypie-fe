@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 export const Result = () => {
   const [character, setCharacter] = useState({});
   const [imageURL, setImageURL] = useState("");
+  const { id } = useParams();
+
+  console.log(id);
+
   useEffect(() => {
     const fetchResult = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-        const urlParams = new URLSearchParams(window.location.search);
-        const data = urlParams.get("data");
-
-        if (!data) {
-          console.error("No data found in URL parameters.");
-          return;
-        }
 
         const response = await axios.get(
-          `${apiBaseUrl}/fe/psychometric-result/view/${data}?expand=character`
+          `${apiBaseUrl}/fe/psychometric-result/view/${id}?expand=character`
         );
         if (!response.data || !response.data.character) {
           console.error("Invalid response structure:", response);

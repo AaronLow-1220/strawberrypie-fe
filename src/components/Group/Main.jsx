@@ -112,6 +112,15 @@ export const Group = () => {
       return [];
     }
   };
+  const mediaArray = (jsonString) => {
+    try {
+      const obj = JSON.parse(jsonString);
+      return Object.values(obj).filter((value) => value !== "");
+    } catch (error) {
+      console.error("解析 member 失敗", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -146,10 +155,10 @@ export const Group = () => {
           response.data._data.map(async (card) => {
             let photoImageURL = "";
 
-            if (card.photo_id) {
+            if (card.logo_id) {
               try {
                 const photoImgResponse = await axios.get(
-                  `${apiBaseUrl}/file/download/${card.photo_id}`,
+                  `${apiBaseUrl}/file/download/${card.logo_id}`,
                   {
                     headers: {
                       Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
@@ -174,7 +183,8 @@ export const Group = () => {
               secondTitle: card.name,
               detailedContent: card.description,
               member: parseJsonArray(card.member),
-              teachers: [],
+              teachers: parseJsonArray(card.tutor),
+              media: mediaArray(card.media),
             };
           })
         );
@@ -196,9 +206,6 @@ export const Group = () => {
     selectedFilter === "全部"
       ? cards
       : cards.filter((card) => card.category === selectedFilter);
-
-  // 獲取所有唯一的類別
-  // const categories = [...new Set(d.map((item) => item.category))];
 
   // 獲取需要顯示的類別（用於分類顯示模式）
   const filteredCategories =
@@ -350,6 +357,7 @@ export const Group = () => {
                   detailedContent={card.detailedContent}
                   member={card.member}
                   teachers={card.teachers}
+                  media={card.media}
                   onClick={() => handleCardClick(card)}
                 />
               ))}
@@ -401,6 +409,7 @@ export const Group = () => {
                       detailedContent={card.detailedContent}
                       member={card.member}
                       teachers={card.teachers}
+                      media={card.media}
                       onClick={() => handleCardClick(card)}
                     />
                   ))}
@@ -467,6 +476,7 @@ export const Group = () => {
             detailedContent={focusedCard.detailedContent}
             member={focusedCard.member}
             teachers={focusedCard.teachers}
+            media={focusedCard.media}
             onCancel={handleCancelFocus}
           />
         )}

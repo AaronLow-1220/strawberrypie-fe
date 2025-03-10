@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback, memo } from "react";
 
 // 抽離社交媒體圖標組件
-const SocialMediaIcon = memo(({ src, alt }) => (
-  <div className="bg-[#6C2028] w-[40px] lg:w-[48px] lg:h-[48px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color">
+const SocialMediaIcon = memo(({ src, alt, url }) => (
+  <div
+    className="bg-[#6C2028] w-[40px] lg:w-[48px] lg:h-[48px] h-[40px] rounded-[50%] flex items-center justify-center transition-all duration-500 hover:bg-primary-color"
+    onClick={() => window.open(url, "_blank")}
+  >
     <img
       className="w-[20px] lg:w-[24px] lg:h-[24px] h-[20px]"
       src={src}
@@ -23,9 +26,26 @@ export const FocusCard = memo(
     detailedContent,
     member,
     teachers,
+    media,
     onCancel,
   }) => {
     const [isWideScreen, setIsWideScreen] = useState(false);
+    const [mediaArray, setMediaArray] = useState([]);
+
+    const mediaIcon = [
+      "/Group/globe21.svg",
+      "/Group/instagram 1.svg",
+      "/Group/Threads.svg",
+      "/Group/link-45deg 1.svg",
+    ];
+
+    useEffect(() => {
+      const mediaArray = media.map((item, index) => ({
+        src: mediaIcon[index],
+        url: item,
+      }));
+      setMediaArray(mediaArray);
+    }, []);
 
     useEffect(() => {
       const handleResize = () => {
@@ -109,10 +129,14 @@ export const FocusCard = memo(
                 {secondTitle}
               </div>
               <div className="flex flex-wrap gap-[12px] mt-[12px]">
-                <SocialMediaIcon src="/Group/globe21.svg" alt="網站" />
-                <SocialMediaIcon src="/Group/instagram 1.svg" alt="Instagram" />
-                <SocialMediaIcon src="/Group/youtube 1.svg" alt="YouTube" />
-                <SocialMediaIcon src="/Group/link-45deg 1.svg" alt="連結" />
+                {mediaArray?.map((item, index) => (
+                  <SocialMediaIcon
+                    key={index}
+                    src={item.src}
+                    alt={item.alt}
+                    url={item.url}
+                  />
+                ))}
               </div>
               <div className="text-white mt-[24px] overflow-auto flex-1 opacity-[80%] text-[20px]">
                 {detailedContent}
@@ -170,13 +194,14 @@ export const FocusCard = memo(
                   {secondTitle}
                 </div>
                 <div className="flex flex-wrap gap-[10px] mt-[12px]">
-                  <SocialMediaIcon src="/Group/globe21.svg" alt="網站" />
-                  <SocialMediaIcon
-                    src="/Group/instagram 1.svg"
-                    alt="Instagram"
-                  />
-                  <SocialMediaIcon src="/Group/youtube 1.svg" alt="YouTube" />
-                  <SocialMediaIcon src="/Group/link-45deg 1.svg" alt="連結" />
+                  {mediaArray?.map((item, index) => (
+                    <SocialMediaIcon
+                      key={index}
+                      src={item.src}
+                      alt={item.alt}
+                      url={item.url}
+                    />
+                  ))}
                 </div>
                 <div className="text-white mt-[24px] overflow-auto flex-1 opacity-[80%] text-[14px]">
                   {detailedContent}
