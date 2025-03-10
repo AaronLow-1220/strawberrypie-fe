@@ -2,7 +2,7 @@ import { Question } from "./Question/Question";
 import { useState, useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 
-export const PsychologicalTest = () => {
+export const PsychometricTest = () => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const nodeRef = useRef(null);

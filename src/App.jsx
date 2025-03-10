@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //header
 import { Header } from "./components/Header";
 //Test
-import { PsychologicalTest } from "./components/PsychologicalTest/Main";
+import { PsychometricTest } from "./components/PsychometricTest/Main";
 //HomePage
 import { HomePage } from "./components/HomePage/Main";
 //Group
@@ -35,34 +35,33 @@ function App() {
   };
 
   return (
-    <HeaderProvider>
-      <Router>
-        {/* 只有當 showHeader 為 true 時才顯示 Header */}
-        {showHeader && (
-          <div
-            className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}
-          >
-            <Header />
-          </div>
-        )}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                handleLogoAnimation={handleLogoAnimation}
-                setShowHeader={setShowHeader}
-              />
-            }
-          />
-          <Route path="/psychological-test" element={<PsychologicalTest />} />
-          <Route path="/group" element={<Group focus={handleFocus} />} />
-          <Route path="/result/:id" element={<Result />} />
-          {/* <Route path="/collect" element={<Collect2 />} /> */}
-          <Route path="/collect" element={<ComingSoon />} />
-        </Routes>
-      </Router>
-    </HeaderProvider>
+    <Router>
+      {/* 只有當 showHeader 為 true 時才顯示 Header */}
+      {showHeader && (
+        <div
+          className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}
+        >
+          <Header />
+        </div>
+      )}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              handleLogoAnimation={handleLogoAnimation}
+              setShowHeader={setShowHeader}
+            />
+          }
+        />
+        <Route path="/psychometric-test" element={<PsychometricTest />} />
+        <Route path="/group" element={<Group focus={handleFocus} />} />
+        <Route path="/result/:id" element={<Result />} />
+        {/* <Route path="/collect" element={<Collect2 />} /> */}
+        <Route path="/collect" element={<ComingSoon />} />
+        <Route path="/feedback" element={<ComingSoon />} />
+      </Routes>
+    </Router>
   );
 }
 
