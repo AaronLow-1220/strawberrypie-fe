@@ -11,8 +11,9 @@ import { Group } from "./components/Group/Main";
 //Result
 import { Result } from "./components/Result/Main";
 
-import { Collect } from "./components/Collect/Main";
 import { Collect2 } from "./components/Collect/Main2";
+
+import { ComingSoon } from "./components/ComingSoon";
 
 function App() {
   const [animate, setAnimate] = useState(false);
@@ -45,7 +46,7 @@ function App() {
         <Route path="/psychological-test" element={<PsychologicalTest />} />
         <Route path="/group" element={<Group focus={handleFocus} />} />
         <Route path="/result" element={<Result />} />
-        <Route path="/collect" element={<Collect2 />} />
+        <Route path="/collect" element={<ComingSoon />} />
         {/* <Route path="/Result/:id" element={<Result />} /> */}
       </Routes>
     </Router>
