@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //header
 import { Header } from "./components/Header";
 //Test
-import { PsychologicalTest } from "./components/PsychologicalTest/Main";
+import { PsychometricTest } from "./components/PsychometricTest/Main";
 //HomePage
 import { HomePage } from "./components/HomePage/Main";
 //Group
@@ -52,11 +52,12 @@ function App() {
             />
           }
         />
-        <Route path="/psychological-test" element={<PsychologicalTest />} />
+        <Route path="/psychometric-test" element={<PsychometricTest />} />
         <Route path="/group" element={<Group focus={handleFocus} />} />
         <Route path="/result/:id" element={<Result />} />
         {/* <Route path="/collect" element={<Collect2 />} /> */}
         <Route path="/collect" element={<ComingSoon />} />
+        <Route path="/feedback" element={<ComingSoon />} />
       </Routes>
     </Router>
   );

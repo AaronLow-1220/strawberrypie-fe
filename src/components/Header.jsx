@@ -228,7 +228,7 @@ export const Header = () => {
               </li>
               <li className="pb-[2.25rem] text-[2rem]">
                 <Link
-                  to="/psychologicalTest"
+                  to="/psychometric-test"
                   className="flex items-center"
                 >
                   <div>心理測驗</div>
@@ -239,7 +239,7 @@ export const Header = () => {
               </li>
               <li className="text-[2rem]">
                 <Link
-                  to="/contact"
+                  to="/feedback"
                   className="flex items-center"
                 >
                   <div>意見回饋</div>
@@ -289,7 +289,7 @@ export const Header = () => {
               />
             </Link>
             <Link
-              to="/psychological-test"
+              to="/psychometric-test"
               className="navHover text-[1.5rem] px-[27px] leading-none text-white"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
@@ -298,7 +298,8 @@ export const Header = () => {
             >
               心理測驗
             </Link>
-            <div
+            <Link
+              to="/feedback"
               className="navHover text-[1.5rem] px-[27px] leading-none text-white"
               style={{
                 textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
@@ -306,7 +307,7 @@ export const Header = () => {
               }}
             >
               意見回饋
-            </div>
+            </Link>
           </div>
         </div>
       )}
