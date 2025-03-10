@@ -423,7 +423,7 @@ export const Question = () => {
                         ></div>
 
                         {/* 選項文字 */}
-                        <p className="text-[1rem]">{option}</p>
+                        <p className="text-[1rem]">{option.content}</p>
                       </button>
                     ))}
                   </div>

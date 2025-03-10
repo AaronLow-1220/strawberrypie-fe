@@ -2,7 +2,7 @@ import { Question } from "./Question/Question";
 import { useState, useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 
-export const PsychologicalTest = () => {
+export const PsychometricTest = () => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
   const nodeRef = useRef(null);
@@ -19,7 +19,6 @@ export const PsychologicalTest = () => {
   const handleStartTest = () => {
     // 添加歷史記錄狀態，用於處理返回按鈕
     window.history.pushState({ page: "question" }, "");
-
     // 只設置 showIntro 為 false，讓它開始淡出
     setShowIntro(false);
     // 不再使用 setTimeout，而是在 CSSTransition 的 onExited 回調中設置 showQuestion
@@ -29,14 +28,12 @@ export const PsychologicalTest = () => {
   useEffect(() => {
     // 初始化歷史記錄狀態
     window.history.replaceState({ page: "intro" }, "");
-
     const handlePopState = (event) => {
       if (event.state && event.state.page === "intro") {
         setShowQuestion(false);
         // 在 Question 完全淡出後再顯示 Intro (通過 onExited 回調處理)
       }
     };
-
     window.addEventListener("popstate", handlePopState);
     return () => {
       window.removeEventListener("popstate", handlePopState);
@@ -138,7 +135,6 @@ export const PsychologicalTest = () => {
             // 提供一個回到封面的方法給 Question 組件
             setShowQuestion(false);
             // 不再使用 setTimeout，而是在 onExited 回調中設置 showIntro
-
             // 更新歷史記錄狀態
             window.history.pushState({ page: "intro" }, "");
           }} />

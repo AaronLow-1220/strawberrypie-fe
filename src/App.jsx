@@ -20,50 +20,41 @@ import { ComingSoon } from "./components/ComingSoon";
 import { Login } from "./components/Login/Main";
 
 function App() {
-  const [animate, setAnimate] = useState(false);
-  const [focus, setFocus] = useState(false);
-  // 控制 Header 顯示的狀態
-  const [showHeader, setShowHeader] = useState(true);
+	const [animate, setAnimate] = useState(false);
+	const [focus, setFocus] = useState(false);
+	// 控制 Header 顯示的狀態
+	const [showHeader, setShowHeader] = useState(true);
 
-  // Logo 動畫觸發方法
-  const handleLogoAnimation = () => {
-    setAnimate(true);
-  };
+	// Logo 動畫觸發方法
+	const handleLogoAnimation = () => {
+		setAnimate(true);
+	};
 
-  const handleFocus = (target) => {
-    setFocus(target);
-  };
+	const handleFocus = (target) => {
+		setFocus(target);
+	};
 
-  return (
-    <HeaderProvider>
-      <Router>
-        {/* 只有當 showHeader 為 true 時才顯示 Header */}
-        {showHeader && (
-          <div
-            className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}
-          >
-            <Header />
-          </div>
-        )}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                handleLogoAnimation={handleLogoAnimation}
-                setShowHeader={setShowHeader}
-              />
-            }
-          />
-          <Route path="/psychological-test" element={<PsychometricTest />} />
-          <Route path="/group" element={<Group focus={handleFocus} />} />
-          <Route path="/result/:id" element={<Result />} />
-          {/* <Route path="/collect" element={<Collect2 />} /> */}
-          <Route path="/collect" element={<ComingSoon />} />
-        </Routes>
-      </Router>
-    </HeaderProvider>
-  );
+	return (
+		<HeaderProvider>
+			<Router>
+				{/* 只有當 showHeader 為 true 時才顯示 Header */}
+				{showHeader && (
+					<div className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}>
+						<Header />
+					</div>
+				)}
+				<Routes>
+					<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
+					<Route path="/psychometric-test" element={<PsychometricTest />} />
+					<Route path="/group" element={<Group focus={handleFocus} />} />
+					<Route path="/result/:id" element={<Result />} />
+					{/* <Route path="/collect" element={<Collect2 />} /> */}
+					<Route path="/collect" element={<ComingSoon />} />
+					<Route path="/feedback" element={<ComingSoon />} />
+				</Routes>
+			</Router>
+		</HeaderProvider>
+	);
 }
 
 export default App;
