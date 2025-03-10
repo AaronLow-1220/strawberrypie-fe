@@ -112,47 +112,68 @@ export const Group = () => {
       return [];
     }
   };
+  const mediaArray = (jsonString) => {
+    try {
+      const obj = JSON.parse(jsonString);
+      return Object.values(obj).filter((value) => value !== "");
+    } catch (error) {
+      console.error("解析 member 失敗", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
         // const token =typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        //
 
         const response = await axios.post(
-          `${apiBaseUrl}/group/search`,
+          `${apiBaseUrl}/fe/group/search`,
           {},
           {
             headers: {
-              // Authorization: `Bearer ${token}`,
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDEzNDM1NzgsImV4cCI6MTc0MTk0ODM3OCwiaWQiOiIyIiwic3ViIjoiMTA2MzY0NTc1OTY3NjY5NzYzOTgwIiwidXNlcm5hbWUiOiJcdTVlYzkiLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiJcdTVlYzkiLCJhdmF0YXIiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJa3A0T29WYVNabjdPd2ItRTZNZTZ0X1JsYVBFVkF3bE5TZDRMTjNocmlxNHY4STBnUT1zOTYtYyIsImVtYWlsIjoiMjY0MTYzODcucmVAZ21haWwuY29tIiwic3RhdHVzIjoiMSJ9.kNLAiHTmzkZ4vfO1ZPFlj8a1mkO4liDddiUtKSZ6t-U`,
-              Accept: "application/json",
+              'Content-Type': 'application/json',
             },
           }
         );
 
-        const ImgResponse = await axios.get(`${apiBaseUrl}/file/download/1`, {
-          headers: {
-            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDEzNDM1NzgsImV4cCI6MTc0MTk0ODM3OCwiaWQiOiIyIiwic3ViIjoiMTA2MzY0NTc1OTY3NjY5NzYzOTgwIiwidXNlcm5hbWUiOiJcdTVlYzkiLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiJcdTVlYzkiLCJhdmF0YXIiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJa3A0T29WYVNabjdPd2ItRTZNZTZ0X1JsYVBFVkF3bE5TZDRMTjNocmlxNHY4STBnUT1zOTYtYyIsImVtYWlsIjoiMjY0MTYzODcucmVAZ21haWwuY29tIiwic3RhdHVzIjoiMSJ9.kNLAiHTmzkZ4vfO1ZPFlj8a1mkO4liDddiUtKSZ6t-U`,
-            Accept: "application/json",
-            "Content-Type": "application/octet-stream",
-          },
-          responseType: "blob", // 設定回應類型為 blob
-        });
-        const imageURL = URL.createObjectURL(ImgResponse.data);
+        const transformedCards = await Promise.all(
+          response.data._data.map(async (card) => {
+            let photoImageURL = "";
 
-        console.log("API 回應：", response.data);
+            if (card.logo_id) {
+              try {
+                const photoImgResponse = await axios.get(
+                  `${apiBaseUrl}/fe/file/download/${card.logo_id}`,
+                  {
+                    headers: {
+                      "Content-Type": "application/octet-stream",
+                    },
+                    responseType: "blob",
+                  }
+                );
 
-        const transformedCards = response.data._data.map((card) => ({
-          category: mapGenreToCategory(card.genre),
-          img: imageURL,
-          title: card.work_name,
-          content: card.short_description,
-          secondTitle: card.name,
-          detailedContent: card.description,
-          member: parseJsonArray(card.member),
-          teachers: [],
-        }));
+                photoImageURL = URL.createObjectURL(photoImgResponse.data);
+              } catch (imgError) {
+                console.error(`無法下載圖片 (image_id)`, imgError);
+              }
+            }
+
+            return {
+              category: mapGenreToCategory(card.genre),
+              img: photoImageURL,
+              title: card.work_name,
+              content: card.short_description,
+              secondTitle: card.name,
+              detailedContent: card.description,
+              member: parseJsonArray(card.member),
+              teachers: parseJsonArray(card.tutor),
+              media: mediaArray(card.media),
+            };
+          })
+        );
 
         setCards(transformedCards);
       } catch (error) {
@@ -171,9 +192,6 @@ export const Group = () => {
     selectedFilter === "全部"
       ? cards
       : cards.filter((card) => card.category === selectedFilter);
-
-  // 獲取所有唯一的類別
-  // const categories = [...new Set(d.map((item) => item.category))];
 
   // 獲取需要顯示的類別（用於分類顯示模式）
   const filteredCategories =
@@ -325,6 +343,7 @@ export const Group = () => {
                   detailedContent={card.detailedContent}
                   member={card.member}
                   teachers={card.teachers}
+                  media={card.media}
                   onClick={() => handleCardClick(card)}
                 />
               ))}
@@ -376,6 +395,7 @@ export const Group = () => {
                       detailedContent={card.detailedContent}
                       member={card.member}
                       teachers={card.teachers}
+                      media={card.media}
                       onClick={() => handleCardClick(card)}
                     />
                   ))}
@@ -442,6 +462,7 @@ export const Group = () => {
             detailedContent={focusedCard.detailedContent}
             member={focusedCard.member}
             teachers={focusedCard.teachers}
+            media={focusedCard.media}
             onCancel={handleCancelFocus}
           />
         )}

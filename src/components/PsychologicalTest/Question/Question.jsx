@@ -1,161 +1,171 @@
 import { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
+import axios from "axios";
 
 export const Question = () => {
-  // 問題資料陣列，包含問題、選項和圖片
-  const Questions = [
-    {
-      id: 1,
-      question: "你會想要製作<br>什麼樣的草莓派呢?",
-      options: [
-        "派皮上只有草莓，滿滿的草莓",
-        "白色的卡士達與紅色的草莓衝擊視覺",
-        "將草莓打成果醬混入乳酪呈現櫻花粉",
-        "加入堅果、藍莓，增加口感與色彩層次",
-      ],
-      img: "/PsychologicalTest/IMG_1996.PNG",
-    },
-    {
-      id: 2,
-      question: "在作派的過程中，<br>看不懂步驟怎麼辦?",
-      options: [
-        "馬上call out有經驗的朋友，順便聊一下天",
-        "慢慢研究，網路上一定有很多相關的資料",
-        "很chill隨意照自己想法做，能吃都沒問題",
-        "自己瞎搞看看，說不定變成更好吃的東西",
-      ],
-      img: "/PsychologicalTest/IMG_1995.PNG",
-    },
-    {
-      id: 3,
-      question: "終於快完工了!<br>怎麼收拾雜亂的桌面?",
-      options: [
-        "怎麼會到最後才收，做的時候就一邊整理了",
-        "把同類型的放在一起，比較方便啦",
-        "全部都丟到水槽等等再一起洗就行了",
-        "我覺得......等等應該會有小精靈",
-      ],
-      img: "/PsychologicalTest/IMG_1994.PNG",
-    },
-    {
-      id: 4,
-      question: "裝飾用草莓<br>要去哪裡買呢?",
-      options: [
-        "去果園自己摘的最新鮮啦~ 還可以偷吃",
-        "當然是要自己種吧~ 全程DIY超有成就感的 !",
-        "多選幾間水果攤挑選一下吧！或許能買到更好吃的！",
-        "草莓當然是要去大湖啦，順便逛逛苗栗",
-      ],
-      img: "/PsychologicalTest/IMG_1993.PNG",
-    },
-    {
-      id: 5,
-      question: "想要草莓派有不同變化，<br>該從哪下手呢?",
-      options: [
-        "加入水果切片或是杏仁片，產生口感差異或香氣",
-        "表面撒上檸檬皮屑或淋上焦糖醬，加上配料跟裝飾",
-        "派皮混入可可粉或肉桂粉，增添創意",
-        "加少許白蘭地或香橙酒，增加成熟風味",
-      ],
-      img: "/PsychologicalTest/IMG_1991.PNG",
-    },
-    {
-      id: 6,
-      question: "製作派皮時<br>會注意到的細節?",
-      options: [
-        "保持原料的低溫，冷的奶油烤起來才會又酥又脆",
-        "不要過度揉捏，不然會硬邦邦咬不下去",
-        "靜置冷藏，麵團才能好好放鬆，否則會變形",
-        "烘烤前派皮底部戳些洞，避免爆炸",
-      ],
-      img: "/PsychologicalTest/IMG_1990.PNG",
-    },
-  ];
-
-  // 響應式設計的狀態變數
-  const [windowWidthTrue, setWindowWidthTrue] = useState(false);        // 判斷是否為寬螢幕
-  const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false); // 判斷是否為平板尺寸
-  const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false); // 判斷是否為桌面尺寸
-  
-  const [currentIndex, setCurrentIndex] = useState(0); // 目前顯示的題目索引
-  const [isAnswer, setIsAnswer] = useState(false);     // 是否已完成所有問題
-  
-  // 儲存使用者選擇的答案，初始化為全部 null 的陣列
-  const [selectedOptions, setSelectedOptions] = useState(
-    new Array(Questions.length).fill(null)
+  const [Questions, setQuestions] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedOptionIds, setSelectedOptionIds] = useState(
+    Array(Questions.length).fill(null)
   );
+  const [isAnswer, setIsAnswer] = useState(false);
 
-  // 監聽視窗大小變化，設定對應的響應式狀態
+  const [windowWidthTrue, setWindowWidthTrue] = useState(false);
+  const [ipadWindowWidthTrue, setIpadWindowWidthTrue] = useState(false);
+  const [desTopWindowWidthTrue, setDesTopWindowWidthTrue] = useState(false);
+
+  // 監聽螢幕尺寸變化
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        // 手機尺寸
         setWindowWidthTrue(false);
       } else if (window.innerWidth < 1024) {
-        // 平板直立尺寸
         setWindowWidthTrue(false);
         setIpadWindowWidthTrue(true);
       } else if (window.innerWidth < 1584) {
-        // 平板橫向尺寸
         setWindowWidthTrue(true);
       } else {
-        // 桌面尺寸
         setWindowWidthTrue(true);
         setDesTopWindowWidthTrue(true);
       }
     };
-    
-    // 初始化時執行一次
     handleResize();
-    
+
     // 添加視窗大小變化的監聽器
     window.addEventListener("resize", handleResize);
-    
+
     // 組件卸載時移除監聽器
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 設定滑動手勢處理
+  // 取得 API 資料
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const requestData = {
+          expand: "options", // 只帶 expand
+        };
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+        const response = await axios.post(
+          `https://dev-api.strawberrypie.tw/fe/psychometric-question/search`,
+          requestData
+        );
+        const transformedQuestions = await Promise.all(
+          response.data._data.map(async (question) => {
+            let imageURL = "";
+
+            if (question.image_id) {
+              try {
+                // 使用問題的 `image_id` 來獲取圖片
+                const imgResponse = await axios.get(
+                  `${apiBaseUrl}/fe/file/download/${question.image_id}`,
+                  {
+                    headers: {
+                      "Content-Type": "application/octet-stream",
+                    },
+                    responseType: "blob",
+                  }
+                );
+
+                imageURL = URL.createObjectURL(imgResponse.data);
+              } catch (imgError) {
+                console.error(
+                  `無法下載圖片 (image_id: ${question.image_id})`,
+                  imgError
+                );
+              }
+            }
+
+            return {
+              id: question.id,
+              question: question.question,
+              img: imageURL, // 這裡動態設定圖片 URL
+              options: question.options,
+            };
+          })
+        );
+
+        setQuestions(transformedQuestions);
+        setSelectedOptions(new Array(transformedQuestions.length).fill(null));
+      } catch (error) {
+        console.error("獲取資料失敗", error);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
+  // 處理滑動功能
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => {
-      // 往左滑動 => 下一題
       if (currentIndex < Questions.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-        setCurrentQuestion(currentQuestion + 1);
+        setCurrentIndex((prevIndex) => prevIndex + 1);
       }
     },
     onSwipedRight: () => {
-      // 往右滑動 => 回上一題
       if (currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
-        setCurrentQuestion(currentQuestion - 1);
+        setCurrentIndex((prevIndex) => prevIndex - 1);
       }
     },
-    preventDefaultTouchmoveEvent: true, // 防止預設的觸控移動事件
-    trackMouse: false, // 不追蹤滑鼠事件
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false,
   });
 
-  // 處理選擇答案並前進到下一題
   const handleNextQuestion = (optionIndex) => {
-    // 複製當前選擇的答案陣列
-    const newSelectedOptions = [...selectedOptions];
-    // 更新當前題目的選擇
-    newSelectedOptions[currentIndex] = optionIndex;
-    setSelectedOptions(newSelectedOptions);
-    
-    // 延遲 500ms 後前進到下一題或完成測驗
-    setTimeout(() => {
-      if (currentIndex < Questions.length - 1) {
-        // 還有下一題，前進
-        setCurrentIndex(currentIndex + 1);
-        setCurrentQuestion(currentQuestion + 1);
-      } else {
-        // 已是最後一題，設定完成狀態
-        setIsAnswer(true);
-      }
-    }, 500);
+    try {
+      setSelectedOptionIds((prev) => {
+        const newIds = [...prev];
+        newIds[currentIndex] = optionIndex.id; // 假設每個選項有 id 屬性
+        return newIds;
+      });
+
+      let fixedString = optionIndex.weight.replace(/\\/g, "");
+      let jsonData = JSON.parse(fixedString);
+
+      let newSelectedOptions = [...selectedOptions];
+      newSelectedOptions[currentIndex] = jsonData;
+      setSelectedOptions(newSelectedOptions);
+
+      // 過 0.5 秒再切到下一題
+      setTimeout(() => {
+        if (currentIndex < Questions.length - 1) {
+          setCurrentIndex((prevIndex) => prevIndex + 1);
+        } else {
+          setIsAnswer(true);
+        }
+      }, 500);
+    } catch (error) {
+      console.error("JSON 解析錯誤:", error);
+    }
   };
-  
+
+  const handleGoResult = async () => {
+    const result = selectedOptions.reduce((acc, item) => {
+      if (!item) return acc;
+      Object.keys(item).forEach((key) => {
+        acc[key] = (acc[key] || 0) + item[key];
+      });
+      return acc;
+    }, {});
+
+    const stringifiedObj = JSON.stringify(
+      Object.fromEntries(
+        Object.entries(result).map(([key, value]) => [key.toString(), value])
+      )
+    );
+
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+    const response = await axios.post(
+      `${apiBaseUrl}/fe/psychometric-result/calculate`,
+      {
+        weight: stringifiedObj,
+      }
+    );
+
+    const encodedData = encodeURIComponent(response.data.psychoresultid);
+    window.location.href = `/result/${encodedData}`;
+  };
   return (
     <>
       {windowWidthTrue === true ? (
@@ -175,27 +185,15 @@ export const Question = () => {
                 : "max-w-[33.75rem] w-full aspect-[4/3] relative"
             }
           >
-            {Questions.map((question, index) => (
-              <div
-                key={index}
-                className="absolute inset-0 transition-opacity duration-500 ease-in-out"
-                style={{ 
-                  opacity: index === currentIndex ? 1 : 0,
-                  zIndex: index === currentIndex ? 1 : 0,
-                  pointerEvents: index === currentIndex ? 'auto' : 'none'
-                }}
-              >
-                {question.img && (
-                  <img
-                    className="w-full h-full object-cover rounded-[1rem]"
-                    src={question.img}
-                    alt=""
-                  />
-                )}
-              </div>
-            ))}
+            {Questions.length > 0 && Questions[currentIndex].img && (
+              <img
+                className="w-full h-full object-cover rounded-[1rem] navMargin"
+                src={Questions[currentIndex].img}
+                alt=""
+              />
+            )}
           </div>
-          
+
           {/* 右側問題與選項區域 */}
           <div
             className={
@@ -232,7 +230,7 @@ export const Question = () => {
                         style={{ fontFamily: "B" }}
                         dangerouslySetInnerHTML={{ __html: question.question }}
                       ></p>
-                      
+
                       {/* 選項按鈕 */}
                       {question.options.map((option, i) => (
                         <button
@@ -242,17 +240,17 @@ export const Question = () => {
                               ? "my-[0.625rem] flex items-center w-full text-left p-[15px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]"
                               : "my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]"
                           }
-                          onClick={() => handleNextQuestion(i)}
+                          onClick={() => handleNextQuestion(option)}
                         >
                           {/* 選項前的圓點 */}
                           <div
                             className={`w-[12px] h-[12px] rounded-[50%]  border  me-[0.625rem] box-border ${
-                              selectedOptions[currentIndex] === i
+                              selectedOptionIds[currentIndex] === option.id
                                 ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                                 : " opacity-[60%]"
                             }`}
                           ></div>
-                          
+
                           {/* 選項文字 */}
                           <p
                             className={
@@ -261,7 +259,7 @@ export const Question = () => {
                                 : "text-[1rem]"
                             }
                           >
-                            {option}
+                            {option.content}
                           </p>
                         </button>
                       ))}
@@ -277,10 +275,8 @@ export const Question = () => {
               // 所有問題都已回答，顯示結果按鈕
               <div className="w-full flex justify-center ">
                 <button
-                  className="flex justify-center items-center text-[20px] w-fit px-[1.2em] py-[0.5em] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
-                  onClick={() => {
-                    window.location.href = "/Result";
-                  }}
+                  className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
+                  onClick={handleGoResult}
                 >
                   查看你的專屬角色
                 </button>
@@ -363,31 +359,19 @@ export const Question = () => {
                 : "w-full mt-[4rem] aspect-[4/3] relative"
             }
           >
-            {Questions.map((question, index) => (
-              <div
-                key={index}
-                className="absolute inset-0 transition-opacity duration-500 ease-in-out"
-                style={{ 
-                  opacity: index === currentIndex ? 1 : 0,
-                  zIndex: index === currentIndex ? 1 : 0,
-                  pointerEvents: index === currentIndex ? 'auto' : 'none'
-                }}
-              >
-                {question.img && (
-                  <img
-                    className={
-                      ipadWindowWidthTrue
-                        ? "w-full h-full object-cover rounded-[1rem]"
-                        : "w-full h-full object-cover"
-                    }
-                    src={question.img}
-                    alt=""
-                  />
-                )}
-              </div>
-            ))}
+            {Questions.length > 0 && Questions[currentIndex].img && (
+              <img
+                className={
+                  ipadWindowWidthTrue
+                    ? "w-full h-full  object-cover rounded-[1rem]"
+                    : "w-full h-full  object-cover"
+                }
+                src={Questions[currentIndex].img}
+                alt=""
+              />
+            )}
           </div>
-          
+
           {/* 問題與選項區域（支援滑動手勢） */}
           <div
             {...swipeHandlers}
@@ -421,23 +405,23 @@ export const Question = () => {
                       style={{ fontFamily: "B" }}
                       dangerouslySetInnerHTML={{ __html: question.question }}
                     ></p>
-                    
+
                     {/* 選項按鈕 */}
                     {question.options.map((option, i) => (
                       <button
                         key={i}
                         className={`my-[0.625rem] flex items-center w-full text-left p-[10px] text-white  transition-all duration-300  rounded-[8px] bg-[#361014] hover:bg-[#6C2028]`}
-                        onClick={() => handleNextQuestion(i)}
+                        onClick={() => handleNextQuestion(option)}
                       >
                         {/* 選項前的圓點 */}
                         <div
                           className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border  me-[0.625rem] box-border ${
-                            selectedOptions[currentIndex] === i
+                            selectedOptionIds[currentIndex] === option.id
                               ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                               : " opacity-[60%]"
                           }`}
                         ></div>
-                        
+
                         {/* 選項文字 */}
                         <p className="text-[1rem]">{option}</p>
                       </button>
@@ -447,17 +431,15 @@ export const Question = () => {
               })}
             </div>
           </div>
-          
+
           {/* 底部導航區域 */}
           {isAnswer != false &&
           selectedOptions.every((option) => option !== null) ? (
             // 所有問題都已回答，顯示結果按鈕
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <button
-                className="flex justify-center items-center w-fit text-[16px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
-                onClick={() => {
-                  window.location.href = "/Result";
-                }}
+                className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
+                onClick={handleGoResult}
               >
                 查看你的專屬角色
               </button>
