@@ -11,6 +11,10 @@ const SocialMediaIcon = memo(({ src, alt }) => (
   </div>
 ));
 
+SocialMediaIcon.displayName = "SocialMediaIcon"; // 設置組件的 displayName
+
+export default SocialMediaIcon;
+
 export const FocusCard = memo(
   ({
     img,

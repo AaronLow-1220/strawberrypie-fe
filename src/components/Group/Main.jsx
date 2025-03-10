@@ -118,6 +118,7 @@ export const Group = () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
         // const token =typeof window !== "undefined" ? localStorage.getItem("token") : null;
+        //
 
         const response = await axios.post(
           `${apiBaseUrl}/group/search`,
@@ -125,34 +126,58 @@ export const Group = () => {
           {
             headers: {
               // Authorization: `Bearer ${token}`,
-              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDEzNDM1NzgsImV4cCI6MTc0MTk0ODM3OCwiaWQiOiIyIiwic3ViIjoiMTA2MzY0NTc1OTY3NjY5NzYzOTgwIiwidXNlcm5hbWUiOiJcdTVlYzkiLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiJcdTVlYzkiLCJhdmF0YXIiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJa3A0T29WYVNabjdPd2ItRTZNZTZ0X1JsYVBFVkF3bE5TZDRMTjNocmlxNHY4STBnUT1zOTYtYyIsImVtYWlsIjoiMjY0MTYzODcucmVAZ21haWwuY29tIiwic3RhdHVzIjoiMSJ9.kNLAiHTmzkZ4vfO1ZPFlj8a1mkO4liDddiUtKSZ6t-U`,
-              Accept: "application/json",
+              Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
+              "Content-Type": "application/json",
             },
           }
         );
 
-        const ImgResponse = await axios.get(`${apiBaseUrl}/file/download/1`, {
-          headers: {
-            Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDEzNDM1NzgsImV4cCI6MTc0MTk0ODM3OCwiaWQiOiIyIiwic3ViIjoiMTA2MzY0NTc1OTY3NjY5NzYzOTgwIiwidXNlcm5hbWUiOiJcdTVlYzkiLCJmYW1pbHlfbmFtZSI6IiIsImdpdmVuX25hbWUiOiJcdTVlYzkiLCJhdmF0YXIiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NJa3A0T29WYVNabjdPd2ItRTZNZTZ0X1JsYVBFVkF3bE5TZDRMTjNocmlxNHY4STBnUT1zOTYtYyIsImVtYWlsIjoiMjY0MTYzODcucmVAZ21haWwuY29tIiwic3RhdHVzIjoiMSJ9.kNLAiHTmzkZ4vfO1ZPFlj8a1mkO4liDddiUtKSZ6t-U`,
-            Accept: "application/json",
-            "Content-Type": "application/octet-stream",
-          },
-          responseType: "blob", // 設定回應類型為 blob
-        });
-        const imageURL = URL.createObjectURL(ImgResponse.data);
+        // const ImgResponse = await axios.get(`${apiBaseUrl}/file/download/1`, {
+        //   headers: {
+        //     Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
+        //     Accept: "application/json",
+        //     "Content-Type": "application/octet-stream",
+        //   },
+        //   responseType: "blob",
+        // });
+        // const imageURL = URL.createObjectURL(ImgResponse.data);
 
-        console.log("API 回應：", response.data);
+        const transformedCards = await Promise.all(
+          response.data._data.map(async (card) => {
+            let photoImageURL = "";
 
-        const transformedCards = response.data._data.map((card) => ({
-          category: mapGenreToCategory(card.genre),
-          img: imageURL,
-          title: card.work_name,
-          content: card.short_description,
-          secondTitle: card.name,
-          detailedContent: card.description,
-          member: parseJsonArray(card.member),
-          teachers: [],
-        }));
+            if (card.photo_id) {
+              try {
+                const photoImgResponse = await axios.get(
+                  `${apiBaseUrl}/file/download/${card.photo_id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2Rldi1hcGkuc3RyYXdiZXJyeXBpZS50dy8iLCJpYXQiOjE3NDE0NTQ4NDcsImV4cCI6MTc0MjA1OTY0NywiaWQiOjIsInN1YiI6IjEwNjM2NDU3NTk2NzY2OTc2Mzk4MCIsInVzZXJuYW1lIjoiXHU1ZWM5IiwiZmFtaWx5X25hbWUiOiIiLCJnaXZlbl9uYW1lIjoiXHU1ZWM5IiwiYXZhdGFyIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSWtwNE9vVmFTWm43T3diLUU2TWU2dF9SbGFQRVZBd2xOU2Q0TE4zaHJpcTR2OEkwZ1E9czk2LWMiLCJlbWFpbCI6IjI2NDE2Mzg3LnJlQGdtYWlsLmNvbSIsInN0YXR1cyI6IjEifQ.BAduHgnDSGtezIgMsB9qArAQ-do8Wa6FAC7lWO_2WeI`,
+                      Accept: "application/json",
+                      "Content-Type": "application/octet-stream",
+                    },
+                    responseType: "blob",
+                  }
+                );
+
+                photoImageURL = URL.createObjectURL(photoImgResponse.data);
+              } catch (imgError) {
+                console.error(`無法下載圖片 (image_id)`, imgError);
+              }
+            }
+
+            return {
+              category: mapGenreToCategory(card.genre),
+              img: photoImageURL,
+              title: card.work_name,
+              content: card.short_description,
+              secondTitle: card.name,
+              detailedContent: card.description,
+              member: parseJsonArray(card.member),
+              teachers: [],
+            };
+          })
+        );
 
         setCards(transformedCards);
       } catch (error) {
