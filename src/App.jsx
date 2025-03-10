@@ -13,6 +13,8 @@ import { Result } from "./components/Result/Main";
 
 import { Collect2 } from "./components/Collect/Main2";
 
+import { HeaderProvider } from "./components/HeaderContext";
+
 import { ComingSoon } from "./components/ComingSoon";
 
 import { Login } from "./components/Login/Main";

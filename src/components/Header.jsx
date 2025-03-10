@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Link, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { HeaderContext } from "./HeaderContext";
 
 // NavBackground 元件：根據 menuOpen 狀態改變 SVG 路徑動畫
 const NavBackground = ({ menuOpen }) => {
@@ -18,8 +20,8 @@ const NavBackground = ({ menuOpen }) => {
 
     // 當 menuOpen 為 true 時，執行展開動畫，否則回復關閉狀態
     gsap.to(path, {
-      duration: 0.8,
-      ease: "power3.inOut",
+      duration: 1,
+      ease: "inOut",
       attr: { d: menuOpen ? openPath : closedPath },
     });
   }, [menuOpen]);
@@ -40,44 +42,8 @@ const NavBackground = ({ menuOpen }) => {
         left: 0,
       }}
     >
-      <defs>
-        <filter
-          id="filter0_i_2695_15960"
-          x="-14"
-          y="-10"
-          width="430"
-          height="800"
-          filterUnits="userSpaceOnUse"
-          colorInterpolationFilters="sRGB"
-        >
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          />
-          <feColorMatrix
-            in="SourceAlpha"
-            type="matrix"
-            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-            result="hardAlpha"
-          />
-          <feOffset dx="6" dy="1" />
-          <feGaussianBlur stdDeviation="8.9" />
-          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
-          <feColorMatrix
-            type="matrix"
-            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
-          />
-          <feBlend
-            mode="normal"
-            in2="shape"
-            result="effect1_innerShadow_2695_15960"
-          />
-        </filter>
-      </defs>
       <g style={{ overflow: "visible" }}>
-        <g filter="url(#filter0_i_2695_15960)">
+        <g>
           <path
             ref={pathRef}
             d="M416 409.264C416 409.264 375.756 391.753 327.086 391.753C278.417 391.753 263.338 429.772 208.033 429.772C152.727 429.772 128.161 452.785 63.8621 429.772C-0.436921 406.76 -14 414.768 -14 414.768L-14 -10L416 -9.99996L416 409.264Z"
@@ -89,6 +55,8 @@ const NavBackground = ({ menuOpen }) => {
   );
 };
 
+
+
 // Header 元件：根據裝置寬度與選單狀態顯示不同版型
 export const Header = () => {
   const location = useLocation();
@@ -97,6 +65,8 @@ export const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrollOpacity, setScrollOpacity] = useState(0); // 滾動透明度狀態
   const is2XLScreen = windowWidth >= 1536; // 判斷是否為 2xl 及以上螢幕尺寸
+  const { isHeaderOpen, setIsHeaderOpen } = useContext(HeaderContext);
+
 
   useEffect(() => {
     setIsHome(location.pathname === "/");
@@ -125,13 +95,13 @@ export const Header = () => {
         setScrollOpacity(1);
         return;
       }
-      
+
       // 如果是 2xl 及以上螢幕尺寸，則不需要透明度效果
       if (is2XLScreen) {
         setScrollOpacity(1); // 始終保持完全不透明
         return;
       }
-      
+
       // 計算透明度：從 0 到 100px 的滾動範圍內，透明度從 0 變為 1
       const scrollY = window.scrollY;
       const maxScroll = 100; // 滾動 100px 後達到完全不透明
@@ -142,9 +112,17 @@ export const Header = () => {
     window.addEventListener("scroll", handleScroll);
     // 初始化時執行一次，確保正確的初始狀態
     handleScroll();
-    
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, [is2XLScreen, isHome]); // 當螢幕尺寸類別或頁面變化時重新設置
+
+  useEffect(() => {
+    if (menuOpen) {
+      setIsHeaderOpen(true);
+    } else {
+      setIsHeaderOpen(false);
+    }
+  }, [menuOpen]);
 
   return (
     <>
@@ -170,16 +148,18 @@ export const Header = () => {
               onClick={() => setMenuOpen(!menuOpen)}
             />
             {!isHome && (
-              <img
-                src="/Header/Headline.svg"
-                alt="Headline"
-                style={{
-                  width: "7.5rem",
-                  height: "auto",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-              />
+              <Link to="/" onClick={() => setMenuOpen(false)}>
+                <img
+                  src="/Header/Headline.svg"
+                  alt="Headline"
+                  style={{
+                    width: "7.5rem",
+                    height: "auto",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                />
+              </Link>
             )}
             <img
               src="/Header/collect.svg"
@@ -192,22 +172,31 @@ export const Header = () => {
               }}
             />
           </div>
-
           <div
-            className={`z-[-10] absolute top-0 right-0 w-full h-[33.75rem] transition-transform duration-500 ease-in-out origin-top-right ${menuOpen
-              ? "scale-y-100 opacity-100 translate-y-0"
-              : "scale-y-0 opacity-100 -translate-y-10"
+              className={`fixed inset-0 bg-black h-screen -z-10 transition-opacity duration-500 ease-in-out ${menuOpen ? "opacity-60" : "opacity-0 pointer-events-none"}`}
+              onClick={() => setMenuOpen(false)}
+            ></div>
+          <div
+            className={`z-[-10] absolute top-0 right-0 w-full h-[480px] transition-all duration-700 ease-in-out origin-top-right ${menuOpen
+              ? "translate-y-0 opacity-100"
+              : "-translate-y-3/4 opacity-0 pointer-events-none"
               }`}
           >
-            <NavBackground menuOpen={menuOpen} />
+            <div className="pointer-events-none">
+              <NavBackground menuOpen={menuOpen} />
+            </div>
+            {/* 背景覆蓋層：60% 透明黑色，點擊時收合選單 */}
+
             <ul
-              className="relative z-10 flex flex-col items-center justify-center h-full text-white"
+              className={`relative z-10 flex flex-col items-center justify-center gap-9 h-full text-white transition-all duration-700 ease-in-out
+                ${menuOpen ? "" : "-translate-y-20"}`}
               style={{ fontFamily: "B" }}
             >
-              <li className="pb-[2.25rem] text-[2rem]">
+              <li className="text-[2rem]">
                 <Link
                   to="/group"
                   className="flex items-center"
+                  onClick={() => setMenuOpen(false)}
                 >
                   <div>組別介紹</div>
                   <div className="ms-[1rem]">
@@ -215,10 +204,11 @@ export const Header = () => {
                   </div>
                 </Link>
               </li>
-              <li className="pb-[2.25rem] text-[2rem]">
+              <li className="text-[2rem]">
                 <Link
                   to="/collect"
                   className="flex items-center"
+                  onClick={() => setMenuOpen(false)}
                 >
                   <div>集章兌換</div>
                   <div className="ms-[1rem]">
@@ -226,13 +216,14 @@ export const Header = () => {
                   </div>
                 </Link>
               </li>
-              <li className="pb-[2.25rem] text-[2rem]">
+              <li className="text-[2rem]">
                 <Link
                   to="/psychometric-test"
                   className="flex items-center"
+                  onClick={() => setMenuOpen(false)}
                 >
                   <div>心理測驗</div>
-                  <div className="ms-[1rem]">
+                  <div className="">
                     <img src="/Header/psychology.svg" alt="Psychology" />
                   </div>
                 </Link>
@@ -241,6 +232,7 @@ export const Header = () => {
                 <Link
                   to="/feedback"
                   className="flex items-center"
+                  onClick={() => setMenuOpen(false)}
                 >
                   <div>意見回饋</div>
                   <div className="ms-[1rem]">
@@ -255,7 +247,7 @@ export const Header = () => {
         // 桌機版 Header - 根據螢幕尺寸和頁面決定是否套用透明度效果
         <div
           className="fixed top-0 left-0 right-0 z-[999] transition-opacity duration-300"
-          style={{ 
+          style={{
             opacity: scrollOpacity,
             background: "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)"
           }}
