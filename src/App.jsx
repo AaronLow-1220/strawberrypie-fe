@@ -55,8 +55,8 @@ function App() {
         <Route path="/psychological-test" element={<PsychologicalTest />} />
         <Route path="/group" element={<Group focus={handleFocus} />} />
         <Route path="/result/:id" element={<Result />} />
-        <Route path="/collect" element={<Collect2 />} />
-        <Route path="/coming-soon" element={<ComingSoon />} />
+        {/* <Route path="/collect" element={<Collect2 />} /> */}
+        <Route path="/collect" element={<ComingSoon />} />
       </Routes>
     </Router>
   );
