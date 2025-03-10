@@ -11,4 +11,10 @@ export default defineConfig({
       plugins: [tailwindcss, autoprefixer],
     },
   },
+  server: {
+    allowedHosts: [
+      "5652-218-32-46-141.ngrok-free.app", // 加入 ngrok 提供的域名
+    ],
+    host: "0.0.0.0",
+  },
 });
