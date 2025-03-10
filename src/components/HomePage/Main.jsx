@@ -90,11 +90,6 @@ const ImageDialog = ({ imgSrc, title, onClose }) => {
           alt={title} 
           className="max-w-full max-h-[90vh] object-contain"
         />
-        {title && (
-          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white p-4 text-center">
-            {title}
-          </div>
-        )}
       </div>
     </div>
   );
