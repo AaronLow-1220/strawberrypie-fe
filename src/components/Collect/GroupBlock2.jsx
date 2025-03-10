@@ -1,5 +1,5 @@
 import { GroupBlockItem } from "./GroupBlockItem";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export const GroupBlock2 = ({ num }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -8,14 +8,26 @@ export const GroupBlock2 = ({ num }) => {
   const itemsRef = useRef([]);
 
   // 定義動畫時長常數
-  const TRANSITION_DURATION = 0.5; // 秒
+  const TRANSITION_DURATION = 0.33; // 秒
   const TRANSITION_TIMING = "ease";
   const TRANSITION = `${TRANSITION_DURATION}s ${TRANSITION_TIMING}`;
+
+  // 當組件初次渲染時，確保 bodyRef 有 scrollable class
+  useEffect(() => {
+    if (bodyRef.current) {
+      bodyRef.current.classList.add("scrollable");
+    }
+  }, []);
 
   const animateGridTransition = (expanding) => {
     const items = Array.from(bodyRef.current.children);
     const container = containerRef.current;
     const body = bodyRef.current;
+
+    // 如果是展開，立即移除 scrollable
+    if (expanding) {
+      body.classList.remove("scrollable");
+    }
 
     // 記錄初始高度和位置
     const startHeight = container.getBoundingClientRect().height;
@@ -31,9 +43,22 @@ export const GroupBlock2 = ({ num }) => {
       const iconRect = iconEl.getBoundingClientRect();
       const itemStyle = window.getComputedStyle(item);
 
+      // 根據展開狀態計算不同的 left 和 top 值
+      let leftValue, topValue;
+      
+      if (expanding) {
+        // 展開時的計算方式
+        leftValue = rect.left - bodyRect.left + body.scrollLeft - paddingLeft - 16;
+        topValue = rect.top - bodyRect.top - 24;
+      } else {
+        // 收合時的計算方式
+        leftValue = rect.left - bodyRect.left + body.scrollLeft - paddingLeft + 8; // 減少 24px
+        topValue = rect.top - bodyRect.top + 16; // 增加 12px
+      }
+
       return {
-        left: rect.left - bodyRect.left + body.scrollLeft - paddingLeft,
-        top: rect.top - bodyRect.top,
+        left: leftValue,
+        top: topValue,
         width: rect.width,
         height: rect.height,
         marginRight: parseFloat(itemStyle.marginRight),
@@ -129,21 +154,16 @@ export const GroupBlock2 = ({ num }) => {
   };
 
   const handleToggle = () => {
-    // 開始動畫時移除 scrollable
-    if (bodyRef.current) {
-      bodyRef.current.classList.remove("scrollable");
-    }
-
     animateGridTransition(!isExpanded);
     setIsExpanded(!isExpanded);
   };
 
   return (
     <div
-      className="w-full rounded-[1rem] p-[16px_20px_20px_20px] mt-[1rem] transition-all duration-500 group-block"
+      className="w-full rounded-[1rem] transition-all duration-500 group-block"
       ref={containerRef}
     >
-      <div className="flex justify-between items-center" onClick={handleToggle}>
+      <div className="flex justify-between p-[16px_20px_0px_20px] mb-4 items-center cursor-pointer" onClick={handleToggle}>
         <div className="flex items-center">
           <div className="text-white text-[20px]" style={{ fontFamily: "H" }}>
             遊戲
@@ -160,12 +180,12 @@ export const GroupBlock2 = ({ num }) => {
             isExpanded ? "expand" : ""
           }`}
         >
-          <img src="/arrow_forward_ios.svg" alt="" />
+          <img src="/Collect/arrow.svg" alt="" />
         </div>
       </div>
       <div
         ref={bodyRef}
-        className={`group-block__body ${isExpanded ? "expand" : ""}`}
+        className={`group-block__body p-[0px_20px_20px_20px] ${isExpanded ? "expand" : ""}`}
       >
         {Array(num)
           .fill(null)

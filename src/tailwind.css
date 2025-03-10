@@ -138,7 +138,7 @@ body {
   .wave-container {
     width: 100%;
     overflow: hidden;
-    height: 650px;
+    height: 750px;
     position: relative;
     min-width: 800px;
   }
@@ -155,7 +155,7 @@ body {
     animation: wave-animation 20s linear infinite;
   }
   .wave-container .img-container.wave_2 {
-    animation: wave-animation 30s linear infinite;
+    animation: wave-animation 50s linear infinite;
   }
   .wave-container .img-container.wave_3 {
     animation: wave-animation 20s linear infinite;
@@ -164,6 +164,7 @@ body {
   .wave-container .img-container img {
     width: 50%;
   }
+
   @keyframes wave-animation {
     0% {
       left: 0%;
@@ -176,7 +177,7 @@ body {
   @media (max-width: 768px) {
     .wave-container {
       overflow-x: hidden;
-      height: 820px;
+      height: 780px;
       position: relative;
     }
     .wave-container .img-container {
@@ -307,7 +308,6 @@ body {
 
   .group-block {
     background-color: #361014;
-    row-gap: 1em;
     width: 100%;
     max-width: 540px;
     display: flex;
@@ -317,21 +317,14 @@ body {
     font-size: 20px;
   }
 
-  .group-block__header {
-    display: flex;
-    align-items: center;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
   .group-block__header__dropdown {
     display: flex;
-    transition: transform 0.5s ease;
+    transition: transform 0.33s ease;
     opacity: 0.6;
   }
 
   .group-block__header__dropdown.expand {
-    transform: rotate(90deg);
+    transform: rotate(-180deg);
   }
 
   .group-block__header__dropdown img {
@@ -345,9 +338,9 @@ body {
   }
 
   .group-block__body.scrollable {
-    margin: 0 -1em;
-    padding: 0 1em;
     padding-right: 1.6em;
+    overflow-x: scroll;
+    overflow-y: hidden;
   }
 
   .group-block__body.expand {

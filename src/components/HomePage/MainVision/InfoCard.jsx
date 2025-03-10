@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 export const InfoCard = ({
   title,
   date,
-  endDate = "",
+  endDate,
   opacity,
   transform,
   backgroundColor,
@@ -89,7 +89,6 @@ export const InfoCard = ({
     textAlign: "center",
     whiteSpace: "nowrap",
     lineHeight: "normal",
-    width: "100%",
   };
 
   const transitionStyle = {
@@ -117,7 +116,7 @@ export const InfoCard = ({
                 borderRadius: "100px",
               }}
             ></div>
-            <div style={dateStyle}>{children || date}</div>
+            <div style={dateStyle}>{children || endDate}</div>
           </>
         )}
         {deviceType === "desktop" && endDate && (
@@ -127,9 +126,10 @@ export const InfoCard = ({
                 height: "0.375em",
                 backgroundColor: "white",
                 borderRadius: "100px",
+                width: "100%"
               }}
             ></div>
-            <div style={dateStyle}>{children || date}</div>
+            <div style={dateStyle}>{children || endDate}</div>
           </>
         )}
       </div>
