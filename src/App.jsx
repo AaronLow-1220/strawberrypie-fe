@@ -15,6 +15,8 @@ import { Collect2 } from "./components/Collect/Main2";
 
 import { ComingSoon } from "./components/ComingSoon";
 
+import { Login } from "./components/Login/Main";
+
 function App() {
   const [animate, setAnimate] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -53,8 +55,14 @@ function App() {
         <Route path="/psychological-test" element={<PsychologicalTest />} />
         <Route path="/group" element={<Group focus={handleFocus} />} />
         <Route path="/result/:id" element={<Result />} />
+<<<<<<< HEAD
         <Route path="/collect" element={<Collect2 />} />
         <Route path="/coming-soon" element={<ComingSoon />} />
+=======
+        <Route path="/collect" element={<Collect />} />
+        {/* <Route path="/Result/:id" element={<Result />} /> */}
+        <Route path="/login" element={<Login />} />
+>>>>>>> 8dd3d95 (rebase)
       </Routes>
     </Router>
   );
