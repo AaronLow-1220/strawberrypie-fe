@@ -117,9 +117,15 @@ export const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 監聽滾動事件，控制 Header 透明度
+  // 監聽滾動事件，控制 Header 透明度 - 只在首頁有效
   useEffect(() => {
     const handleScroll = () => {
+      // 如果不是首頁，則始終保持完全不透明
+      if (!isHome) {
+        setScrollOpacity(1);
+        return;
+      }
+      
       // 如果是 2xl 及以上螢幕尺寸，則不需要透明度效果
       if (is2XLScreen) {
         setScrollOpacity(1); // 始終保持完全不透明
@@ -138,7 +144,7 @@ export const Header = () => {
     handleScroll();
     
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [is2XLScreen]); // 當螢幕尺寸類別變化時重新設置
+  }, [is2XLScreen, isHome]); // 當螢幕尺寸類別或頁面變化時重新設置
 
   return (
     <>
@@ -246,7 +252,7 @@ export const Header = () => {
           </div>
         </div>
       ) : (
-        // 桌機版 Header - 根據螢幕尺寸決定是否套用透明度效果
+        // 桌機版 Header - 根據螢幕尺寸和頁面決定是否套用透明度效果
         <div
           className="fixed top-0 left-0 right-0 z-[999] transition-opacity duration-300"
           style={{ 
