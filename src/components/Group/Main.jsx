@@ -115,9 +115,9 @@ export const Group = () => {
   const mediaArray = (jsonString) => {
     try {
       const obj = JSON.parse(jsonString);
-      return Object.values(obj).filter((value) => value !== "");
+      return Object.entries(obj).filter(([key, value]) => value !== "");
     } catch (error) {
-      console.error("解析 member 失敗", error);
+      console.error("解析 media 失敗", error);
       return [];
     }
   };

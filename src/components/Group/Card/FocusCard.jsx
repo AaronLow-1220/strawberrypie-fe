@@ -32,17 +32,18 @@ export const FocusCard = memo(
     const [isWideScreen, setIsWideScreen] = useState(false);
     const [mediaArray, setMediaArray] = useState([]);
 
-    const mediaIcon = [
-      "/Group/globe21.svg",
-      "/Group/instagram 1.svg",
-      "/Group/Threads.svg",
-      "/Group/link-45deg 1.svg",
-    ];
+    const mediaIcon = {
+      web: "/Group/globe21.svg",
+      ig: "/Group/instagram 1.svg",
+      threads: "/Group/Threads.svg",
+      other: "/Group/link-45deg 1.svg",
+    };
 
     useEffect(() => {
       const mediaArray = media.map((item, index) => ({
-        src: mediaIcon[index],
-        url: item,
+        src: mediaIcon[item[0]],
+        type: item[0],
+        url: item[1],
       }));
       setMediaArray(mediaArray);
     }, []);
