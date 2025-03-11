@@ -36,7 +36,7 @@ export const FocusCard = memo(
       web: "/Group/globe21.svg",
       ig: "/Group/instagram 1.svg",
       threads: "/Group/Threads.svg",
-      other: "/Group/link-45deg 1.svg",
+      other_link: "/Group/link-45deg 1.svg",
     };
 
     useEffect(() => {
