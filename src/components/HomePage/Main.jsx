@@ -334,7 +334,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 title="校外展"
                 date="04.25"
                 secondDate="04.28"
-                place="松三文創園區• 三號倉庫"
+                place="松山文創園區• 三號倉庫"
                 imgSrc="/HomePage/松菸.png"
                 onImageClick={handleImageClick}
               />

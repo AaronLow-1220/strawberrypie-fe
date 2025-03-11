@@ -22,34 +22,6 @@ body {
 }
 
 @font-face {
-  font-family: "EL";
-  src: url("/font/GenSenRounded-EL.ttf") format("truetype");
-  font-weight: 200; /* Extra Light */
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "H";
-  src: url("/font/GenSenRounded-H.ttf") format("truetype");
-  font-weight: 900; /* Heavy */
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "L";
-  src: url("/font/GenSenRounded-L.ttf") format("truetype");
-  font-weight: 300; /* Light */
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "M";
-  src: url("/font/GenSenRounded-M.ttf") format("truetype");
-  font-weight: 500; /* Medium */
-  font-style: normal;
-}
-
-@font-face {
   font-family: "R";
   src: url("/font/GenSenRounded-R.ttf") format("truetype");
   font-weight: 400; /* Regular */

@@ -165,7 +165,7 @@ export const GroupBlock2 = ({ num }) => {
     >
       <div className="flex justify-between p-[16px_20px_0px_20px] mb-4 items-center cursor-pointer" onClick={handleToggle}>
         <div className="flex items-center">
-          <div className="text-white text-[20px]" style={{ fontFamily: "H" }}>
+          <div className="text-white text-[20px]" style={{ fontFamily: "B" }}>
             遊戲
           </div>
           <div
