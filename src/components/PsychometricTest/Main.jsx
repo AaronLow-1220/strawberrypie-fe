@@ -61,7 +61,7 @@ export const PsychometricTest = () => {
     }, [images.length, interval, fadeDuration]);
 
     return (
-      <div className="slideshow-container max-w-[360px] lg:max-w-[480px] 2xl:max-w-[600px] lg:max-w-none w-[90vw] mx-auto lg:mx-0 h-full relative flex justify-center items-center">
+      <div className="slideshow-container max-w-[360px] lg:max-w-[480px] 2xl:max-w-[600px] w-[90vw] mx-auto lg:mx-0 h-full relative flex justify-center items-center">
         <div className="absolute aspect-square bg-primary-color w-[280px] lg:w-[420px] rounded-full blur-[60px] lg:blur-[100px]"></div>
         <img
           src={images[currentIndex]}
