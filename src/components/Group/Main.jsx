@@ -131,7 +131,9 @@ export const Group = () => {
 
         const response = await axios.post(
           `${apiBaseUrl}/fe/group/search`,
-          {},
+          {
+            pageSize:25
+          },
           {
             headers: {
               'Content-Type': 'application/json',
