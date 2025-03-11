@@ -126,7 +126,7 @@ export const Header = () => {
 
   return (
     <>
-      {windowWidth < 768 ? (
+      {windowWidth < 1024 ? (
         // 行動版 Header
         <div
           className="fixed top-0 left-0 right-0 z-[100]"

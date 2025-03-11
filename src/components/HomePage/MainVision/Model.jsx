@@ -137,29 +137,7 @@ export const Model = ({ logoAnimation, onAnimationEnd }) => {
           className={`flex opacity-0 flex-col items-center w-fit ${animate}`}
           style={{ transform: "scale(0.9)" }}
         >
-          <div className="w-[420px]">
-            <img
-              src="/Header/Headline.svg"
-              alt="草莓派標題"
-              style={{
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-            />
-          </div>
-          <div className="mt-4 text-center flex flex-col items-center">
-            <p
-              className="text-white text-[42px] tracking-[8px]"
-              style={{ fontFamily: "H" }}
-            >
-              元智大學資訊傳播學系
-            </p>
-            <img
-              className="w-[360px] mt-4"
-              src="/HomePage/畢業展28.svg"
-              alt="第28屆畢業展"
-            />
-          </div>
+          <img src="/HomePage/草莓派_Desktop.svg" alt="" />
         </div>
         
         {/* 右側資訊卡片 */}

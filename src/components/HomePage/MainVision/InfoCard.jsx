@@ -101,7 +101,7 @@ export const InfoCard = ({
   return (
     <div style={transitionStyle} className="flex flex-col justify-center">
       <div style={containerStyle}>
-        <div style={{ color, fontFamily: "H" }}>{title}</div>
+        <div style={{ color, fontFamily: "B" }}>{title}</div>
       </div>
       <div className="flex justify-center items-center gap-[0.75em] mt-[1rem] w-full">
         <div style={dateStyle}>{date || children}</div>
