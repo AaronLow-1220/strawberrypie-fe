@@ -166,18 +166,16 @@ body {
 
   .navHover {
     color: #ffffff;
-    transition: color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transition: ease-in-out, opacity 0.3s ease-in-out;
   }
 
   .navHover:hover {
     cursor: pointer;
-    color: #ffffff;
     opacity: 1;
   }
 
   .navContainer:has(.navHover:hover) .navHover:not(:hover) {
-    color: #838383;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   .carousel-container {
@@ -549,4 +547,14 @@ body {
 /* 淡出效果：不透明度從 1 過渡到 0 */
 .fade-out {
   opacity: 0;
+}
+
+.primary-button{
+  transition: box-shadow 0.6s cubic-bezier(0,0,0,1);
+  box-shadow: 0 0 0px 0 transparent;
+
+}
+
+.primary-button:hover{
+  box-shadow: 0 0 40px 0 #F748C1;
 }

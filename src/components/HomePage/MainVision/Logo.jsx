@@ -74,7 +74,7 @@ export const Logo = ({ beginAnimation, className }) => {
   return (
     <div
       ref={logoRef}
-      className={`fixed md:absolute left-[50%] z-30 ${
+      className={`fixed lg:absolute left-[50%] z-30 ${
         className
       } ${shouldAnimate ? config.animateClass : ""}`}
       style={{
