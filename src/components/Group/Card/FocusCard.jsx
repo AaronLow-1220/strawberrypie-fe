@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback, memo } from "react";
 
+// 圖片骨架屏組件
+const ImageSkeleton = () => (
+  <div className="w-full h-full aspect-[4/3] bg-[#361014] animate-pulse rounded-lg flex justify-center items-center"></div>
+);
+
 // 抽離社交媒體圖標組件
 const SocialMediaIcon = memo(({ src, alt, url }) => (
   <div
@@ -31,6 +36,8 @@ export const FocusCard = memo(
   }) => {
     const [isWideScreen, setIsWideScreen] = useState(false);
     const [mediaArray, setMediaArray] = useState([]);
+    const [imgLoaded, setImgLoaded] = useState(false);
+    const [imgError, setImgError] = useState(false);
 
     const mediaIcon = {
       web: "/Group/globe21.svg",
@@ -58,6 +65,12 @@ export const FocusCard = memo(
       return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    // 重設圖片加載狀態
+    useEffect(() => {
+      setImgLoaded(false);
+      setImgError(false);
+    }, [img]);
+
     const handleClose = useCallback(() => {
       onCancel?.();
     }, [onCancel]);
@@ -71,12 +84,53 @@ export const FocusCard = memo(
       [onCancel]
     );
 
+    const handleImageLoad = useCallback(() => {
+      setImgLoaded(true);
+    }, []);
+
+    const handleImageError = useCallback(() => {
+      setImgError(true);
+    }, []);
+
     const getTitleFontSize = (title) => {
       if (!title) return "text-[48px]";
       const length = title.length;
-      if (length > 14) return "text-[32px]";
       if (length > 10) return "text-[36px]";
       return "text-[48px]";
+    };
+
+    // 渲染圖片區域
+    const renderImage = () => {
+      if (!img || imgError) {
+        return (
+          <div className="w-full h-full aspect-[4/3] bg-[#361014] flex justify-center items-center">
+            <p className="text-white text-lg">無圖片</p>
+          </div>
+        );
+      }
+
+      if (!imgLoaded) {
+        return (
+          <>
+            <ImageSkeleton />
+            <img
+              className="hidden"
+              src={img}
+              alt={title || "卡片圖片"}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          </>
+        );
+      }
+
+      return (
+        <img
+          className="aspect-[4/3] bg-white w-full object-cover rounded-[8px]"
+          src={img}
+          alt={title || "卡片圖片"}
+        />
+      );
     };
 
     const WideScreenLayout = (
@@ -87,11 +141,7 @@ export const FocusCard = memo(
         <div className="my-auto">
           <div className="focus-card my-8 max-w-[1200px] bg-[#361014] p-[64px] rounded-[48px] flex gap-[48px] relative">
             <div className="w-full">
-              <img
-                className="aspect-[4/3] bg-white w-full rounded-[8px]"
-                src={img}
-                alt={title || "卡片圖片"}
-              />
+              {renderImage()}
               <div className="px-3 mt-5">
                 <div className="text-[20px] text-white opacity-[80%] mt-5">
                   成員：
@@ -168,7 +218,7 @@ export const FocusCard = memo(
             <div className="relative flex flex-col justify-center align-top">
               <div className="w-full aspect-[4/3] relative rounded-t-[12px]">
                 <button
-                  className="flex items-center justify-center absolute top-[12px] right-[12px] w-9 h-9 cursor-pointer bg-[rgba(0,0,0,0.2)] rounded-full"
+                  className="flex items-center justify-center absolute top-[12px] right-[12px] w-9 h-9 cursor-pointer bg-[rgba(0,0,0,0.2)] rounded-full z-10"
                   onClick={handleClose}
                   aria-label="關閉"
                 >
@@ -178,11 +228,28 @@ export const FocusCard = memo(
                     alt="關閉按鈕"
                   />
                 </button>
-                <img
-                  className="w-full h-full object-cover bg-white"
-                  src={img}
-                  alt={title || "卡片圖片"}
-                />
+                {!imgLoaded && !imgError && img ? (
+                  <>
+                    <ImageSkeleton />
+                    <img
+                      className="hidden"
+                      src={img}
+                      alt={title || "卡片圖片"}
+                      onLoad={handleImageLoad}
+                      onError={handleImageError}
+                    />
+                  </>
+                ) : imgError || !img ? (
+                  <div className="w-full h-full bg-[#361014] flex justify-center items-center">
+                    <p className="text-white text-lg">無圖片</p>
+                  </div>
+                ) : (
+                  <img
+                    className="w-full h-full object-cover bg-white"
+                    src={img}
+                    alt={title || "卡片圖片"}
+                  />
+                )}
               </div>
               <div className="bg-[#361014] p-[20px_24px_32px_24px] flex flex-col flex-grow">
                 <div
