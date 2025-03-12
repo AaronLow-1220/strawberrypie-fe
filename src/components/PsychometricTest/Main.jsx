@@ -8,11 +8,11 @@ export const PsychometricTest = () => {
   const nodeRef = useRef(null);
   const questionRef = useRef(null);
   const images = [
-    "/Group/Cover/互動.png",
-    "/Group/Cover/動畫.png",
-    "/Group/Cover/影視.png",
-    "/Group/Cover/行銷.png",
-    "/Group/Cover/遊戲.png",
+    "/IPs/互動.png",
+    "/IPs/動畫.png",
+    "/IPs/影視.png",
+    "/IPs/行銷.png",
+    "/IPs/遊戲.png",
   ];
 
   // 處理開始測驗按鈕點擊
