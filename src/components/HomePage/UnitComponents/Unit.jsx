@@ -31,7 +31,7 @@ export const Unit = ({ title, images = []}) => {
       {/* 標題區塊 */}
       <div
         className="px-6 py-2 w-fit mb-6 bg-[#381025] rounded-[39px] text-center flex items-center justify-center text-white text-[1rem] md:text-base"
-        style={{ fontFamily: "M" }}
+        style={{ fontFamily: "R" }}
       >
         {title}
       </div>
