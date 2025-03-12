@@ -23,7 +23,7 @@ export const Question = () => {
       } else if (window.innerWidth < 1024) {
         setWindowWidthTrue(false);
         setIpadWindowWidthTrue(true);
-      } else if (window.innerWidth < 1584) {
+      } else if (window.innerWidth < 1536) {
         setWindowWidthTrue(true);
       } else {
         setWindowWidthTrue(true);
@@ -170,21 +170,9 @@ export const Question = () => {
     <>
       {windowWidthTrue === true ? (
         // 寬螢幕版面配置（平板橫向或桌面）
-        <div
-          className={
-            desTopWindowWidthTrue
-              ? "flex justify-center items-center h-screen space-x-[8rem]"
-              : "flex justify-center items-center h-screen space-x-[4rem]"
-          }
-        >
+        <div className="flex justify-center max-w-[1600px] mx-auto items-center px-5 xl:px-16 min-h-screen gap-[min(5vw,6rem)]">
           {/* 左側圖片區域 - 使用淡入淡出效果 */}
-          <div
-            className={
-              desTopWindowWidthTrue
-                ? "max-w-[39.375rem] w-full aspect-[4/3] relative"
-                : "max-w-[33.75rem] w-full aspect-[4/3] relative"
-            }
-          >
+          <div className="w-full z-10 aspect-[4/3] relative">
             {Questions.length > 0 && Questions[currentIndex].img && (
               <img
                 className="w-full h-full object-cover rounded-[1rem] navMargin"
@@ -195,15 +183,9 @@ export const Question = () => {
           </div>
 
           {/* 右側問題與選項區域 */}
-          <div
-            className={
-              desTopWindowWidthTrue
-                ? "w-full max-w-[39rem] "
-                : "w-full max-w-[28.75rem] "
-            }
-          >
+          <div className="w-full">
             {/* 問題與選項輪播容器 */}
-            <div className=" mx-auto mt-[60px] mb-[20px] overflow-hidden relative">
+            <div className=" mx-auto mt-[60px] mb-[20px] relative">
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -244,11 +226,10 @@ export const Question = () => {
                         >
                           {/* 選項前的圓點 */}
                           <div
-                            className={`w-[12px] h-[12px] rounded-[50%]  border  me-[0.625rem] box-border ${
-                              selectedOptionIds[currentIndex] === option.id
+                            className={`w-[12px] h-[12px] rounded-[50%]  border  me-[0.625rem] box-border ${selectedOptionIds[currentIndex] === option.id
                                 ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
                                 : " opacity-[60%]"
-                            }`}
+                              }`}
                           ></div>
 
                           {/* 選項文字 */}
@@ -271,11 +252,11 @@ export const Question = () => {
 
             {/* 底部導航區域 */}
             {isAnswer != false &&
-            selectedOptions.every((option) => option !== null) ? (
+              selectedOptions.every((option) => option !== null) ? (
               // 所有問題都已回答，顯示結果按鈕
               <div className="w-full flex justify-center ">
                 <button
-                  className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
+                  className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[1rem] rounded-[999px]"
                   onClick={handleGoResult}
                 >
                   查看你的專屬角色
@@ -291,7 +272,7 @@ export const Question = () => {
                 }
               >
                 {Questions.map((_, index) => {
-                  let bgColor = index === 1 ? "#51181E" : "#6C2028";
+                  let bgColor = "#6C2028";
                   return (
                     <div
                       key={index}
@@ -377,8 +358,8 @@ export const Question = () => {
             {...swipeHandlers}
             className={
               ipadWindowWidthTrue
-                ? "w-full max-w-[26.25rem] mx-auto px-[24px] mt-[40px] mb-[20px]  relative "
-                : "w-full max-w-[22.5rem] mx-auto px-[24px] mt-[20px] mb-[20px]  relative "
+                ? "w-full max-w-[26.25rem] mx-auto px-[24px] mt-[20px] mb-[20px]  relative "
+                : "w-full max-w-[28rem] mx-auto px-[24px] mt-[20px] mb-[20px]  relative "
             }
           >
             <div
@@ -415,11 +396,10 @@ export const Question = () => {
                       >
                         {/* 選項前的圓點 */}
                         <div
-                          className={`w-[12px] h-[12px] rounded-[50%] opacity-[60%] border  me-[0.625rem] box-border ${
-                            selectedOptionIds[currentIndex] === option.id
-                              ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
+                          className={`min-w-[12px] min-h-[12px] rounded-[50%] opacity-[60%] border me-[0.625rem] box-border ${selectedOptionIds[currentIndex] === option.id
+                              ? "bg-secondary-color !opacity-100 border-[#FFB0CE]"
                               : " opacity-[60%]"
-                          }`}
+                            }`}
                         ></div>
 
                         {/* 選項文字 */}
@@ -434,11 +414,11 @@ export const Question = () => {
 
           {/* 底部導航區域 */}
           {isAnswer != false &&
-          selectedOptions.every((option) => option !== null) ? (
+            selectedOptions.every((option) => option !== null) ? (
             // 所有問題都已回答，顯示結果按鈕
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
               <button
-                className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px] shadow-[0_0_40px_0_#F748C1]"
+                className="flex justify-center items-center w-fit h-[41px] px-[20px] py-[12px] bg-primary-color text-white text-[16px] rounded-[999px]"
                 onClick={handleGoResult}
               >
                 查看你的專屬角色
@@ -447,13 +427,13 @@ export const Question = () => {
           ) : (
             // 顯示問題進度指示器
             <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
-              <div className="flex justify-center items-center w-[9.625rem] h-[2rem] mx-auto">
+              <div className="flex justify-center items-center h-[2rem] mx-auto mb-[16px]">
                 {Questions.map((_, index) => {
-                  let bgColor = index === 1 ? "#51181E" : "#6C2028";
+                  let bgColor = "#6C2028";
                   return (
                     <div
                       key={index}
-                      className="flex items-center justify-center mx-1 w-[16px] h-[16px]"
+                      className="flex items-center justify-center w-[22px] h-[32px]"
                     >
                       <button
                         onClick={() => setCurrentIndex(index)}
