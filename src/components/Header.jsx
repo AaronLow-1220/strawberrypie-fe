@@ -176,16 +176,18 @@ export const Header = () => {
                 />
               </Link>
             )}
-            <img
-              src="/Header/login.svg"
-              alt="Collect"
-              style={{
-                width: "28px",
-                height: "auto",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-            />
+            <Link to="/login">
+              <img
+                src="/Header/login.svg"
+                alt="Collect"
+                style={{
+                  width: "28px",
+                  height: "auto",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              />
+            </Link>
           </div>
           <div
             className={`fixed inset-0 bg-black h-screen -z-10 transition-opacity duration-500 ease-in-out ${menuOpen ? "opacity-60" : "opacity-0 pointer-events-none"}`}
@@ -267,7 +269,7 @@ export const Header = () => {
             background: "linear-gradient(to bottom, rgba(27, 8, 10, 1) 0%, rgba(27, 8, 10, 0) 100%)"
           }}
         >
-          <div className="w-full flex mx-auto justify-center mt-[48px] pb-6 px-[1rem] navContainer">
+          <div className="w-full flex mx-auto justify-center mt-[48px] pb-5 navContainer">
             <LinkLarge to={"/groups"} text="組別介紹" />
             <LinkLarge to={"/collect"} text="集章兌換" />
             <Link to="/" className={`${isHome ? "w-0 !opacity-0" : "w-[180px]"} navHover !transition-all !duration-500 ease-in-out`}>
