@@ -253,7 +253,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 color="#F748C1"
                 title="校內展"
                 date="04.07"
-                secondDate="04.11"
+                secondDate="04.12"
                 place="元智大學•五館三樓 / 六館玻璃屋"
                 imgSrc="/HomePage/校內地圖.png"
                 onImageClick={handleImageClick}
@@ -272,7 +272,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 title="校外展"
                 date="04.25"
                 secondDate="04.28"
-                place="松三文創園區• 三號倉庫"
+                place="松山文創園區• 三號倉庫"
                 reverseRow="true"
                 imgSrc="/HomePage/松菸.png"
                 onImageClick={handleImageClick}
@@ -315,7 +315,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 color="#F748C1"
                 title="校內展"
                 date="04.07"
-                secondDate="04.11"
+                secondDate="04.12"
                 place="元智大學•五館三樓 / 六館玻璃屋"
                 imgSrc="/HomePage/校內地圖.png"
                 onImageClick={handleImageClick}
