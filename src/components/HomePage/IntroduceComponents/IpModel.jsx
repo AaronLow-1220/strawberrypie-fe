@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 export const IpModel = ({
-  height,
   title,
   secondTitle,
   img,
@@ -37,7 +36,7 @@ export const IpModel = ({
                       filter blur-[20px] group-hover:blur-[50px] z-0 transition-all duration-300 ease-in-out block
                       group-hover:h-[11.25rem] group-hover:w-[11.25rem]"
           ></div>
-          <div className="relative h-full w-full flex items-center justify-center">
+          <div className="relative h-full w-full flex items-center justify-center scale-110">
             <img
               className="relative transition-transform duration-300 ease-in-out group-hover:scale-110"
               style={{
@@ -67,61 +66,31 @@ export const IpModel = ({
       </div>
     )) ||
     // 手機版
-    (rowReverse === "true" && (
+    <div
+      className={`mt-[2rem] flex mx-[30px] -z-0 ${rowReverse === "true" ? "flex-row-reverse" : ""}`}
+    >
+      <div className="relative h-full ">
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[5rem] w-[5rem] rounded-full bg-primary-color filter blur-[20px] z-0 "></div>
+        <img
+          className="relative w-[150px] h-full "
+          src={img}
+          alt="foreground image"
+        />
+      </div>
       <div
-        className=" mt-[2rem] flex mx-[30px] -z-0"
-        style={{ height: height }}
+        className="text-white flex flex-col justify-center"
+        style={{ marginLeft: textMarginLeft }}
       >
-        <div className="relative h-full ">
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 h-[5rem] w-[5rem] rounded-full bg-primary-color filter blur-[20px] z-0 "></div>
-          <img
-            className="relative w-full h-full "
-            src={img}
-            style={{ width: imgWidth }}
-            alt="foreground image"
-          />
+        <div className="text-[32px] leading-none" style={{ fontFamily: "B" }}>
+          {title}
         </div>
         <div
-          className="text-white flex flex-col justify-center"
-          style={{ marginLeft: textMarginLeft }}
+          className="text-[20px] mt-[0.5rem] leading-none text-secondary-color"
+          style={{ fontFamily: "R" }}
         >
-          <div className="text-[32px] leading-none" style={{ fontFamily: "B" }}>
-            {title}
-          </div>
-          <div
-            className="text-[20px] mt-[0.5rem] leading-none text-secondary-color"
-            style={{ fontFamily: "R" }}
-          >
-            {secondTitle}
-          </div>
+          {secondTitle}
         </div>
       </div>
-    )) || (
-      <div
-        className="mt-[2rem] flex justify-end mx-[30px] -z-0"
-        style={{ height: height }}
-      >
-        <div className="text-white flex flex-col justify-center">
-          <div className="text-[32px] leading-none" style={{ fontFamily: "B" }}>
-            {title}
-          </div>
-          <div
-            className="text-[20px] mt-[0.5rem] leading-none text-secondary-color"
-            style={{ fontFamily: "R" }}
-          >
-            {secondTitle}
-          </div>
-        </div>
-        <div className="relative h-full ">
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2  h-[5rem] w-[5rem] rounded-full bg-primary-color filter blur-[20px] z-0"></div>
-          <img
-            className="relative h-full "
-            src={img}
-            style={{ width: imgWidth }}
-            alt="foreground image"
-          />
-        </div>
-      </div>
-    )
+    </div>
   );
 };
