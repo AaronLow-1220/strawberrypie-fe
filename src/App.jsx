@@ -46,11 +46,12 @@ function App() {
 				<Routes>
 					<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
 					<Route path="/psychometric-test" element={<PsychometricTest />} />
-					<Route path="/group" element={<Group focus={handleFocus} />} />
+					<Route path="/groups" element={<Group focus={handleFocus} />} />
 					<Route path="/result/:id" element={<Result />} />
 					{/* <Route path="/collect" element={<Collect2 />} /> */}
 					<Route path="/collect" element={<ComingSoon />} />
 					<Route path="/feedback" element={<ComingSoon />} />
+					<Route path="/login" element={<Login />} />
 				</Routes>
 			</Router>
 		</HeaderProvider>
