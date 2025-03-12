@@ -10,6 +10,7 @@ const transitionStyles = `
 @media (max-width: 768px) {
   .mobile__header{
     background-color: none !important;
+    padding-bottom: 0px !important;
   }
   .groups__nav{
     z-index: 100;
@@ -63,7 +64,7 @@ const transitionStyles = `
 
 // 圖片骨架屏組件
 const ImageSkeleton = () => (
-  <div className="w-full h-full aspect-[4/3] bg-[#361014] animate-pulse rounded-lg flex justify-center items-center"></div>
+  <div className="w-full h-full aspect-[4/3] bg-[hsl(354,54%,20%)] animate-pulse flex justify-center items-center"></div>
 );
 
 // 滾動按鈕組件
@@ -204,21 +205,31 @@ export const Group = () => {
     const fetchCards = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-
-        const response = await axios.post(
-          `${apiBaseUrl}/fe/group/search`,
-          {
-            pageSize: 25
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
+        let responseData;
+        
+        // 檢查是否有預載的組別數據
+        if (window.preloadedData && window.preloadedData.groupData) {
+          console.log('使用預載的組別數據');
+          responseData = window.preloadedData.groupData;
+        } else {
+          // 如果沒有預載數據，則進行 API 請求
+          console.log('無預載數據，進行 API 請求');
+          const response = await axios.post(
+            `${apiBaseUrl}/fe/group/search`,
+            {
+              pageSize: 25
             },
-          }
-        );
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          responseData = response.data;
+        }
 
         // 先處理文字內容，不等待圖片
-        const cardsData = response.data._data.map(card => ({
+        const cardsData = responseData._data.map(card => ({
           id: card.id,
           logo_id: card.logo_id,
           category: mapGenreToCategory(card.genre),
