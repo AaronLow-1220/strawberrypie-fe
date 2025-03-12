@@ -17,6 +17,7 @@
     "@types/three": "^0.171.0",
     "axios": "^1.7.9",
     "d3-ease": "^3.0.1",
+    "fontfaceobserver": "^2.3.0",
     "gsap": "^3.12.7",
     "html5-qrcode": "^2.3.8",
     "react": "^18.3.1",
