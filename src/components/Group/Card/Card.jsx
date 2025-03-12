@@ -56,7 +56,7 @@ export const Card = ({
       {/* 卡片容器，使用 flex 佈局 */}
       <div className="relative flex flex-col justify-center group">
         {/* 卡片圖片區域 */}
-        <div className="max-w-full aspect-[4/3] overflow-hidden">
+        <div className={`max-w-full aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
           {imageLoading ? (
             // 圖片加載時顯示骨架屏
             <ImageSkeleton />
@@ -70,7 +70,7 @@ export const Card = ({
           ) : (
             // 無圖片可用或加載失敗
             <div className="w-full h-full bg-[#361014] flex justify-center items-center">
-              <p className="text-white text-lg">無圖片</p>
+                  <p className="text-white text-lg">無圖片</p>
             </div>
           )}
         </div>
