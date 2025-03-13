@@ -23,28 +23,28 @@ const ImageDialog = ({ imgSrc, title, onClose }) => {
     // 保存原始的 overflow 值
     const originalOverflow = document.body.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
-    
+
     // 計算滾動條寬度
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    
+
     // 禁止滾動並添加右邊距，防止頁面跳動
     document.body.style.overflow = "hidden";
     document.body.style.paddingRight = `${scrollbarWidth}px`;
-    
+
     // 禁止觸摸滾動
     const preventTouch = (e) => {
       e.preventDefault();
     };
-    
+
     // 禁止滾輪滾動
     const preventWheel = (e) => {
       e.preventDefault();
     };
-    
+
     // 添加事件監聽器
     document.addEventListener('touchmove', preventTouch, { passive: false });
     document.addEventListener('wheel', preventWheel, { passive: false });
-    
+
     // 組件卸載時恢復原始設置
     return () => {
       document.body.style.overflow = originalOverflow;
@@ -67,16 +67,16 @@ const ImageDialog = ({ imgSrc, title, onClose }) => {
   }, [onClose]);
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm"
       onClick={onClose}
       style={{ touchAction: 'none' }}
     >
-      <div 
+      <div
         className="relative max-w-[90vw] max-h-[90vh] overflow-hidden rounded-lg"
         onClick={stopPropagation}
       >
-        <button 
+        <button
           className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-white bg-opacity-70 rounded-full text-black hover:bg-opacity-100 transition-all duration-300"
           onClick={onClose}
           aria-label="關閉"
@@ -85,9 +85,9 @@ const ImageDialog = ({ imgSrc, title, onClose }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <img 
-          src={imgSrc} 
-          alt={title} 
+        <img
+          src={imgSrc}
+          alt={title}
           className="max-w-full max-h-[90vh] object-contain"
         />
       </div>
@@ -180,7 +180,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
     if (!dialogImage) {
       document.body.style.overflow = isAnimationComplete ? "auto" : "hidden";
     }
-    
+
     // 組件卸載時恢復滾動和顯示 Header
     return () => {
       document.body.style.overflow = "auto";
@@ -193,40 +193,26 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
   // 渲染 IP 模型區塊
   const renderIpModels = () => {
     // 大型桌面版面 - 並排顯示所有 IP 模型
-    if (windowTrue && windowLargeDesktop) {
+    if (windowTrue) {
       return (
-        <div className="pt-[5.375rem] flex justify-center">
-          <div className="flex w-fit gap-[4.5rem]">
-            <IpModel title="互動" secondTitle="Digital Experience" img="/IpModel/互動_web.png" />
-            <IpModel title="遊戲" secondTitle="Game Design" img="/IpModel/遊戲_web.png" />
-            <IpModel title="影視" secondTitle="Film Production" img="/IpModel/影視_web.png" />
-            <IpModel title="行銷" secondTitle="Marketing" img="/IpModel/行銷_web.png" />
-            <IpModel title="動畫" secondTitle="Animation" img="/IpModel/動畫_web.png" />
-          </div>
-        </div>
-      );
-    }
-    // 平板版面 - 可滾動的 IP 模型
-    else if (windowTrue) {
-      return (
-        <div className="ipModelScroll">
-          <IpModel title="互動" secondTitle="Digital Experience" img="/IpModel/互動_web.png" />
-          <IpModel title="遊戲" secondTitle="Game Design" img="/IpModel/遊戲_web.png" />
-          <IpModel title="影視" secondTitle="Film Production" img="/IpModel/影視_web.png" />
-          <IpModel title="行銷" secondTitle="Marketing" img="/IpModel/行銷_web.png" />
-          <IpModel title="動畫" secondTitle="Animation" img="/IpModel/動畫_web.png" />
+        <div className="w-full flex 2xl:justify-center pt-[4.5rem] 2xl:pt-[5.375rem] pb-1 overflow-x-auto gap-[4.5rem] scroll-smooth scrollbar-hide px-[4.5rem]">
+          <IpModel title="互動" secondTitle="Digital Experience" img="/IPs/互動.png" />
+          <IpModel title="遊戲" secondTitle="Game Design" img="/IPs/遊戲.png" />
+          <IpModel title="影視" secondTitle="Film Production" img="/IPs/影視.png" />
+          <IpModel title="行銷" secondTitle="Marketing" img="/IPs/行銷.png" />
+          <IpModel title="動畫" secondTitle="Animation" img="/IPs/動畫.png" />
         </div>
       );
     }
     // 手機版面 - 垂直排列的 IP 模型
     else {
       return (
-        <div className="max-w-[33.75rem] h-[49.4rem] mt-[2.6rem] mx-auto">
-          <IpModel height="8.75rem" title="互動" secondTitle="Digital Experience" img="/IpModel/互動_web.png" imgWidth="9.5rem" rowReverse="true" />
-          <IpModel height="6.5rem" title="遊戲" secondTitle="Game Design" img="/IpModel/遊戲_web.png" imgWidth="7.625rem" />
-          <IpModel height="10rem" title="影視" secondTitle="Film Production" img="/IpModel/影視_web.png" imgWidth="7.5rem" rowReverse="true" textMarginLeft="12px" />
-          <IpModel height="8.25rem" title="行銷" secondTitle="Marketing" img="/IpModel/行銷_web.png" imgWidth="9.3rem" />
-          <IpModel height="7.75rem" title="動畫" secondTitle="Animation" img="/IpModel/動畫_web.png" imgWidth="10.25rem" rowReverse="true" textMarginLeft="12px" />
+        <div className="max-w-[33.75rem] mt-[2.6rem] mx-auto">
+          <IpModel title="互動" secondTitle="Digital Experience" img="/IPs/互動.png"/>
+          <IpModel title="遊戲" secondTitle="Game Design" img="/IPs/遊戲.png" rowReverse="true"/>
+          <IpModel title="影視" secondTitle="Film Production" img="/IPs/影視.png"  />
+          <IpModel title="行銷" secondTitle="Marketing" img="/IPs/行銷.png" rowReverse="true"/>
+          <IpModel title="動畫" secondTitle="Animation" img="/IPs/動畫.png" />
         </div>
       );
     }
@@ -253,7 +239,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 color="#F748C1"
                 title="校內展"
                 date="04.07"
-                secondDate="04.11"
+                secondDate="04.12"
                 place="元智大學•五館三樓 / 六館玻璃屋"
                 imgSrc="/HomePage/校內地圖.png"
                 onImageClick={handleImageClick}
@@ -272,7 +258,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 title="校外展"
                 date="04.25"
                 secondDate="04.28"
-                place="松三文創園區• 三號倉庫"
+                place="松山文創園區• 三號倉庫"
                 reverseRow="true"
                 imgSrc="/HomePage/松菸.png"
                 onImageClick={handleImageClick}
@@ -315,7 +301,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
                 color="#F748C1"
                 title="校內展"
                 date="04.07"
-                secondDate="04.11"
+                secondDate="04.12"
                 place="元智大學•五館三樓 / 六館玻璃屋"
                 imgSrc="/HomePage/校內地圖.png"
                 onImageClick={handleImageClick}
@@ -443,10 +429,10 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
 
       {/* 圖片對話框 */}
       {dialogImage && (
-        <ImageDialog 
-          imgSrc={dialogImage} 
-          title={dialogTitle} 
-          onClose={closeImageDialog} 
+        <ImageDialog
+          imgSrc={dialogImage}
+          title={dialogTitle}
+          onClose={closeImageDialog}
         />
       )}
     </div>

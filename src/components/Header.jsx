@@ -4,6 +4,21 @@ import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { HeaderContext } from "./HeaderContext";
 
+const LinkLarge = ({ to, text }) => {
+  return (
+    <Link
+      to={to}
+      className="text-nowrap w-full max-w-[150px] text-center navHover text-[1.5rem] text-white pb-3"
+      style={{
+        textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
+        fontFamily: "B",
+      }}
+    >
+      {text}
+    </Link>
+  )
+}
+
 // NavBackground 元件：根據 menuOpen 狀態改變 SVG 路徑動畫
 const NavBackground = ({ menuOpen }) => {
   const pathRef = useRef(null);
@@ -129,10 +144,10 @@ export const Header = () => {
       {windowWidth < 1024 ? (
         // 行動版 Header
         <div
-          className="fixed top-0 left-0 right-0 z-[100]"
+          className="mobile__header fixed top-0 left-0 right-0 z-[100] pb-6"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)",
+              "linear-gradient(to bottom, rgba(27, 8, 10, 0.8) 0%, rgba(27, 8, 10, 0) 100%)",
           }}
         >
           <div className="w-full h-[4rem] flex justify-between items-center px-[1rem]">
@@ -161,21 +176,23 @@ export const Header = () => {
                 />
               </Link>
             )}
-            <img
-              src="/Header/collect.svg"
-              alt="Collect"
-              style={{
-                width: "28px",
-                height: "auto",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-            />
+            <Link to="/login">
+              <img
+                src="/Header/login.svg"
+                alt="Collect"
+                style={{
+                  width: "28px",
+                  height: "auto",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                }}
+              />
+            </Link>
           </div>
           <div
-              className={`fixed inset-0 bg-black h-screen -z-10 transition-opacity duration-500 ease-in-out ${menuOpen ? "opacity-60" : "opacity-0 pointer-events-none"}`}
-              onClick={() => setMenuOpen(false)}
-            ></div>
+            className={`fixed inset-0 bg-black h-screen -z-10 transition-opacity duration-500 ease-in-out ${menuOpen ? "opacity-60" : "opacity-0 pointer-events-none"}`}
+            onClick={() => setMenuOpen(false)}
+          ></div>
           <div
             className={`z-[-10] absolute top-0 right-0 w-full h-[520px] transition-all duration-700 ease-in-out origin-top-right ${menuOpen
               ? "translate-y-0 opacity-100"
@@ -194,7 +211,7 @@ export const Header = () => {
             >
               <li className="text-[2rem]">
                 <Link
-                  to="/group"
+                  to="/groups"
                   className="flex items-center"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -246,60 +263,24 @@ export const Header = () => {
       ) : (
         // 桌機版 Header - 根據螢幕尺寸和頁面決定是否套用透明度效果
         <div
-          className="fixed top-0 left-0 right-0 z-[999] transition-opacity duration-300"
+          className="w-full fixed top-0 flex mx-auto z-[999] transition-opacity duration-300"
           style={{
             opacity: scrollOpacity,
-            background: "linear-gradient(to bottom, rgba(27, 8, 10, 0.5) 0%, rgba(27, 8, 10, 0) 100%)"
+            background: "linear-gradient(to bottom, rgba(27, 8, 10, 1) 0%, rgba(27, 8, 10, 0) 100%)"
           }}
         >
-          <div className="w-full flex justify-center mt-[48px] px-[1rem] navContainer">
-            <Link
-              to="/group"
-              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-            >
-              組別介紹
-            </Link>
-            <Link
-              to="/collect"
-              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-            >
-              集章兌換
-            </Link>
-            <Link to="/">
+          <div className="w-full flex mx-auto justify-center mt-[48px] pb-5 navContainer">
+            <LinkLarge to={"/groups"} text="組別介紹" />
+            <LinkLarge to={"/collect"} text="集章兌換" />
+            <Link to="/" className={`${isHome ? "w-0 !opacity-0" : "w-[180px]"} navHover !transition-all !duration-500 ease-in-out`}>
               <img
                 src="/Header/Headline.svg"
                 alt="Headline"
-                className={`text-nowrap drop-shadow-lg object-cover overflow-visible h-[60px] backface-hidden mt-[-27.25px] 2xl:mt-[-30px] w-0 mx-0 opacity-0 ${!isHome && "!w-[150px] !mx-[16px] !opacity-100"} transition-all duration-500 ease-in-out`}
+                className={`text-nowrap drop-shadow-lg object-cover overflow-visible h-[60px] backface-hidden mt-[-28px] mx-auto transition-all duration-500 ease-in-out`}
               />
             </Link>
-            <Link
-              to="/psychometric-test"
-              className="text-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-            >
-              心理測驗
-            </Link>
-            <Link
-              to="/feedback"
-              className="ext-nowrap navHover text-[1.5rem] px-[27px] leading-none text-white"
-              style={{
-                textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
-                fontFamily: "B",
-              }}
-            >
-              意見回饋
-            </Link>
+            <LinkLarge to={"/psychometric-test"} text="心理測驗" />
+            <LinkLarge to={"/feedback"} text="意見回饋" />
           </div>
         </div>
       )}

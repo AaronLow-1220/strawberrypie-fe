@@ -1,17 +1,90 @@
-import { Canvas, useLoader } from "@react-three/fiber";
-import { Stats } from "@react-three/drei";
+import { Canvas, useLoader, useThree } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { SlidingCamera } from "./SlidingCamera";
 import { InfoCard } from "./InfoCard";
 import { LightStrip } from "./LightStrip";
 import { useDeviceType } from "./useDeviceType";
 
+// 自定義 hook 用於載入預載或直接載入 3D 模型
+const usePreloadedGLTF = (modelPath) => {
+  const [model, setModel] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { invalidate } = useThree();
+
+  useEffect(() => {
+    const fileName = modelPath.split('/').pop();
+    const loader = new GLTFLoader();
+    
+    // 檢查是否有預載的模型
+    if (window.preloadedModels && window.preloadedModels[fileName]) {
+      console.log(`使用預載的模型: ${fileName}`);
+      const preloadedModel = window.preloadedModels[fileName];
+      
+      // 使用預載的 URL
+      loader.load(preloadedModel.url, 
+        (gltf) => {
+          setModel(gltf);
+          setLoading(false);
+          invalidate(); // 通知 Three.js 需要重新渲染
+        },
+        undefined, // 進度回調
+        (error) => {
+          console.error(`預載模型載入失敗: ${fileName}`, error);
+          setError(error);
+          setLoading(false);
+          
+          // 如果預載模型失敗，嘗試直接載入
+          console.log(`嘗試直接載入模型: ${modelPath}`);
+          loader.load(modelPath, 
+            (gltf) => {
+              setModel(gltf);
+              setLoading(false);
+              invalidate();
+            },
+            undefined,
+            (directError) => {
+              console.error(`直接載入模型也失敗: ${modelPath}`, directError);
+              setError(directError);
+              setLoading(false);
+            }
+          );
+        }
+      );
+    } else {
+      // 沒有預載模型，直接載入
+      console.log(`直接載入模型: ${modelPath}`);
+      loader.load(modelPath, 
+        (gltf) => {
+          setModel(gltf);
+          setLoading(false);
+          invalidate();
+        },
+        undefined,
+        (error) => {
+          console.error(`模型載入失敗: ${modelPath}`, error);
+          setError(error);
+          setLoading(false);
+        }
+      );
+    }
+    
+    // 清理函數
+    return () => {
+      // 如果需要清理資源，可以在這裡進行
+    };
+  }, [modelPath, invalidate]);
+
+  return { model, loading, error };
+};
+
 // 3D 模型展示元件
 export const Model = ({ onAnimationStart, logoAnimation }) => {
   const { deviceType } = useDeviceType();
   const [sceneReady, setSceneReady] = useState(false);
-  const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
+  // 使用自定義 hook 載入模型
+  const { model, loading, error } = usePreloadedGLTF("/GT_Scene.glb");
   const [animate, setAnimate] = useState("");
 
   // 合併相關的狀態
@@ -23,8 +96,8 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
 
   // 優化模型
   useEffect(() => {
-    if (gltf && gltf.scene) {
-      gltf.scene.traverse((child) => {
+    if (model && model.scene) {
+      model.scene.traverse((child) => {
         if (child.isMesh) {
           // 優化幾何體
           if (child.geometry) {
@@ -49,7 +122,7 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
 
       setSceneReady(true);
     }
-  }, [gltf]);
+  }, [model]);
 
   const handleAnimationStart = () => {
     logoAnimation();
@@ -66,7 +139,7 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
         ...prev,
         right: { opacity: 1, transform: "translateY(0px)" }
       }));
-    }, 1500);
+    }, 1200);
 
     setTimeout(() => {
       setLightStripHeight("animate-light");
@@ -91,6 +164,11 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
     }
   ];
 
+  // 顯示載入錯誤
+  if (error) {
+    console.error("模型載入錯誤:", error);
+  }
+
   return (
     <div className="w-full h-screen relative">
       <Canvas
@@ -106,12 +184,11 @@ export const Model = ({ onAnimationStart, logoAnimation }) => {
           gl.setClearColor('#000000', 0);
         }}
       >
-        {process.env.NODE_ENV === 'development' && <Stats />}
-        {sceneReady && (
+        {sceneReady && !loading && model && (
           <>
             <SlidingCamera onAnimationStart={handleAnimationStart} />
             <primitive
-              object={gltf.scene}
+              object={model.scene}
               frustumCulled={true}
             />
           </>

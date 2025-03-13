@@ -205,8 +205,6 @@ export const Model = ({ logoAnimation, onAnimationEnd }) => {
           gl.setClearColor("#000000", 0); // 設置透明背景
         }}
       >
-        {/* 開發環境下顯示性能統計 */}
-        {process.env.NODE_ENV === "development" && <Stats />}
         
         {/* 場景準備完成後渲染 3D 內容 */}
         {sceneReady && (

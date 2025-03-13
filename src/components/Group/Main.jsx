@@ -7,6 +7,17 @@ import { CSSTransition, SwitchTransition } from "react-transition-group";
 
 // 添加 CSS 過渡樣式
 const transitionStyles = `
+@media (max-width: 768px) {
+  .mobile__header{
+    background-color: none !important;
+    padding-bottom: 0px !important;
+  }
+  .groups__nav{
+    z-index: 100;
+    background-color: linear-gradient(to bottom, rgba(27, 8, 10, 1) 0%, rgba(27, 8, 10, 0) 100%) ;
+  }
+}
+
   .fade-enter {
     opacity: 0;
   }
@@ -51,28 +62,31 @@ const transitionStyles = `
   }
 `;
 
+// 圖片骨架屏組件
+const ImageSkeleton = () => (
+  <div className="w-full h-full aspect-[4/3] bg-[hsl(354,54%,20%)] animate-pulse flex justify-center items-center"></div>
+);
+
 // 滾動按鈕組件
 const ScrollArrow = ({ direction, isVisible, onClick }) => {
   return (
     <div
-      className={`absolute ${
-        direction === "left"
-          ? "left-0 -translate-x-1/2"
-          : "right-0 translate-x-1/2"
-      } 
+      className={`absolute ${direction === "left"
+        ? "left-0 -translate-x-1/2"
+        : "right-0 translate-x-1/2"
+        } 
         hidden lg:flex top-[50%] group-arrow w-14 h-14
         items-center justify-center z-10 cursor-pointer
         transition-all duration-300 ease-in-out group/arrow
         ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       onClick={onClick}
     >
-      <div className="absolute inset-0 bg-[#6C2028] hover:bg-[#D84050] hover:scale-150 rounded-full transition-all duration-500 ease-in-out"></div>
+      <div className="absolute shadow-[0_8px_8px_rgba(0,0,0,0.2)] inset-0 bg-[#6C2028] hover:bg-[#D84050] hover:scale-150 rounded-full transition-all duration-500 ease-in-out"></div>
       <img
-        className={`relative z-20 pointer-events-none w-6 h-6 opacity-80 group-hover/arrow:opacity-100 transition-opacity duration-300 ${
-          direction === "left"
-            ? "transform rotate-180 -translate-x-[1px]"
-            : "translate-x-[1px]"
-        }`}
+        className={`relative z-20 pointer-events-none w-6 h-6 opacity-80 group-hover/arrow:opacity-100 transition-opacity duration-300 ${direction === "left"
+          ? "transform rotate-180 -translate-x-[1px]"
+          : "translate-x-[1px]"
+          }`}
         src="/arrow_forward_ios.svg"
         alt={`向${direction === "left" ? "左" : "右"}滾動`}
       />
@@ -93,6 +107,9 @@ export const Group = () => {
   const nodeRef = useRef(null);
   // 後端回傳的卡片資料
   const [cards, setCards] = useState([]);
+  // 追蹤已載入的圖片
+  const [loadedImages, setLoadedImages] = useState({});
+
   const mapGenreToCategory = (genre) => {
     const genreMap = {
       0: "互動",
@@ -103,6 +120,7 @@ export const Group = () => {
     };
     return genreMap[genre] || "其他";
   };
+
   const parseJsonArray = (jsonString) => {
     try {
       const obj = JSON.parse(jsonString);
@@ -112,6 +130,7 @@ export const Group = () => {
       return [];
     }
   };
+
   const mediaArray = (jsonString) => {
     try {
       const obj = JSON.parse(jsonString);
@@ -122,62 +141,114 @@ export const Group = () => {
     }
   };
 
+  // 按順序載入圖片
+  const loadImagesInOrder = async (cardsData, apiBaseUrl) => {
+    // 載入單個卡片的圖片
+    const loadCardImage = async (card, index) => {
+      if (!card.logo_id || loadedImages[card.id]) return;
+
+      try {
+        const imgResponse = await axios.get(
+          `${apiBaseUrl}/fe/file/download/${card.logo_id}`,
+          {
+            headers: {
+              "Content-Type": "application/octet-stream",
+            },
+            responseType: "blob",
+          }
+        );
+
+        const imageURL = URL.createObjectURL(imgResponse.data);
+
+        // 更新已載入的圖片
+        setLoadedImages(prev => ({
+          ...prev,
+          [card.id]: imageURL
+        }));
+
+        // 更新卡片列表中的圖片
+        setCards(prevCards => {
+          const newCards = [...prevCards];
+          if (newCards[index]) {
+            newCards[index] = {
+              ...newCards[index],
+              img: imageURL,
+              imageLoading: false,
+            };
+          }
+          return newCards;
+        });
+      } catch (imgError) {
+        console.error(`無法下載圖片 (logo_id: ${card.logo_id})`, imgError);
+
+        // 標記圖片載入失敗
+        setCards(prevCards => {
+          const newCards = [...prevCards];
+          if (newCards[index]) {
+            newCards[index] = {
+              ...newCards[index],
+              imageLoading: false,
+            };
+          }
+          return newCards;
+        });
+      }
+    };
+
+    // 開始載入所有卡片的圖片
+    cardsData.forEach((card, index) => {
+      loadCardImage(card, index);
+    });
+  };
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
         const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-        // const token =typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        //
-
-        const response = await axios.post(
-          `${apiBaseUrl}/fe/group/search`,
-          {
-            pageSize:25
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
+        let responseData;
+        
+        // 檢查是否有預載的組別數據
+        if (window.preloadedData && window.preloadedData.groupData) {
+          console.log('使用預載的組別數據');
+          responseData = window.preloadedData.groupData;
+        } else {
+          // 如果沒有預載數據，則進行 API 請求
+          console.log('無預載數據，進行 API 請求');
+          const response = await axios.post(
+            `${apiBaseUrl}/fe/group/search`,
+            {
+              pageSize: 25
             },
-          }
-        );
-
-        const transformedCards = await Promise.all(
-          response.data._data.map(async (card) => {
-            let photoImageURL = "";
-
-            if (card.logo_id) {
-              try {
-                const photoImgResponse = await axios.get(
-                  `${apiBaseUrl}/fe/file/download/${card.logo_id}`,
-                  {
-                    headers: {
-                      "Content-Type": "application/octet-stream",
-                    },
-                    responseType: "blob",
-                  }
-                );
-
-                photoImageURL = URL.createObjectURL(photoImgResponse.data);
-              } catch (imgError) {
-                console.error(`無法下載圖片 (image_id)`, imgError);
-              }
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
             }
+          );
+          responseData = response.data;
+        }
 
-            return {
-              category: mapGenreToCategory(card.genre),
-              img: photoImageURL,
-              title: card.work_name,
-              content: card.short_description,
-              secondTitle: card.name,
-              detailedContent: card.description,
-              member: parseJsonArray(card.member),
-              teachers: parseJsonArray(card.tutor),
-              media: mediaArray(card.media),
-            };
-          })
-        );
+        // 先處理文字內容，不等待圖片
+        const cardsData = responseData._data.map(card => ({
+          id: card.id,
+          logo_id: card.logo_id,
+          category: mapGenreToCategory(card.genre),
+          img: "", // 先設置為空，稍後再載入
+          title: card.work_name,
+          content: card.short_description,
+          secondTitle: card.name,
+          detailedContent: card.description,
+          member: parseJsonArray(card.member),
+          teachers: parseJsonArray(card.tutor),
+          media: mediaArray(card.media),
+          imageLoading: !!card.logo_id, // 如果有logo_id，標記為正在載入
+        }));
 
-        setCards(transformedCards);
+        // 先設置卡片文字內容
+        setCards(cardsData);
+
+        // 開始異步載入圖片
+        loadImagesInOrder(cardsData, apiBaseUrl);
       } catch (error) {
         console.error("獲取卡片資料失敗", error);
       }
@@ -339,9 +410,12 @@ export const Group = () => {
                 <Card
                   key={index}
                   img={card.img}
+                  imageLoading={card.imageLoading}
+                  ImageSkeleton={ImageSkeleton}
                   title={card.title}
                   content={card.content}
                   secondTitle={card.secondTitle}
+                  selectedFilter={selectedFilter}
                   detailedContent={card.detailedContent}
                   member={card.member}
                   teachers={card.teachers}
@@ -372,48 +446,52 @@ export const Group = () => {
               </div>
 
               {/* 可橫向滾動的卡片容器 */}
-              <div
-                className="flex relative mt-4 gap-[14px] overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
-                ref={(el) => {
-                  // 設置滾動容器參考
-                  scrollContainerRefs.current[item] = el;
-                  // 初始化時檢查按鈕可見性
-                  if (el) updateButtonVisibility(item);
-                }}
-                // 監聽滾動事件以更新按鈕可見性
-                onScroll={() => updateButtonVisibility(item)}
-              >
-                {/* 渲染該類別的卡片 */}
-                {filteredCards
-                  .filter((card) => card.category === item)
-                  .map((card, index) => (
-                    <Card
-                      key={index}
-                      img={card.img}
-                      title={card.title}
-                      content={card.content}
-                      secondTitle={card.secondTitle}
-                      selectedFilter={selectedFilter}
-                      detailedContent={card.detailedContent}
-                      member={card.member}
-                      teachers={card.teachers}
-                      media={card.media}
-                      onClick={() => handleCardClick(card)}
-                    />
-                  ))}
-              </div>
+              <div>
+                <div
+                  className="flex relative mt-4 gap-[14px] overflow-x-auto snap-x scrollbar-hide group-scroll-padding"
+                  ref={(el) => {
+                    // 設置滾動容器參考
+                    scrollContainerRefs.current[item] = el;
+                    // 初始化時檢查按鈕可見性
+                    if (el) updateButtonVisibility(item);
+                  }}
+                  // 監聽滾動事件以更新按鈕可見性
+                  onScroll={() => updateButtonVisibility(item)}
+                >
+                  {/* 渲染該類別的卡片 */}
+                  {filteredCards
+                    .filter((card) => card.category === item)
+                    .map((card, index) => (
+                      <Card
+                        key={index}
+                        img={card.img}
+                        imageLoading={card.imageLoading}
+                        ImageSkeleton={ImageSkeleton}
+                        title={card.title}
+                        content={card.content}
+                        secondTitle={card.secondTitle}
+                        selectedFilter={selectedFilter}
+                        detailedContent={card.detailedContent}
+                        member={card.member}
+                        teachers={card.teachers}
+                        media={card.media}
+                        onClick={() => handleCardClick(card)}
+                      />
+                    ))}
+                </div>
 
-              {/* 左右滾動按鈕 */}
-              <ScrollArrow
-                direction="left"
-                isVisible={buttonVisibility[item]?.showLeftButton}
-                onClick={() => scroll(item, "left")}
-              />
-              <ScrollArrow
-                direction="right"
-                isVisible={buttonVisibility[item]?.showRightButton}
-                onClick={() => scroll(item, "right")}
-              />
+                {/* 左右滾動按鈕 */}
+                <ScrollArrow
+                  direction="left"
+                  isVisible={buttonVisibility[item]?.showLeftButton}
+                  onClick={() => scroll(item, "left")}
+                />
+                <ScrollArrow
+                  direction="right"
+                  isVisible={buttonVisibility[item]?.showRightButton}
+                  onClick={() => scroll(item, "right")}
+                />
+              </div>
             </div>
           ))}
         </>
@@ -452,9 +530,8 @@ export const Group = () => {
         className={`focus-card-overlay ${isFocusCardVisible ? "visible" : ""}`}
       ></div>
       <div
-        className={`focus-card-container flex items-center justify-center overflow-y-auto ${
-          isFocusCardVisible ? "visible" : ""
-        }`}
+        className={`focus-card-container flex items-center justify-center overflow-y-auto ${isFocusCardVisible ? "visible" : ""
+          }`}
       >
         {focusedCard && (
           <FocusCard

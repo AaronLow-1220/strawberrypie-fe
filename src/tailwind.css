@@ -16,19 +16,39 @@ body {
 
 @font-face {
   font-family: "B";
-  src: url("/font/GenSenRounded-B.ttf") format("truetype");
+  src: url("/font/GenSenRounded-B.woff2") format("woff2");
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
   font-family: "R";
-  src: url("/font/GenSenRounded-R.ttf") format("truetype");
+  src: url("/font/GenSenRounded-R.woff2") format("woff2");
   font-weight: 400; /* Regular */
   font-style: normal;
 }
 
 @layer utilities {
+  /* 載入動畫 */
+  @keyframes loading-bar {
+    0% {
+      width: 0%;
+      left: 0;
+    }
+    50% {
+      width: 100%;
+      left: 0;
+    }
+    100% {
+      width: 100%;
+      left: 100%;
+    }
+  }
+
+  .animate-loading-bar {
+    animation: loading-bar 2s ease-in-out infinite;
+  }
+
   body {
     background-color: #1b080a;
   }
@@ -92,20 +112,6 @@ body {
     animation-play-state: paused;
   }
 
-  .ipModelScroll {
-    width: 100%;
-    display: flex;
-    padding-top: 4.5rem;
-    padding-bottom: 4px;
-    overflow-x: auto;
-    gap: 4.5rem;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-left: 4.5rem;
-    padding-right: 4.5rem;
-  }
-
   .wave-container {
     width: 100%;
     overflow: hidden;
@@ -166,18 +172,16 @@ body {
 
   .navHover {
     color: #ffffff;
-    transition: color 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transition: ease-in-out, opacity 0.3s ease-in-out;
   }
 
   .navHover:hover {
     cursor: pointer;
-    color: #ffffff;
     opacity: 1;
   }
 
   .navContainer:has(.navHover:hover) .navHover:not(:hover) {
-    color: #838383;
-    opacity: 0.5;
+    opacity: 0.4;
   }
 
   .carousel-container {
@@ -549,4 +553,17 @@ body {
 /* 淡出效果：不透明度從 1 過渡到 0 */
 .fade-out {
   opacity: 0;
+}
+
+.primary-button{
+  background-color: #F748C1;
+  color: white;
+  border-radius: 999px;
+  transition: box-shadow 0.6s cubic-bezier(0,0,0,1);
+  box-shadow: 0 0 0px 0 transparent;
+
+}
+
+.primary-button:hover{
+  box-shadow: 0 0 40px 0 #F748C1;
 }
