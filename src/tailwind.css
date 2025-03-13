@@ -19,7 +19,6 @@ body, * {
 	/* IE and Edge */
 	scrollbar-width: none;
 	/* Firefox */
-	overflow-x: hidden;
 	-webkit-tap-highlight-color: transparent;
 }
 
