@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FontFaceObserver from "fontfaceobserver";
 //header
 import { Header } from "./components/Header";
+import { HeaderProvider } from "./components/HeaderContext";
 //Test
 import { PsychometricTest } from "./components/PsychometricTest/Main";
 //HomePage
@@ -14,7 +15,6 @@ import { Result } from "./components/Result/Main";
 
 import { Collect2 } from "./components/Collect/Main2";
 
-import { HeaderProvider } from "./components/HeaderContext";
 
 import { ComingSoon } from "./components/ComingSoon";
 
@@ -27,6 +27,8 @@ import { Loading } from "./components/Loading";
 import { LogIn } from "./components/Account/LogIn";
 import { Register } from "./components/Account/Register";
 import { ForgetPassword } from "./components/Account/ForgetPassword";
+import { Account } from "./components/Account/Account";
+import { CSSTransition } from "react-transition-group";
 
 // 預載檔案列表 - 可以在這裡添加你需要預載的所有檔案
 const PRELOAD_ASSETS = {
@@ -36,7 +38,7 @@ const PRELOAD_ASSETS = {
 		{ name: 'B', family: 'B' },
 		{ name: 'R', family: 'R' }
 	],
-	
+
 	// 關鍵圖片列表
 	images: [
 		'/strawberry.svg',
@@ -53,18 +55,18 @@ const PRELOAD_ASSETS = {
 		'/Header/Headline.svg'
 		// 在這裡添加更多需要預載的圖片
 	],
-	
+
 	// 3D 模型和其他特殊檔案
 	models: [
 		'/GT_Scene.glb',
 		// 在這裡添加更多需要預載的 3D 模型或特殊檔案
 	],
-	
+
 	// API 請求列表 - 預載 API 數據
 	apis: [
 		{
-			name: '組別介紹', 
-			url: `${import.meta.env.VITE_API_BASE_URL}/fe/group/search`, 
+			name: '組別介紹',
+			url: `${import.meta.env.VITE_API_BASE_URL}/fe/group/search`,
 			method: 'POST',
 			body: { pageSize: 25 },
 			headers: { 'Content-Type': 'application/json' },
@@ -92,19 +94,34 @@ function App() {
 	// 載入文字
 	const [loadingText, setLoadingText] = useState("正在準備您的專屬體驗...");
 
+	// 控制 Account 元件顯示的狀態
+	const [isAccountOpen, setIsAccountOpen] = useState(false);
+	// 添加 ref 用於 CSSTransition
+	const accountTransitionRef = useRef(null);
+
+	// 處理開啟 Account 面板
+	const handleOpenAccount = useCallback(() => {
+		setIsAccountOpen(true);
+	}, []);
+
+	// 處理關閉 Account 面板
+	const handleCloseAccount = useCallback(() => {
+		setIsAccountOpen(false);
+	}, []);
+
 	// 載入字體和其他必要資源
 	useEffect(() => {
 		const loadResources = async () => {
 			try {
 				// 計算預載資源總數
-				const totalResources = 
-					PRELOAD_ASSETS.fonts.length + 
-					PRELOAD_ASSETS.images.length + 
+				const totalResources =
+					PRELOAD_ASSETS.fonts.length +
+					PRELOAD_ASSETS.images.length +
 					(PRELOAD_ASSETS.models?.length || 0) +
 					PRELOAD_ASSETS.apis.length;
-				
+
 				let loadedResources = 0;
-				
+
 				// 更新載入進度的函數
 				const updateProgress = (loaded, total, type) => {
 					loadedResources++;
@@ -113,11 +130,11 @@ function App() {
 					setLoadingText(`正在載入${type}... (${loaded}/${total})`);
 					console.log(`載入進度: ${newProgress.toFixed(2)}%, 正在載入${type}... (${loaded}/${total})`);
 				};
-				
+
 				// 1. 載入字體
 				setLoadingText("正在載入字體...");
 				const fonts = PRELOAD_ASSETS.fonts;
-				
+
 				for (let i = 0; i < fonts.length; i++) {
 					const font = fonts[i];
 					try {
@@ -130,11 +147,11 @@ function App() {
 					}
 					updateProgress(i + 1, fonts.length, "字體");
 				}
-				
+
 				// 2. 載入圖片
 				setLoadingText("正在載入圖片...");
 				const images = PRELOAD_ASSETS.images;
-				
+
 				const imagePromises = images.map((src, index) => {
 					return new Promise((resolve) => {
 						const img = new Image();
@@ -150,16 +167,16 @@ function App() {
 						img.src = src;
 					});
 				});
-				
+
 				// 等待圖片載入
 				await Promise.all(imagePromises);
 				console.log('圖片已載入完成');
-				
+
 				// 2.5 載入 3D 模型和特殊檔案
 				if (PRELOAD_ASSETS.models && PRELOAD_ASSETS.models.length > 0) {
 					setLoadingText("正在載入模型...");
 					const models = PRELOAD_ASSETS.models;
-					
+
 					for (let i = 0; i < models.length; i++) {
 						const modelPath = models[i];
 						try {
@@ -168,52 +185,61 @@ function App() {
 							if (!response.ok) {
 								throw new Error(`模型載入失敗: ${response.status}`);
 							}
-							
+
 							// 獲取檔案的二進制數據
 							const blob = await response.blob();
-							
+
 							// 創建一個 URL 以便後續使用
 							const objectUrl = URL.createObjectURL(blob);
-							
+
 							// 從路徑中提取檔案名作為鍵
 							const fileName = modelPath.split('/').pop();
-							
+
 							// 存儲在全局對象中
 							window.preloadedModels[fileName] = {
 								blob: blob,
 								url: objectUrl
 							};
-							
+
 							console.log(`模型已預載: ${modelPath}`);
 						} catch (error) {
 							console.warn(`無法預載模型: ${modelPath}`, error);
 						}
-						
+
 						updateProgress(i + 1, models.length, "模型");
 					}
-					
+
 					console.log('所有模型已預載完成');
 				}
-				
+
 				// 3. 預載 API 數據
 				setLoadingText("正在載入內容...");
 				const apis = PRELOAD_ASSETS.apis;
-				
+
 				for (let i = 0; i < apis.length; i++) {
 					const api = apis[i];
 					try {
-						const response = await fetch(api.url, {
+						// 創建一個 5 秒超時的 Promise
+						const timeoutPromise = new Promise((_, reject) => {
+							setTimeout(() => reject(new Error(`API ${api.name} 請求超時 (5秒)`)), 5000);
+						});
+
+						// 創建 API 請求的 Promise
+						const fetchPromise = fetch(api.url, {
 							method: api.method || 'GET',
 							headers: api.headers || {},
 							body: api.method === 'POST' ? JSON.stringify(api.body) : undefined
 						});
-						
+
+						// 使用 Promise.race 競爭，哪個先完成就用哪個結果
+						const response = await Promise.race([fetchPromise, timeoutPromise]);
+
 						if (!response.ok) {
 							throw new Error(`API 請求失敗: ${response.status}`);
 						}
-						
+
 						const data = await response.json();
-						
+
 						// 將 API 數據存儲在全局數據存儲中
 						if (api.cacheKey) {
 							window.preloadedData[api.cacheKey] = data;
@@ -222,15 +248,15 @@ function App() {
 					} catch (error) {
 						console.warn(`API ${api.name} 預載失敗:`, error);
 					}
-					
+
 					updateProgress(i + 1, apis.length, "內容");
 				}
-				
+
 				// 確保載入畫面顯示足夠長時間
 				setLoadingProgress(100);
 				setLoadingText("準備完成，即將進入...");
 				await new Promise(resolve => setTimeout(resolve, 500));
-				
+
 				// 隱藏載入頁面
 				setIsLoading(false);
 			} catch (error) {
@@ -243,7 +269,7 @@ function App() {
 				}, 1000);
 			}
 		};
-		
+
 		loadResources();
 	}, []);
 
@@ -252,9 +278,6 @@ function App() {
 		setAnimate(true);
 	};
 
-	const handleFocus = (target) => {
-		setFocus(target);
-	};
 
 	return (
 		<>
@@ -263,16 +286,10 @@ function App() {
 			) : (
 				<HeaderProvider>
 					<Router>
-						{/* 只有當 showHeader 為 true 時才顯示 Header */}
-						{showHeader && (
-							<div className={`${focus == true ? "opacity-[60%]" : ""} relative z-20`}>
-								<Header />
-							</div>
-						)}
 						<Routes>
 							<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
 							<Route path="/psychometric-test" element={<PsychometricTest />} />
-							<Route path="/groups" element={<Group focus={handleFocus} />} />
+							<Route path="/groups" element={<Group />} />
 							<Route path="/result/:id" element={<Result />} />
 							<Route path="/collect" element={<Collect2 />} />
 							{/* <Route path="/collect" element={<ComingSoon />} /> */}
@@ -282,6 +299,25 @@ function App() {
 							<Route path="/auth/callback" element={<Callback />}></Route>
 							<Route path="/forget-password" element={<ForgetPassword />}></Route>
 						</Routes>
+						{/* 只有當 showHeader 為 true 時才顯示 Header */}
+						{showHeader && (
+							<div className="relative">
+								<Header onOpenAccount={handleOpenAccount} />
+							</div>
+						)}
+						{/* 使用 CSSTransition 來渲染 Account 元件 */}
+						<CSSTransition
+							in={isAccountOpen}
+							timeout={300}
+							classNames="overlay"
+							unmountOnExit
+							mountOnEnter
+							nodeRef={accountTransitionRef}
+						>
+							<div ref={accountTransitionRef}>
+								<Account onClose={handleCloseAccount} />
+							</div>
+						</CSSTransition>
 					</Router>
 				</HeaderProvider>
 			)}
