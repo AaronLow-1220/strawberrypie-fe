@@ -45,7 +45,7 @@ export const LogIn = () => {
       });
 
       // 註冊成功後直接登入
-      localStorage.setItem('authToken', response.data.access_token);
+      localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
       // 重定向到首頁
@@ -79,7 +79,7 @@ export const LogIn = () => {
           {`
           /* 覆蓋自動填充時的背景色和文字顏色 */
           input:-webkit-autofill,
-          input:-webkit-autofill:hover, 
+          input:-webkit-autofill:hover,
           input:-webkit-autofill:focus,
           input:-webkit-autofill:active {
             -webkit-box-shadow: 0 0 0 30px #361014 inset !important;

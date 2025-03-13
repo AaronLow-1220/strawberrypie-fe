@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { HeaderContext } from "./HeaderContext";
+
 
 const LinkLarge = ({ to, text }) => {
   return (
@@ -70,10 +71,8 @@ const NavBackground = ({ menuOpen }) => {
   );
 };
 
-
-
 // Header 元件：根據裝置寬度與選單狀態顯示不同版型
-export const Header = () => {
+export const Header = ({ onOpenAccount }) => {
   const location = useLocation();
   const [isHome, setIsHome] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -81,7 +80,7 @@ export const Header = () => {
   const [scrollOpacity, setScrollOpacity] = useState(0); // 滾動透明度狀態
   const is2XLScreen = windowWidth >= 1536; // 判斷是否為 2xl 及以上螢幕尺寸
   const { isHeaderOpen, setIsHeaderOpen } = useContext(HeaderContext);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     setIsHome(location.pathname === "/");
@@ -139,29 +138,31 @@ export const Header = () => {
     }
   }, [menuOpen]);
 
+  useEffect(() => {
+    const authToken = localStorage.getItem('accessToken');
+    setIsLoggedIn(!!authToken);
+  }, []);
+
   return (
     <>
       {windowWidth < 1024 ? (
         // 行動版 Header
         <div
-          className="mobile__header fixed top-0 left-0 right-0 z-[100] pb-6"
+          className="mobile__header fixed top-0 left-0 right-0 pb-6"
           style={{
             background:
               "linear-gradient(to bottom, rgba(27, 8, 10, 0.8) 0%, rgba(27, 8, 10, 0) 100%)",
           }}
         >
           <div className="w-full h-[4rem] flex justify-between items-center px-[1rem]">
-            <img
-              src="/Header/menu.svg"
-              alt="Menu"
-              style={{
-                width: "28px",
-                height: "auto",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
+            <div
+              className={`max-menu flex flex-col justify-between items-center ${menuOpen ? "active" : ""}`}
               onClick={() => setMenuOpen(!menuOpen)}
-            />
+            >
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
             {!isHome && (
               <Link to="/" onClick={() => setMenuOpen(false)}>
                 <img
@@ -176,18 +177,37 @@ export const Header = () => {
                 />
               </Link>
             )}
-            <Link to="/login">
-              <img
-                src="/Header/login.svg"
-                alt="Collect"
-                style={{
-                  width: "28px",
-                  height: "auto",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-              />
-            </Link>
+            {isLoggedIn ? (
+
+              <button onClick={() => {
+                onOpenAccount();
+                setMenuOpen(false);
+              }}>
+                <img
+                  src="/Header/person.svg"
+                  alt="Account"
+                  style={{
+                    width: "28px",
+                    height: "auto",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                />
+              </button>
+            ) : (
+              <Link to="/login">
+                <img
+                  src="/Header/login.svg"
+                  alt="Collect"
+                  style={{
+                    width: "28px",
+                    height: "auto",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                />
+              </Link>
+            )}
           </div>
           <div
             className={`fixed inset-0 bg-black h-screen -z-10 transition-opacity duration-500 ease-in-out ${menuOpen ? "opacity-60" : "opacity-0 pointer-events-none"}`}
@@ -263,7 +283,7 @@ export const Header = () => {
       ) : (
         // 桌機版 Header - 根據螢幕尺寸和頁面決定是否套用透明度效果
         <div
-          className="w-full fixed top-0 flex mx-auto z-[999] transition-opacity duration-300"
+          className="w-full fixed top-0 flex mx-auto transition-opacity duration-300"
           style={{
             opacity: scrollOpacity,
             background: "linear-gradient(to bottom, rgba(27, 8, 10, 1) 0%, rgba(27, 8, 10, 0) 100%)"
@@ -281,6 +301,30 @@ export const Header = () => {
             </Link>
             <LinkLarge to={"/psychometric-test"} text="心理測驗" />
             <LinkLarge to={"/feedback"} text="意見回饋" />
+          </div>
+          {/* 桌面版登入/個人資料按鈕 */}
+          <div className="absolute right-8 top-[48px]">
+            {isLoggedIn ? (
+              <button
+                onClick={onOpenAccount}
+                className="text-white hover:text-secondary-color transition-colors"
+              >
+                <img
+                  src="/Header/person.svg"
+                  alt="Account"
+                  className="w-7 h-7 drop-shadow-lg"
+                />
+              </button>
+            ) : (
+              <Link to="/login" className="text-white hover:text-secondary-color transition-colors">
+                <img
+                  src="/Header/login.svg"
+                  alt="Login"
+                  className="w-7 h-7 drop-shadow-lg"
+                />
+              </Link>
+
+            )}
           </div>
         </div>
       )}

@@ -52,14 +52,14 @@ export const Register = () => {
     try {
       console.log("register");
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
-      const response = await axios.post(`${apiBaseUrl}/auth/register`, {
+      const response = await axios.post(`https://dev-api.strawberrypie.tw/auth/register`, {
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
 
       // 註冊成功後直接登入
-      localStorage.setItem('authToken', response.data.accessToken);
+      localStorage.setItem('accessToken', response.data.accessToken);
 
       // 重定向到首頁
       window.location.href = '/';
