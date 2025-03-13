@@ -30,7 +30,7 @@ export const ProgressBar2 = () => {
   ];
 
   return (
-    <div className="overflow-visible -z-10 progress-bar max-w-[240px] lg:w-[clamp(15rem,0rem+23.4375vw,22.5rem)] lg:max-w-[360px]">
+    <div className="overflow-visible -z-10 progress-bar max-w-[240px] w-[clamp(15rem,0rem+23.4375vw,22.5rem)] lg:max-w-[360px]">
       <div className="w-[240px] lg:w-[clamp(15rem,0rem+23.4375vw,22.5rem)] h-[240px] lg:h-[clamp(15rem,0rem+23.4375vw,22.5rem)] absolute rounded-full blur-[60px] bg-primary-color"></div>
       <AnimatedProgressProvider
         valueStart={0}
