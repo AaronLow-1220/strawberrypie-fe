@@ -38,7 +38,7 @@ export const Collect2 = () => {
               <div className="flex justify-between items-center mt-[24px] px-[1rem]">
                 <div>
                   <div className="text-[36px] 2xl:text-[56px] text-white leading-tight text-center"
-                    style={{ fontFamily: "M" }}
+                    style={{ fontFamily: "R" }}
                   >
                     13 {/*已完成的數量*/}
                   </div>
@@ -46,7 +46,7 @@ export const Collect2 = () => {
                 </div>
                 <div>
                   <div className="text-[36px] 2xl:text-[56px] text-white leading-tight text-center"
-                    style={{ fontFamily: "M" }}
+                    style={{ fontFamily: "R" }}
                   >
                     9 {/*剩餘的數量*/}
                   </div>
@@ -54,7 +54,7 @@ export const Collect2 = () => {
                 </div>
                 <div>
                   <div className="text-[36px] 2xl:text-[56px] text-white leading-tight text-center"
-                    style={{ fontFamily: "M" }}
+                    style={{ fontFamily: "R" }}
                   >
                     1 {/*已兌換的數量*/}
                   </div>
