@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react"; // 添加 useCallback 引入
+import { useState, useCallback } from "react"; // 移除 useEffect 引入，因為已經不需要
 import { CSSTransition } from "react-transition-group"; // 添加 CSSTransition 引入
 import { ProgressBar2 } from "./ProgressBar/ProgressBar2"; // 匯入進度條組件
 import { GroupBlock2 } from "./GroupBlock2"; // 匯入組別區塊組件
 import { QRScanner } from "./QrCode/QRScanner"; // 匯入 QRScanner 組件
+import { RewardDialog } from "./QrCode/RewardDialog"; // 匯入 RewardDialog 組件
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
@@ -17,8 +18,9 @@ export const Collect2 = () => {
     { name: "行銷", num: 3 },
   ];
 
-  // 添加狀態來控制 QRScanner 的顯示
+  // 添加狀態來控制 QRScanner 和 RewardDialog 的顯示
   const [showScanner, setShowScanner] = useState(false);
+  const [showRewardDialog, setShowRewardDialog] = useState(false);
 
   // 處理開啟掃描器
   const handleOpenScanner = () => {
@@ -32,6 +34,16 @@ export const Collect2 = () => {
       setShowScanner(false);
     }, 500); // 與 CSSTransition 的 timeout 相同
   }, []);
+  
+  // 處理開啟兌獎對話框
+  const handleOpenRewardDialog = () => {
+    setShowRewardDialog(true);
+  };
+  
+  // 處理關閉兌獎對話框
+  const handleCloseRewardDialog = useCallback(() => {
+    setShowRewardDialog(false);
+  }, []);
 
   return (
     <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
@@ -42,17 +54,20 @@ export const Collect2 = () => {
             <div className="flex flex-col w-full max-w-[280px] lg:max-w-[360px] 2xl:max-w-[420px] mt-[-4px]">
               {/* 兩個圓形圖示按鈕區塊 */}
               <div className="flex justify-between">
-                {/* 兌獎按鈕 */}
-                <div className="flex flex-col items-center justify-center gap-2">
+                {/* 兌獎按鈕 - 修改為可點擊按鈕 */}
+                <div
+                  className="flex flex-col items-center justify-center gap-2 cursor-pointer transition-opacity"
+                  onClick={handleOpenRewardDialog}
+                >
                   <div className="relative flex flex-col items-center justify-center h-[72px] w-[72px] 2xl:h-[96px] 2xl:w-[96px] rounded-full">
                     <div className="z-0 absolute w-full h-full bg-white rounded-full mix-blend-overlay"></div>
                     <div className="z-10 absolute w-full h-full border-4 2xl:border-[6px] border-[rgba(255,255,255,0.1)] rounded-full"></div>
                     <img className="z-10 w-9 2xl:w-12" src="/Collect/gifts.svg" alt="" />
                   </div>
-                  <p className="z-30 text-[14px] opacity-80">兌獎</p>
+                  <p className="z-30 text-[14px] lg:text-[20px] opacity-80">兌獎</p>
                 </div>
                 {/* 集章按鈕 - 修改為可點擊按鈕 */}
-                <div 
+                <div
                   className="flex flex-col items-center justify-center gap-2 cursor-pointer transition-opacity"
                   onClick={handleOpenScanner}
                 >
@@ -61,7 +76,7 @@ export const Collect2 = () => {
                     <div className="z-10 absolute w-full h-full border-4 2xl:border-[6px] border-[rgba(255,255,255,0.1)] rounded-full"></div>
                     <img className="z-10 w-9 2xl:w-12" src="/Collect/qr_codes.svg" alt="" />
                   </div>
-                  <p className="z-30 text-[14px] opacity-80">集章</p>
+                  <p className="z-30 text-[14px] lg:text-[20px] opacity-80">集章</p>
                 </div>
               </div>
             </div>
@@ -85,6 +100,17 @@ export const Collect2 = () => {
         mountOnEnter
       >
         <QRScanner onClose={handleCloseScanner} />
+      </CSSTransition>
+      
+      {/* 兌獎對話框彈出層 */}
+      <CSSTransition
+        in={showRewardDialog}
+        timeout={300}
+        classNames="reward-dialog"
+        unmountOnExit
+        mountOnEnter
+      >
+        <RewardDialog onClose={handleCloseRewardDialog} />
       </CSSTransition>
     </div>
   );
