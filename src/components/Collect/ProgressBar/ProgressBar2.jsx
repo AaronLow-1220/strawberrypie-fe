@@ -11,8 +11,8 @@ import tailwindConfig from "../../../../tailwind.config";
 
 export const ProgressBar2 = () => {
   // 假設目前集到的張數與總數
-  const currentCount = 0;
-  const totalStamps = 21;
+  const currentCount = 5;
+  const totalStamps = 22;
   // 計算百分比
   const percentValue = (currentCount / totalStamps) * 100;
 
@@ -30,8 +30,8 @@ export const ProgressBar2 = () => {
   ];
 
   return (
-    <div className="overflow-visible -z-10 progress-bar max-w-[240px] w-[clamp(15rem,0rem+23.4375vw,22.5rem)] lg:max-w-[360px]">
-      <div className="w-[240px] lg:w-[clamp(15rem,0rem+23.4375vw,22.5rem)] h-[240px] lg:h-[clamp(15rem,0rem+23.4375vw,22.5rem)] absolute rounded-full blur-[60px] bg-primary-color"></div>
+    <div className="overflow-visible -z-10 progress-bar w-full min-w-[200px] max-w-[240px] w-[clamp(15rem,0rem+23.4375vw,22.5rem)] lg:max-w-[360px]">
+      <div className="w-full min-w-[200px] max-w-[240px] w-[clamp(15rem,0rem+23.4375vw,22.5rem)] aspect-square lg:max-w-[360px] absolute rounded-full blur-[60px] bg-primary-color"></div>
       <AnimatedProgressProvider
         valueStart={0}
         valueEnd={percentValue}
@@ -50,16 +50,17 @@ export const ProgressBar2 = () => {
               styles={buildStyles({
                 pathTransition: "none",
                 pathColor: primaryColor,
-                trailColor: "rgba(0,0,0,0)",
+                trailColor: "rgba(255,255,255,0.05)",
                 backgroundColor: "rgba(0,0,0,0.2)",
+                strokeLinecap: "round",
               })}
             >
-              <div className="text-[14px] 2xl:text-[24px] opacity-80">
+              <div className="text-[14px] lg:text-[20px] opacity-80">
                 已搜集
               </div>
               {/* 顯示集到的張數 */}
               <div
-                className="text-[72px] 2xl:text-[108px]"
+                className="text-[72px] lg:text-[86px]"
                 style={{
                   fontWeight: "bold",
                   lineHeight: "1.3em",
@@ -70,7 +71,7 @@ export const ProgressBar2 = () => {
               </div>
               {/* 第二行：顯示百分比 */}
               <div
-                className="text-[24px] 2xl:text-[36px] text-secondary-color"
+                className="text-[24px] lg:text-[28px] text-secondary-color"
                 style={{ marginTop: "-0.2em" }}
               >
                 {roundedPercentage}%
