@@ -1,0 +1,54 @@
+/* QR 掃描器的漸變效果 */
+
+/* 進入動畫開始狀態 */
+.qr-scanner-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* 進入動畫結束狀態 */
+.qr-scanner-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 500ms ease-out, transform 500ms ease-out;
+}
+
+/* 退出動畫開始狀態 */
+.qr-scanner-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 退出動畫結束狀態 */
+.qr-scanner-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 500ms ease-in, transform 500ms ease-in;
+}
+
+/* 掃描器關閉時的淡出效果 */
+.qr-scanner-closing {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* 確保掃描器容器在動畫過程中保持良好的定位 */
+.qr-scanner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}

@@ -54,7 +54,7 @@ export const ProgressBar2 = () => {
                 backgroundColor: "rgba(0,0,0,0.2)",
               })}
             >
-              <div className="text-[14px] 2xl:text-[24px] opacity-75">
+              <div className="text-[14px] 2xl:text-[24px] opacity-80">
                 已搜集
               </div>
               {/* 顯示集到的張數 */}
