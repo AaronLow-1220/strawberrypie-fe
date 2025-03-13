@@ -34,31 +34,39 @@ const transitionStyles = `
   }
   
   /* FocusCard 過渡效果 */
-  .focus-card-container {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    transform: scale(0.95);
+  .focus-card-enter {
     opacity: 0;
-    transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+    transform: scale(0.95);
+  }
+  .focus-card-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  .focus-card-exit {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .focus-card-exit-active {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
   }
   
-  .focus-card-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+  /* 背景遮罩過渡效果 */
+  .overlay-enter {
     opacity: 0;
+  }
+  .overlay-enter-active {
+    opacity: 1;
     transition: opacity 300ms ease-in-out;
   }
-  
-  .focus-card-overlay.visible {
+  .overlay-exit {
     opacity: 1;
   }
-  
-  .focus-card-container.visible {
-    transform: scale(1);
-    opacity: 1;
+  .overlay-exit-active {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
   }
 `;
 
@@ -105,10 +113,16 @@ export const Group = () => {
   const [focusedCard, setFocusedCard] = useState(null);
   // 用於 CSS Transition 的節點引用
   const nodeRef = useRef(null);
+  // 用於 FocusCard 的 CSS Transition 節點引用
+  const focusCardRef = useRef(null);
+  // 用於背景遮罩的 CSS Transition 節點引用
+  const overlayRef = useRef(null);
   // 後端回傳的卡片資料
   const [cards, setCards] = useState([]);
   // 追蹤已載入的圖片
   const [loadedImages, setLoadedImages] = useState({});
+  // 用於追蹤 FocusCard 的可見性狀態
+  const [isFocusCardVisible, setIsFocusCardVisible] = useState(false);
 
   const mapGenreToCategory = (genre) => {
     const genreMap = {
@@ -257,9 +271,6 @@ export const Group = () => {
     fetchCards();
   }, []);
 
-  // 用於追蹤 FocusCard 的可見性狀態
-  const [isFocusCardVisible, setIsFocusCardVisible] = useState(false);
-
   // 根據選擇的過濾類別過濾卡片
   const filteredCards =
     selectedFilter === "全部"
@@ -338,22 +349,16 @@ export const Group = () => {
     setFocusedCard(cardData);
     // 鎖定背景滾動
     document.body.style.overflow = "hidden";
-    // 延遲設置可見性，確保 DOM 已更新
-    setTimeout(() => {
-      setIsFocusCardVisible(true);
-    }, 50);
+    // 設置可見性，CSSTransition 會處理過渡效果
+    setIsFocusCardVisible(true);
   }, []);
 
   // 處理取消焦點事件，返回到主畫面
   const handleCancelFocus = useCallback(() => {
-    // 先隱藏 FocusCard
+    // 先隱藏 FocusCard，CSSTransition 會處理過渡效果
     setIsFocusCardVisible(false);
     // 解除背景滾動鎖定
     document.body.style.overflow = "";
-    // 等待過渡效果完成後清除焦點卡片資料
-    setTimeout(() => {
-      setFocusedCard(null);
-    }, 300);
   }, []);
 
   // 處理過濾器變更事件
@@ -523,29 +528,50 @@ export const Group = () => {
     </div>
   );
 
-  // 修改渲染焦點卡片視圖，使用自定義的過渡效果
+  // 使用 CSSTransition 渲染焦點卡片視圖
   const renderFocusCardView = () => (
     <>
-      <div
-        className={`focus-card-overlay ${isFocusCardVisible ? "visible" : ""}`}
-      ></div>
-      <div
-        className={`focus-card-container flex items-center justify-center overflow-y-auto ${isFocusCardVisible ? "visible" : ""
-          }`}
+      {/* 背景遮罩 */}
+      <CSSTransition
+        in={isFocusCardVisible}
+        nodeRef={overlayRef}
+        timeout={300}
+        classNames="overlay"
+        unmountOnExit
       >
-        {focusedCard && (
-          <FocusCard
-            img={focusedCard.img}
-            title={focusedCard.title}
-            secondTitle={focusedCard.secondTitle}
-            detailedContent={focusedCard.detailedContent}
-            member={focusedCard.member}
-            teachers={focusedCard.teachers}
-            media={focusedCard.media}
-            onCancel={handleCancelFocus}
-          />
-        )}
-      </div>
+        <div 
+          ref={overlayRef}
+          className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+        ></div>
+      </CSSTransition>
+      
+      {/* 焦點卡片 */}
+      <CSSTransition
+        in={isFocusCardVisible}
+        nodeRef={focusCardRef}
+        timeout={300}
+        classNames="modal"
+        unmountOnExit
+        onExited={() => setFocusedCard(null)} // 過渡結束後清除焦點卡片資料
+      >
+        <div 
+          ref={focusCardRef}
+          className="fixed inset-0 flex items-center justify-center overflow-y-auto z-[1000]"
+        >
+          {focusedCard && (
+            <FocusCard
+              img={focusedCard.img}
+              title={focusedCard.title}
+              secondTitle={focusedCard.secondTitle}
+              detailedContent={focusedCard.detailedContent}
+              member={focusedCard.member}
+              teachers={focusedCard.teachers}
+              media={focusedCard.media}
+              onCancel={handleCancelFocus}
+            />
+          )}
+        </div>
+      </CSSTransition>
     </>
   );
 
@@ -556,7 +582,7 @@ export const Group = () => {
       <div className={focusedCard ? "pointer-events-none" : ""}>
         {renderNormalView()}
       </div>
-      {focusedCard && renderFocusCardView()}
+      {renderFocusCardView()}
     </>
   );
 };
