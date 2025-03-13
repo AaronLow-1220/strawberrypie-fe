@@ -274,8 +274,8 @@ function App() {
 							<Route path="/psychometric-test" element={<PsychometricTest />} />
 							<Route path="/groups" element={<Group focus={handleFocus} />} />
 							<Route path="/result/:id" element={<Result />} />
-							{/* <Route path="/collect" element={<Collect2 />} /> */}
-							<Route path="/collect" element={<ComingSoon />} />
+							<Route path="/collect" element={<Collect2 />} />
+							{/* <Route path="/collect" element={<ComingSoon />} /> */}
 							<Route path="/feedback" element={<ComingSoon />} />
 							<Route path="/login" element={<LogIn />} />
 							<Route path="/register" element={<Register />} />
