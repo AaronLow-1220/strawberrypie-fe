@@ -21,7 +21,9 @@ const LogIn = lazy(() => import("./components/Account/LogIn").then(module => ({ 
 const Register = lazy(() => import("./components/Account/Register").then(module => ({ default: module.Register })));
 const ForgetPassword = lazy(() => import("./components/Account/ForgetPassword").then(module => ({ default: module.ForgetPassword })));
 const Callback = lazy(() => import("./components/Account/Callback").then(module => ({ default: module.Callback })));
-const Account = lazy(() => import("./components/Account/Account").then(module => ({ default: module.Account })));
+
+// 直接導入 Account 組件，不使用 lazy 加載，避免與 CSSTransition 衝突
+import { Account } from "./components/Account/Account";
 
 // Loading
 import { Loading } from "./components/Loading";
