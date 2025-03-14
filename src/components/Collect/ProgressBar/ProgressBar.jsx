@@ -9,10 +9,8 @@ import AnimatedProgressProvider from "./AnimatedProgressProvider";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../../../tailwind.config";
 
-export const ProgressBar = () => {
-  // 假設目前集到的張數與總數
-  const currentCount = 5;
-  const totalStamps = 22;
+export const ProgressBar = ({ currentCount, totalStamps }) => {
+
   // 計算百分比
   const percentValue = (currentCount / totalStamps) * 100;
 
