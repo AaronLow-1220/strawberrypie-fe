@@ -4,6 +4,8 @@ import { ProgressBar } from "./ProgressBar/ProgressBar"; // 匯入進度條組�
 import { GroupBlock } from "./GroupBlock"; // 匯入組別區塊組件
 import { QRScanner } from "./QrCode/QRScanner"; // 匯入 QRScanner 組件
 import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
+import { Hint } from "./Hint/Hint"; // 匯入 Hint 組件
+import { useEffect } from "react";
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
@@ -18,9 +20,18 @@ export const Collect = () => {
     { name: "行銷", num: 3 },
   ];
 
+  useEffect(() => {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'h') {
+        handleOpenHint();
+      }
+    });
+  }, []);
+
   // 添加狀態來控制 QRScanner 和 RewardDialog 的顯示
   const [showScanner, setShowScanner] = useState(false);
   const [showRewardDialog, setShowRewardDialog] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   // 處理開啟掃描器
   const handleOpenScanner = () => {
@@ -34,23 +45,37 @@ export const Collect = () => {
       setShowScanner(false);
     }, 500); // 與 CSSTransition 的 timeout 相同
   }, []);
-  
+
   // 處理開啟兌獎對話框
   const handleOpenRewardDialog = () => {
     setShowRewardDialog(true);
   };
-  
+
   // 處理關閉兌獎對話框
   const handleCloseRewardDialog = useCallback(() => {
     setShowRewardDialog(false);
   }, []);
+
+  // 處理開啟提示對話框
+  const handleOpenHint = () => {
+    setShowHint(true);
+  };
+
+  // 處理關閉提示對話框 
+  const handleCloseHint = useCallback(() => {
+    setShowHint(false);
+  }, []);
+
+  // 假設目前集到的張數與總數
+  const currentCount = 5;
+  const totalStamps = 22;
 
   return (
     <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
       <div className="w-full lg:h-screen lg:gap-9 2xl:gap-24 max-w-[1600px] flex flex-col lg:flex-row">
         <div className="block my-auto w-full max-h-full lg:overflow-y-scroll">
           <div className="block-content flex flex-col justify-center items-center mt-20 lg:mt-24">
-            <ProgressBar />
+            <ProgressBar currentCount={currentCount} totalStamps={totalStamps} />
             <div className="flex flex-col w-full max-w-[280px] lg:max-w-[360px] 2xl:max-w-[420px] mt-[-4px]">
               {/* 兩個圓形圖示按鈕區塊 */}
               <div className="flex justify-between">
@@ -101,7 +126,7 @@ export const Collect = () => {
       >
         <QRScanner onClose={handleCloseScanner} />
       </CSSTransition>
-      
+
       {/* 兌獎對話框彈出層 */}
       <CSSTransition
         in={showRewardDialog}
@@ -111,6 +136,16 @@ export const Collect = () => {
         mountOnEnter
       >
         <Redeem onClose={handleCloseRewardDialog} />
+      </CSSTransition>
+
+      <CSSTransition
+        in={showHint}
+        timeout={300}
+        classNames="overlay"
+        unmountOnExit
+        mountOnEnter
+      >
+        <Hint currentCount={currentCount} onClose={handleCloseHint} handleOpenRewardDialog={handleOpenRewardDialog} />
       </CSSTransition>
     </div>
   );
