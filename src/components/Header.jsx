@@ -81,6 +81,7 @@ export const Header = ({ onOpenAccount }) => {
   const is2XLScreen = windowWidth >= 1536; // 判斷是否為 2xl 及以上螢幕尺寸
   const { isHeaderOpen, setIsHeaderOpen } = useContext(HeaderContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState('/Auth/avatar.jpg');
 
   // 檢查登入狀態的函數
   const checkLoginStatus = useCallback(() => {
@@ -91,6 +92,36 @@ export const Header = ({ onOpenAccount }) => {
   useEffect(() => {
     setIsHome(location.pathname === "/");
   })
+
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+    // 解析 JWT token
+    const tokenData = parseJwt(accessToken);
+
+    // 設置頭像 (如果 token 中有頭像 URL)
+    if (tokenData.avatar) {
+      setAvatarUrl(tokenData.avatar);
+    }
+  }, [isLoggedIn]);
+
+  // 解析 JWT token 的函數
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error('Token 解析錯誤:', error);
+      return {};
+    }
+  };
 
   // 每次路由變化時重新判斷是否為首頁
   useEffect(() => {
@@ -149,18 +180,18 @@ export const Header = ({ onOpenAccount }) => {
   // 初始檢查登入狀態
   useEffect(() => {
     checkLoginStatus();
-    
+
     // 創建一個自定義事件監聽器，用於在登入狀態變化時更新
     const handleStorageChange = () => {
       checkLoginStatus();
     };
-    
+
     // 監聽 storage 事件，當 localStorage 變化時觸發
     window.addEventListener('storage', handleStorageChange);
-    
+
     // 創建一個自定義事件，用於在登入狀態變化時通知 Header 組件
     window.addEventListener('login-status-change', handleStorageChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('login-status-change', handleStorageChange);
@@ -208,20 +239,20 @@ export const Header = ({ onOpenAccount }) => {
                 setMenuOpen(false);
               }}>
                 <img
-                  src="/Header/person.svg"
+                  src={avatarUrl}
                   alt="Account"
+                  className="w-9 h-9 drop-shadow-lg rounded-full hover:scale-125 transition-transform duration-300 ease-in-out"
                   style={{
-                    width: "28px",
-                    height: "auto",
                     backfaceVisibility: "hidden",
                     WebkitBackfaceVisibility: "hidden",
+                    border: "2px solid white",
                   }}
                 />
               </button>
             ) : (
               <Link to="/login">
                 <img
-                  src="/Header/login.svg"
+                  src="/Header/person.svg"
                   alt="Collect"
                   style={{
                     width: "28px",
@@ -327,24 +358,21 @@ export const Header = ({ onOpenAccount }) => {
             <LinkLarge to={"/feedback"} text="意見回饋" />
           </div>
           {/* 桌面版登入/個人資料按鈕 */}
-          <div className="absolute right-8 top-[48px]">
+          <div className="absolute right-10 top-[48px]">
             {isLoggedIn ? (
-              <button
-                onClick={onOpenAccount}
-                className="text-white hover:text-secondary-color transition-colors"
-              >
+              <button onClick={onOpenAccount}>
                 <img
-                  src="/Header/person.svg"
+                  src={avatarUrl}
                   alt="Account"
-                  className="w-7 h-7 drop-shadow-lg"
+                  className="w-9 h-9 drop-shadow-lg rounded-full border-2 border-white hover:scale-125 transition-transform duration-300 ease-in-out"
                 />
               </button>
             ) : (
               <Link to="/login" className="text-white hover:text-secondary-color transition-colors">
                 <img
-                  src="/Header/login.svg"
+                  src="/Header/person.svg"
                   alt="Login"
-                  className="w-7 h-7 drop-shadow-lg"
+                  className="w-9 h-9 drop-shadow-lg"
                 />
               </Link>
 
