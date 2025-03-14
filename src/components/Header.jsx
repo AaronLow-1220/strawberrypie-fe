@@ -82,6 +82,12 @@ export const Header = ({ onOpenAccount }) => {
   const { isHeaderOpen, setIsHeaderOpen } = useContext(HeaderContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // 檢查登入狀態的函數
+  const checkLoginStatus = useCallback(() => {
+    const authToken = localStorage.getItem('accessToken');
+    setIsLoggedIn(!!authToken);
+  }, []);
+
   useEffect(() => {
     setIsHome(location.pathname === "/");
   })
@@ -89,7 +95,9 @@ export const Header = ({ onOpenAccount }) => {
   // 每次路由變化時重新判斷是否為首頁
   useEffect(() => {
     setIsHome(location.pathname === "/");
-  }, [location.pathname]);
+    // 每次路由變化時也檢查登入狀態
+    checkLoginStatus();
+  }, [location.pathname, checkLoginStatus]);
 
   // 監聽視窗大小變化
   useEffect(() => {
@@ -138,10 +146,26 @@ export const Header = ({ onOpenAccount }) => {
     }
   }, [menuOpen]);
 
+  // 初始檢查登入狀態
   useEffect(() => {
-    const authToken = localStorage.getItem('accessToken');
-    setIsLoggedIn(!!authToken);
-  }, []);
+    checkLoginStatus();
+    
+    // 創建一個自定義事件監聽器，用於在登入狀態變化時更新
+    const handleStorageChange = () => {
+      checkLoginStatus();
+    };
+    
+    // 監聽 storage 事件，當 localStorage 變化時觸發
+    window.addEventListener('storage', handleStorageChange);
+    
+    // 創建一個自定義事件，用於在登入狀態變化時通知 Header 組件
+    window.addEventListener('login-status-change', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('login-status-change', handleStorageChange);
+    };
+  }, [checkLoginStatus]);
 
   return (
     <>
