@@ -65,6 +65,7 @@ body, * {
 }
 .modal{
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+  margin: 0 30px;
 }
 
 /* 背景遮罩過渡效果 */
