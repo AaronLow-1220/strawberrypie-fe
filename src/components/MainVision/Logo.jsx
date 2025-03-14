@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext } from "react";
 import { useDeviceType } from "./useDeviceType";
 
 export const Logo = ({ beginAnimation }) => {
@@ -6,7 +6,6 @@ export const Logo = ({ beginAnimation }) => {
   const { deviceType, config } = useDeviceType();
   const initialPositionRef = useRef(config.initialPosition);
   const baseScaleRef = useRef(config.baseScale);
-
   // 處理動畫和縮放
   useEffect(() => {
     if (!beginAnimation || deviceType === "desktop") return;
@@ -36,13 +35,15 @@ export const Logo = ({ beginAnimation }) => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [deviceType, beginAnimation, config]);
+  
 
   if (deviceType === "desktop") return null;
+
 
   return (
     <div
       ref={logoRef}
-      className={`fixed left-[50%] z-30 ${config.animateClass}`}
+      className={`fixed left-[50%] ${config.animateClass}`}
       style={{
         '--logo-y': `${config.initialPosition}%`,
         '--logo-scale': config.baseScale,

@@ -51,15 +51,15 @@ export const Register = () => {
     setLoading(true);
     try {
       console.log("register");
-      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
-      const response = await axios.post(`${apiBaseUrl}/auth/register`, {
+      const apiBaseUrl = 'https://dev-api.strawberrypie.tw';
+      const response = await axios.post(`https://dev-api.strawberrypie.tw/auth/register`, {
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
 
       // 註冊成功後直接登入
-      localStorage.setItem('authToken', response.data.accessToken);
+      localStorage.setItem('accessToken', response.data.accessToken);
 
       // 重定向到首頁
       window.location.href = '/';
@@ -74,7 +74,7 @@ export const Register = () => {
   };
 
   const handleGoogleLogin = () => {
-    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
+    const apiBaseUrl = 'https://dev-api.strawberrypie.tw';
     // 儲存當前路徑，以便登入後重定向回來
     localStorage.setItem('redirectAfterLogin', window.location.pathname);
     window.location.href = `${apiBaseUrl}/auth/oauth?authclient=google`;

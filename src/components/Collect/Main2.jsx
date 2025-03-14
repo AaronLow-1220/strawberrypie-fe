@@ -106,7 +106,7 @@ export const Collect2 = () => {
       <CSSTransition
         in={showRewardDialog}
         timeout={300}
-        classNames="reward-dialog"
+        classNames="modal"
         unmountOnExit
         mountOnEnter
       >

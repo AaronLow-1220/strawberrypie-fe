@@ -11,7 +11,6 @@ export const QRScanner = ({ onClose }) => {
   const scannerInstanceRef = useRef(null);
 
   useEffect(() => {
-    const scanBoxSize = Math.min(window.innerWidth * 0.7, 350);
     
     const scanner = new Html5Qrcode("qr-reader");
     scannerRef.current = scanner;
@@ -56,7 +55,6 @@ export const QRScanner = ({ onClose }) => {
           await scanner.start(
             cameraId,
             { 
-              aspectRatio: 1.0,
               videoConstraints: {
                 width: { ideal: window.innerWidth },
                 height: { ideal: window.innerHeight },

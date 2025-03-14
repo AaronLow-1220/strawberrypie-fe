@@ -7,6 +7,22 @@ body {
   font-family: "Noto Sans TC", sans-serif;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar, *::-webkit-scrollbar {
+	display: none;
+}
+
+html,
+body, * {
+	scroll-behavior: smooth;
+	-ms-overflow-style: none;
+	/* IE and Edge */
+	scrollbar-width: none;
+	/* Firefox */
+	-webkit-tap-highlight-color: transparent;
+}
+
+
 @font-face {
   font-family: "Thin";
   src: url("/font/ChenYuluoyan-Thin.ttf") format("truetype");
@@ -26,6 +42,42 @@ body {
   src: url("/font/GenSenRounded-R.woff2") format("woff2");
   font-weight: 400; /* Regular */
   font-style: normal;
+}
+
+/* 通用彈出視窗過渡效果 */
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+.modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+.modal-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+.modal-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+}
+
+/* 背景遮罩過渡效果 */
+.overlay-enter {
+  opacity: 0;
+}
+.overlay-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+.overlay-exit {
+  opacity: 1;
+}
+.overlay-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
 }
 
 @layer utilities {
@@ -567,3 +619,126 @@ body {
 .primary-button:hover{
   box-shadow: 0 0 40px 0 #F748C1;
 }
+
+.max-menu{
+  width: 28px;
+  height: 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.max-menu div{
+  width: 18.5px;
+  height: 2.3px;
+  border-radius: 10px;
+  background-color: white;
+  position: relative;
+  transition: width 0.3s ease-in-out;
+}
+
+.max-menu.active div:nth-child(1){
+  animation: menu-1 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.max-menu.active div:nth-child(2){
+  animation: menu-2 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.max-menu.active div:nth-child(3){
+  animation: menu-3 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.max-menu:not(.active) div:nth-child(1){
+  animation: menu-1-reverse 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.max-menu:not(.active) div:nth-child(2){
+  animation: menu-2-reverse 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.max-menu:not(.active) div:nth-child(3){
+  animation: menu-3-reverse 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+@keyframes menu-1{
+  0%{
+    width: 18.5px;
+    transform: translateY(-4px) rotate(0);
+  }
+  50%{
+    width: 24px;
+    transform: translateY(2.3px) rotate(0deg);
+  }
+  100%{
+    width: 26px;
+    transform: translateY(2.1px) rotate(45deg);
+  }
+}
+
+@keyframes menu-1-reverse{
+  0%{
+    width: 26px;
+    transform: translateY(2.1px) rotate(45deg);
+  }
+  50%{
+    width: 24px;
+    transform: translateY(2.3px) rotate(0deg);
+  }
+  100%{
+    width: 18.5px;
+    transform: translateY(-4px) rotate(0);
+  }
+}
+
+@keyframes menu-2{
+  0%{
+    width: 18.5px;
+  }
+  100%{
+    width: 2.3px;
+  }
+}
+
+@keyframes menu-2-reverse{
+  0%{
+    width: 2.3px;
+  }
+  100%{
+    width: 18.5px;
+  }
+}
+
+@keyframes menu-3{
+  0%{
+    width: 18.5px;
+    transform: translateY(4px) rotate(0);
+  }
+  50%{
+    transform: translateY(-2.3px) rotate(0deg);
+  }
+  100%{
+    width: 26px;
+    transform: translateY(-2.1px) rotate(-45deg);
+  }
+}
+
+@keyframes menu-3-reverse{
+  0%{
+    width: 26px;
+    transform: translateY(-2.1px) rotate(-45deg);
+  }
+  50%{
+    transform: translateY(-2.3px) rotate(0deg);
+  }
+  100%{
+    width: 18.5px;
+    transform: translateY(4px) rotate(0);
+  }
+}
+
+
+
+

@@ -27,7 +27,7 @@ export const Callback = () => {
           throw new Error('未接收到認證碼');
         }
 
-        localStorage.setItem('access_token', code);
+        localStorage.setItem('accessToken', code);
 
         // 重定向到首頁
         navigate('/');
