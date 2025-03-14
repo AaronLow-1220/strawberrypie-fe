@@ -148,7 +148,7 @@ export const Header = ({ onOpenAccount }) => {
       {windowWidth < 1024 ? (
         // 行動版 Header
         <div
-          className="mobile__header fixed top-0 left-0 right-0 pb-6"
+          className="mobile__header z-20 fixed top-0 left-0 right-0 pb-6"
           style={{
             background:
               "linear-gradient(to bottom, rgba(27, 8, 10, 0.8) 0%, rgba(27, 8, 10, 0) 100%)",

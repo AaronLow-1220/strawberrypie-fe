@@ -198,7 +198,7 @@ export const QRScanner = ({ onClose }) => {
               <p className="mb-4 break-all">結果: {scanResult}</p>
               <button 
                 onClick={handleClose}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                className="bg-blue-500 text-black px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
               >
                 關閉
               </button>

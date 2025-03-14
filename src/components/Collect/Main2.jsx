@@ -64,7 +64,7 @@ export const Collect2 = () => {
                     <div className="z-10 absolute w-full h-full border-4 2xl:border-[6px] border-[rgba(255,255,255,0.1)] rounded-full"></div>
                     <img className="z-10 w-9 2xl:w-12" src="/Collect/gifts.svg" alt="" />
                   </div>
-                  <p className="z-30 text-[14px] lg:text-[20px] opacity-80">兌獎</p>
+                  <p className="text-[14px] lg:text-[20px] opacity-80">兌獎</p>
                 </div>
                 {/* 集章按鈕 - 修改為可點擊按鈕 */}
                 <div
@@ -76,7 +76,7 @@ export const Collect2 = () => {
                     <div className="z-10 absolute w-full h-full border-4 2xl:border-[6px] border-[rgba(255,255,255,0.1)] rounded-full"></div>
                     <img className="z-10 w-9 2xl:w-12" src="/Collect/qr_codes.svg" alt="" />
                   </div>
-                  <p className="z-30 text-[14px] lg:text-[20px] opacity-80">集章</p>
+                  <p className="text-[14px] lg:text-[20px] opacity-80">集章</p>
                 </div>
               </div>
             </div>
