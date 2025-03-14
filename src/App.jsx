@@ -1,33 +1,30 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FontFaceObserver from "fontfaceobserver";
 //header
 import { Header } from "./components/Header";
 import { HeaderProvider } from "./components/HeaderContext";
 //Test
-import { PsychometricTest } from "./components/PsychometricTest/Main";
+const PsychometricTest = lazy(() => import("./components/PsychometricTest/Main").then(module => ({ default: module.PsychometricTest })));
 //HomePage
-import { HomePage } from "./components/HomePage/Main";
+const HomePage = lazy(() => import("./components/HomePage/Main").then(module => ({ default: module.HomePage })));
 //Group
-import { Group } from "./components/Group/Main";
+const Group = lazy(() => import("./components/Group/Main").then(module => ({ default: module.Group })));
 //Result
-import { Result } from "./components/Result/Main";
-
-import { Collect2 } from "./components/Collect/Main2";
-
-
-import { ComingSoon } from "./components/ComingSoon";
-
-import { Callback } from "./components/Account/Callback";
+const Result = lazy(() => import("./components/Result/Main").then(module => ({ default: module.Result })));
+//Collect2
+const Collect2 = lazy(() => import("./components/Collect/Main2").then(module => ({ default: module.Collect2 })));
+//ComingSoon
+const ComingSoon = lazy(() => import("./components/ComingSoon").then(module => ({ default: module.ComingSoon })));
+//Account
+const LogIn = lazy(() => import("./components/Account/LogIn").then(module => ({ default: module.LogIn })));
+const Register = lazy(() => import("./components/Account/Register").then(module => ({ default: module.Register })));
+const ForgetPassword = lazy(() => import("./components/Account/ForgetPassword").then(module => ({ default: module.ForgetPassword })));
+const Callback = lazy(() => import("./components/Account/Callback").then(module => ({ default: module.Callback })));
+const Account = lazy(() => import("./components/Account/Account").then(module => ({ default: module.Account })));
 
 // Loading
 import { Loading } from "./components/Loading";
-
-//Account
-import { LogIn } from "./components/Account/LogIn";
-import { Register } from "./components/Account/Register";
-import { ForgetPassword } from "./components/Account/ForgetPassword";
-import { Account } from "./components/Account/Account";
 import { CSSTransition } from "react-transition-group";
 
 // 預載檔案列表 - 可以在這裡添加你需要預載的所有檔案
@@ -52,7 +49,7 @@ const PRELOAD_ASSETS = {
 		'/IPs/行銷.png',
 		'/IPs/動畫.png',
 		'/HomePage/Background_web.jpg',
-		'/Header/Headline.svg'
+		'/Header/Headline.webp',
 		// 在這裡添加更多需要預載的圖片
 	],
 
@@ -84,7 +81,6 @@ window.preloadedModels = window.preloadedModels || {};
 
 function App() {
 	const [animate, setAnimate] = useState(false);
-	const [focus, setFocus] = useState(false);
 	// 控制 Header 顯示的狀態
 	const [showHeader, setShowHeader] = useState(true);
 	// 控制載入頁面的顯示
@@ -286,19 +282,22 @@ function App() {
 			) : (
 				<HeaderProvider>
 					<Router>
-						<Routes>
-							<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
-							<Route path="/psychometric-test" element={<PsychometricTest />} />
-							<Route path="/groups" element={<Group />} />
-							<Route path="/result/:id" element={<Result />} />
-							<Route path="/collect" element={<Collect2 />} />
-							{/* <Route path="/collect" element={<ComingSoon />} /> */}
-							<Route path="/feedback" element={<ComingSoon />} />
-							<Route path="/login" element={<LogIn />} />
-							<Route path="/register" element={<Register />} />
-							<Route path="/auth/callback" element={<Callback />}></Route>
-							<Route path="/forget-password" element={<ForgetPassword />}></Route>
-						</Routes>
+						{/* 使用 Suspense 包裹 Routes，當組件載入時顯示 Loading 組件 */}
+						<Suspense fallback={<Loading progress={100} loadingText="載入中..." />}>
+							<Routes>
+								<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
+								<Route path="/psychometric-test" element={<PsychometricTest />} />
+								<Route path="/groups" element={<Group />} />
+								<Route path="/result/:id" element={<Result />} />
+								<Route path="/collect" element={<Collect2 />} />
+								{/* <Route path="/collect" element={<ComingSoon />} /> */}
+								<Route path="/feedback" element={<ComingSoon />} />
+								<Route path="/login" element={<LogIn />} />
+								<Route path="/register" element={<Register />} />
+								<Route path="/auth/callback" element={<Callback />}></Route>
+								<Route path="/forget-password" element={<ForgetPassword />}></Route>
+							</Routes>
+						</Suspense>
 						{/* 只有當 showHeader 為 true 時才顯示 Header */}
 						{showHeader && (
 							<div className="relative">
