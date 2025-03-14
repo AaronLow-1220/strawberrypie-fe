@@ -6,12 +6,7 @@ import { IpModel } from "./IntroduceComponents/IpModel";
 import { DateMap } from "./DateMapComponents/DateMap";
 import { Unit } from "./UnitComponents/Unit";
 
-/**
- * 圖片對話框組件
- * @param {string} imgSrc - 圖片來源
- * @param {string} title - 圖片標題
- * @param {function} onClose - 關閉對話框的回調函數
- */
+
 const ImageDialog = ({ imgSrc, title, onClose }) => {
   // 防止點擊事件冒泡
   const stopPropagation = (e) => {
@@ -226,12 +221,12 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
         <>
           <div className="wave-container">
             <div className="img-container wave_0">
-              <img src="/HomePage/wave_0.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_0.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_0.webp" alt="" className="wave" loading="lazy" />
+              <img src="/HomePage/wave_0.webp" alt="" className="wave" loading="lazy" />
             </div>
             <div className="img-container wave_1">
-              <img src="/HomePage/wave_1.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_1.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_1.webp" alt="" className="wave" loading="lazy" />
+              <img src="/HomePage/wave_1.webp" alt="" className="wave" loading="lazy" />
             </div>
             <div className="relative px-5 lg:w-[90vw] xl:w-[85vw] 2xl:w-[80vw] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <DateMap
@@ -248,8 +243,8 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
           </div>
           <div className="wave-container relative left-1/2 transform -translate-x-1/2 -translate-y-[30%]">
             <div className="img-container wave_2">
-              <img src="/HomePage/wave_2.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_2.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_2.webp" alt="" className="wave" loading="lazy" />
+              <img src="/HomePage/wave_2.webp" alt="" className="wave" loading="lazy" />
             </div>
             <div className="relative px-5 lg:w-[90vw] xl:w-[85vw] 2xl:w-[80vw] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
               <DateMap
