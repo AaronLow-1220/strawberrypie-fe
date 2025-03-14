@@ -27,6 +27,7 @@ export const useDeviceType = () => {
   useEffect(() => {
     const updateDeviceType = () => {
       const width = window.innerWidth;
+      console.log("width: ",width);
       let newType;
       let newConfig;
 
@@ -43,10 +44,15 @@ export const useDeviceType = () => {
 
       setDeviceType(newType);
       setConfig(newConfig);
+      console.log("device type: ",newType);
+
     };
 
-    updateDeviceType();
+
     window.addEventListener("resize", updateDeviceType);
+    updateDeviceType();
+
+
     return () => window.removeEventListener("resize", updateDeviceType);
   }, []);
 

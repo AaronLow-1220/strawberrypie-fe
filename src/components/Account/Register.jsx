@@ -52,7 +52,7 @@ export const Register = () => {
     try {
       console.log("register");
       const apiBaseUrl = 'https://dev-api.strawberrypie.tw';
-      const response = await axios.post(`https://dev-api.strawberrypie.tw/auth/register`, {
+      const response = await axios.post(`${apiBaseUrl}/auth/register`, {
         username: formData.username,
         email: formData.email,
         password: formData.password

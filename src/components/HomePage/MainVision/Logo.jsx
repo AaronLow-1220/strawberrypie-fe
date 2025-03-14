@@ -87,9 +87,12 @@ export const Logo = ({ beginAnimation, className }) => {
       }}
     >
       <div className="h-[100px]">
+        
         <img
           src="/Header/Headline.svg"
-          alt="Example"
+          alt="元智大學資傳系第28屆畢業展"
+          loading="eager"
+          fetchpriority="high"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
