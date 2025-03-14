@@ -17,6 +17,9 @@ export default withMT({
       colors: {
         "primary-color": "#F748C1",
         "secondary-color": "#FFB0CE",
+        "layer1": "#361014",
+        "layer1-5": "#51181E",
+        "layer2": "#6C2028",
       },
       animation: {
         light: "lightAnimation 2s infinite",
