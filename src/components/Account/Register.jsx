@@ -51,7 +51,7 @@ export const Register = () => {
     setLoading(true);
     try {
       console.log("register");
-      const apiBaseUrl = 'https://dev-api.strawberrypie.tw';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
       const response = await axios.post(`${apiBaseUrl}/auth/register`, {
         username: formData.username,
         email: formData.email,

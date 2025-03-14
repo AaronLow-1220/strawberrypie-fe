@@ -240,7 +240,7 @@ export const Group = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
         let responseData;
         
         // 檢查是否有預載的組別數據

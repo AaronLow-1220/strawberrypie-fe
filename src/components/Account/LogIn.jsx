@@ -38,7 +38,7 @@ export const LogIn = () => {
 
     setLoading(true);
     try {
-      const apiBaseUrl = 'https://dev-api.strawberrypie.tw';
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
       const response = await axios.post(`${apiBaseUrl}/auth/login`, {
         email: formData.email,
         password: formData.password
@@ -62,7 +62,7 @@ export const LogIn = () => {
   };
 
   const handleGoogleLogin = () => {
-    const apiBaseUrl = 'https://dev-api.strawberrypie.tw';
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
     // 儲存當前路徑，以便登入後重定向回來
     localStorage.setItem('redirectAfterLogin', window.location.pathname);
     window.location.href = `${apiBaseUrl}/auth/oauth?authclient=google`;
