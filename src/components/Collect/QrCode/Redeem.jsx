@@ -66,7 +66,7 @@ export const Redeem = ({ onClose }) => {
       >
         <div 
           ref={contentRef}
-          className="bg-[#1A1A1A] rounded-lg w-[90%] max-w-md p-6 relative" 
+          className="bg-layer1 rounded-[24px] modal w-[90%] max-w-md p-6 relative" 
           onClick={(e) => e.stopPropagation()}
         >
           {/* 關閉按鈕 */}
