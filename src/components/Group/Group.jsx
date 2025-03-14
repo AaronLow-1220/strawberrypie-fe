@@ -574,7 +574,7 @@ export const Group = () => {
       >
         <div 
           ref={overlayRef}
-          className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+          className="fixed inset-0 bg-black bg-opacity-40 z-[999]"
         ></div>
       </CSSTransition>
       

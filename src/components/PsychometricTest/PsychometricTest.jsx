@@ -1,4 +1,4 @@
-import { Question2 } from "./Question/Question2";
+import { Question } from "./Question/Question";
 import { useState, useEffect, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 
@@ -131,7 +131,7 @@ export const PsychometricTest = () => {
         onExited={handleQuestionExited}
       >
         <div ref={questionRef} className="w-full overflow-hidden">
-          <Question2 onBack={() => {
+          <Question onBack={() => {
             // 提供一個回到封面的方法給 Question 組件
             setShowQuestion(false);
             // 不再使用 setTimeout，而是在 onExited 回調中設置 showIntro

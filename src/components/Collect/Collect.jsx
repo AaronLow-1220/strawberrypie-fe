@@ -1,14 +1,14 @@
 import { useState, useCallback } from "react"; // 移除 useEffect 引入，因為已經不需要
 import { CSSTransition } from "react-transition-group"; // 添加 CSSTransition 引入
-import { ProgressBar2 } from "./ProgressBar/ProgressBar2"; // 匯入進度條組件
-import { GroupBlock2 } from "./GroupBlock2"; // 匯入組別區塊組件
+import { ProgressBar } from "./ProgressBar/ProgressBar"; // 匯入進度條組件
+import { GroupBlock } from "./GroupBlock"; // 匯入組別區塊組件
 import { QRScanner } from "./QrCode/QRScanner"; // 匯入 QRScanner 組件
-import { RewardDialog } from "./QrCode/RewardDialog"; // 匯入 RewardDialog 組件
+import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
 
-export const Collect2 = () => {
+export const Collect = () => {
   // 定義收集的類別及對應數量
   const array = [
     { name: "遊戲", num: 6 },
@@ -50,7 +50,7 @@ export const Collect2 = () => {
       <div className="w-full lg:h-screen lg:gap-9 2xl:gap-24 max-w-[1600px] flex flex-col lg:flex-row">
         <div className="block my-auto w-full max-h-full lg:overflow-y-scroll">
           <div className="block-content flex flex-col justify-center items-center mt-20 lg:mt-24">
-            <ProgressBar2 />
+            <ProgressBar />
             <div className="flex flex-col w-full max-w-[280px] lg:max-w-[360px] 2xl:max-w-[420px] mt-[-4px]">
               {/* 兩個圓形圖示按鈕區塊 */}
               <div className="flex justify-between">
@@ -85,7 +85,7 @@ export const Collect2 = () => {
         <div className="block my-auto w-full max-h-full lg:overflow-y-scroll">
           <div className="block-content flex flex-col items-center lg:items-start gap-3 my-8 mb-24 lg:my-[max(20vh,96px)]">
             {array.map((item, index) => (
-              <GroupBlock2 key={index} num={item.num} /> // 渲染各組區塊
+              <GroupBlock key={index} num={item.num} /> // 渲染各組區塊
             ))}
           </div>
         </div>
@@ -106,11 +106,11 @@ export const Collect2 = () => {
       <CSSTransition
         in={showRewardDialog}
         timeout={300}
-        classNames="modal"
+        classNames="overlay"
         unmountOnExit
         mountOnEnter
       >
-        <RewardDialog onClose={handleCloseRewardDialog} />
+        <Redeem onClose={handleCloseRewardDialog} />
       </CSSTransition>
     </div>
   );
