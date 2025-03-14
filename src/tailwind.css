@@ -63,6 +63,9 @@ body, * {
   transform: scale(0.95);
   transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
 }
+.modal{
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+}
 
 /* 背景遮罩過渡效果 */
 .overlay-enter {
@@ -70,14 +73,14 @@ body, * {
 }
 .overlay-enter-active {
   opacity: 1;
-  transition: opacity 300ms ease-in-out;
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
 }
 .overlay-exit {
   opacity: 1;
 }
 .overlay-exit-active {
   opacity: 0;
-  transition: opacity 300ms ease-in-out;
+  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
 }
 
 @layer utilities {
