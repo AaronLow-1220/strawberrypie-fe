@@ -156,7 +156,7 @@ export const Header = ({ onOpenAccount }) => {
         >
           <div className="w-full h-[4rem] flex justify-between items-center px-[1rem]">
             <div
-              className={`max-menu flex flex-col justify-between items-center ${menuOpen ? "active" : ""}`}
+              className={`max-menu cursor-pointer flex flex-col justify-between items-center ${menuOpen ? "active" : ""}`}
               onClick={() => setMenuOpen(!menuOpen)}
             >
               <div></div>
