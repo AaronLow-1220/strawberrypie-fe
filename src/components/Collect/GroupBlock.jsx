@@ -1,7 +1,7 @@
 import { GroupBlockItem } from "./GroupBlockItem";
 import { useState, useRef, useEffect } from "react";
 
-export const GroupBlock2 = ({ num }) => {
+export const GroupBlock = ({ num }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const bodyRef = useRef(null);
   const containerRef = useRef(null);

@@ -50,7 +50,7 @@ export const Card = ({
           ? "w-[calc(100vw-40px)] max-w-[300px]"
           : "w-full"
       }
-        shrink-0 snap-start  bg-[#361014]  overflow-hidden rounded-[12px] cursor-pointer`}
+        shrink-0 snap-start bg-[#361014]  overflow-hidden rounded-[12px] cursor-pointer`}
       onClick={handleCardClick}
     >
       {/* 卡片容器，使用 flex 佈局 */}

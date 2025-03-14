@@ -27,7 +27,16 @@ export const Callback = () => {
           throw new Error('未接收到認證碼');
         }
 
+        // 設置 accessToken 到 localStorage
         localStorage.setItem('accessToken', code);
+        
+        // 觸發自定義事件，通知 Header 組件更新登入狀態
+        window.dispatchEvent(new Event('login-status-change'));
+        
+        // 如果需要在不同標籤頁之間同步登入狀態，也可以觸發 storage 事件
+        // 注意：storage 事件只會在其他標籤頁中觸發，不會在當前頁面觸發
+        // 所以我們需要同時使用自定義事件和 storage 事件
+        localStorage.setItem('login-timestamp', Date.now().toString());
 
         // 重定向到首頁
         navigate('/');

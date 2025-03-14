@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import QRCode from 'react-qr-code';
 
-export const RewardDialog = ({ onClose }) => {
+export const Redeem = ({ onClose }) => {
   // 生成隨機獎勵代碼
   const rewardCode = useRef(`YZUIC-${Math.random().toString(36).substring(2, 8).toUpperCase()}`);
   
@@ -54,19 +54,19 @@ export const RewardDialog = ({ onClose }) => {
 
   return (
     <div 
-      className={`fixed inset-0 flex items-center justify-center z-[1000] bg-black bg-opacity-60 ${isClosing ? 'reward-dialog-closing' : ''}`}
+      className="fixed inset-0 flex items-center justify-center z-[1000] bg-black bg-opacity-40"
       onClick={handleBackdropClick}
     >
       <CSSTransition
         in={contentVisible}
         nodeRef={contentRef}
         timeout={300}
-        classNames="reward-dialog-content"
+        classNames="modal"
         unmountOnExit
       >
         <div 
           ref={contentRef}
-          className="bg-[#1A1A1A] rounded-lg w-[90%] max-w-md p-6 relative" 
+          className="bg-layer1 rounded-[24px] modal w-[90%] max-w-md p-6 relative" 
           onClick={(e) => e.stopPropagation()}
         >
           {/* 關閉按鈕 */}

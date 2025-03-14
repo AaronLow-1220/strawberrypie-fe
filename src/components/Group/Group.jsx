@@ -68,6 +68,26 @@ const transitionStyles = `
     opacity: 0;
     transition: opacity 300ms ease-in-out;
   }
+  
+  /* 模態框過渡效果 */
+  .modal-enter {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  .modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  }
+  .modal-exit {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .modal-exit-active {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
+  }
 `;
 
 // 圖片骨架屏組件
@@ -123,6 +143,8 @@ export const Group = () => {
   const [loadedImages, setLoadedImages] = useState({});
   // 用於追蹤 FocusCard 的可見性狀態
   const [isFocusCardVisible, setIsFocusCardVisible] = useState(false);
+  // 用於防止 resize 事件頻繁觸發
+  const resizeTimeoutRef = useRef(null);
 
   const mapGenreToCategory = (genre) => {
     const genreMap = {
@@ -218,7 +240,7 @@ export const Group = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://dev-api.strawberrypie.tw';
         let responseData;
         
         // 檢查是否有預載的組別數據
@@ -379,10 +401,18 @@ export const Group = () => {
     });
   }, [cards, updateButtonVisibility]);
 
-  // 處理視窗大小變更事件
+  // 處理視窗大小變更事件 - 使用防抖動技術減少觸發頻率
   const handleResize = useCallback(() => {
-    // 重新初始化按鈕可見性
-    initializeButtonVisibility();
+    // 清除之前的計時器
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
+    }
+    
+    // 設置新的計時器，延遲執行初始化按鈕可見性
+    resizeTimeoutRef.current = setTimeout(() => {
+      initializeButtonVisibility();
+      resizeTimeoutRef.current = null;
+    }, 200); // 200ms 的防抖動延遲
   }, [initializeButtonVisibility]);
 
   // 元件掛載和依賴項變更時的效果
@@ -400,6 +430,9 @@ export const Group = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
       clearTimeout(timer);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
     };
   }, [handleResize, initializeButtonVisibility]);
 
@@ -541,7 +574,7 @@ export const Group = () => {
       >
         <div 
           ref={overlayRef}
-          className="fixed inset-0 bg-black bg-opacity-50 z-[999]"
+          className="fixed inset-0 bg-black bg-opacity-40 z-[999]"
         ></div>
       </CSSTransition>
       

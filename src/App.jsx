@@ -5,15 +5,15 @@ import FontFaceObserver from "fontfaceobserver";
 import { Header } from "./components/Header";
 import { HeaderProvider } from "./components/HeaderContext";
 //Test
-const PsychometricTest = lazy(() => import("./components/PsychometricTest/Main").then(module => ({ default: module.PsychometricTest })));
-//HomePage
-const HomePage = lazy(() => import("./components/HomePage/Main").then(module => ({ default: module.HomePage })));
+const PsychometricTest = lazy(() => import("./components/PsychometricTest/PsychometricTest").then(module => ({ default: module.PsychometricTest })));
+//HomePage - 直接導入，不使用 lazy loading，避免首頁出現兩次 loading
+import { HomePage } from "./components/HomePage/HomePage";
 //Group
-const Group = lazy(() => import("./components/Group/Main").then(module => ({ default: module.Group })));
+const Group = lazy(() => import("./components/Group/Group").then(module => ({ default: module.Group })));
 //Result
-const Result = lazy(() => import("./components/Result/Main").then(module => ({ default: module.Result })));
-//Collect2
-const Collect2 = lazy(() => import("./components/Collect/Main2").then(module => ({ default: module.Collect2 })));
+const Result = lazy(() => import("./components/Result/Result").then(module => ({ default: module.Result })));
+//Collect
+const Collect = lazy(() => import("./components/Collect/Collect").then(module => ({ default: module.Collect })));
 //ComingSoon
 const ComingSoon = lazy(() => import("./components/ComingSoon").then(module => ({ default: module.ComingSoon })));
 //Account
@@ -90,7 +90,7 @@ function App() {
 	// 載入進度
 	const [loadingProgress, setLoadingProgress] = useState(0);
 	// 載入文字
-	const [loadingText, setLoadingText] = useState("正在準備您的專屬體驗...");
+	const [loadingText, setLoadingText] = useState("");
 
 	// 控制 Account 元件顯示的狀態
 	const [isAccountOpen, setIsAccountOpen] = useState(false);
@@ -125,12 +125,12 @@ function App() {
 					loadedResources++;
 					const newProgress = (loadedResources / totalResources) * 100;
 					setLoadingProgress(newProgress);
-					setLoadingText(`正在載入${type}... (${loaded}/${total})`);
+					setLoadingText(`${type}... (${loaded}/${total})`);
 					console.log(`載入進度: ${newProgress.toFixed(2)}%, 正在載入${type}... (${loaded}/${total})`);
 				};
 
 				// 1. 載入字體
-				setLoadingText("正在載入字體...");
+				setLoadingText("準備中...");
 				const fonts = PRELOAD_ASSETS.fonts;
 
 				for (let i = 0; i < fonts.length; i++) {
@@ -143,23 +143,23 @@ function App() {
 					} catch (error) {
 						console.warn(`字體 ${font.name} 載入失敗:`, error);
 					}
-					updateProgress(i + 1, fonts.length, "字體");
+					updateProgress(i + 1, fonts.length, "正在瀏覽梗圖");
 				}
 
 				// 2. 載入圖片
-				setLoadingText("正在載入圖片...");
+				setLoadingText("正在決定晚餐吃啥...");
 				const images = PRELOAD_ASSETS.images;
 
 				const imagePromises = images.map((src, index) => {
 					return new Promise((resolve) => {
 						const img = new Image();
 						img.onload = () => {
-							updateProgress(index + 1, images.length, "圖片");
+							updateProgress(index + 1, images.length, "正在決定晚餐吃啥");
 							resolve(src);
 						};
 						img.onerror = () => {
 							console.warn(`無法載入圖片: ${src}`);
-							updateProgress(index + 1, images.length, "圖片");
+							updateProgress(index + 1, images.length, "正在決定晚餐吃啥");
 							resolve(null); // 即使失敗也繼續
 						};
 						img.src = src;
@@ -172,7 +172,7 @@ function App() {
 
 				// 2.5 載入 3D 模型和特殊檔案
 				if (PRELOAD_ASSETS.models && PRELOAD_ASSETS.models.length > 0) {
-					setLoadingText("正在載入模型...");
+					setLoadingText("正在讀取你的心...");
 					const models = PRELOAD_ASSETS.models;
 
 					for (let i = 0; i < models.length; i++) {
@@ -204,14 +204,14 @@ function App() {
 							console.warn(`無法預載模型: ${modelPath}`, error);
 						}
 
-						updateProgress(i + 1, models.length, "模型");
+						updateProgress(i + 1, models.length, "正在讀取你的心");
 					}
 
 					console.log('所有模型已預載完成');
 				}
 
 				// 3. 預載 API 數據
-				setLoadingText("正在載入內容...");
+				setLoadingText("學分計算中...");
 				const apis = PRELOAD_ASSETS.apis;
 
 				for (let i = 0; i < apis.length; i++) {
@@ -247,7 +247,7 @@ function App() {
 						console.warn(`API ${api.name} 預載失敗:`, error);
 					}
 
-					updateProgress(i + 1, apis.length, "內容");
+					updateProgress(i + 1, apis.length, "學分計算中");
 				}
 
 				// 確保載入畫面顯示足夠長時間
@@ -285,19 +285,20 @@ function App() {
 				<HeaderProvider>
 					<Router>
 						{/* 使用 Suspense 包裹 Routes，當組件載入時顯示 Loading 組件 */}
-						<Suspense fallback={<Loading progress={100} loadingText="載入中..." />}>
+						<Suspense fallback={<Loading progress={100} loadingText="學分重算中..." />}>
 							<Routes>
+								{/* 首頁不需要 lazy loading，因為已經直接導入 */}
 								<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
 								<Route path="/psychometric-test" element={<PsychometricTest />} />
 								<Route path="/groups" element={<Group />} />
 								<Route path="/result/:id" element={<Result />} />
-								<Route path="/collect" element={<Collect2 />} />
+								<Route path="/collect" element={<Collect />} />
 								{/* <Route path="/collect" element={<ComingSoon />} /> */}
 								<Route path="/feedback" element={<ComingSoon />} />
 								<Route path="/login" element={<LogIn />} />
 								<Route path="/register" element={<Register />} />
-								<Route path="/auth/callback" element={<Callback />}></Route>
-								<Route path="/forget-password" element={<ForgetPassword />}></Route>
+								<Route path="/auth/callback" element={<Callback />} />
+								<Route path="/forget-password" element={<ForgetPassword />} />
 							</Routes>
 						</Suspense>
 						{/* 只有當 showHeader 為 true 時才顯示 Header */}
@@ -313,11 +314,19 @@ function App() {
 							classNames="overlay"
 							unmountOnExit
 							mountOnEnter
-							nodeRef={accountTransitionRef}
 						>
-							<div ref={accountTransitionRef}>
-								<Account onClose={handleCloseAccount} />
-							</div>
+							<div
+								className="fixed inset-0 bg-black bg-opacity-40 z-[999]"
+							></div>
+						</CSSTransition>
+						<CSSTransition
+							in={isAccountOpen}
+							timeout={300}
+							classNames="modal"
+							unmountOnExit
+							mountOnEnter
+						>	
+							<Account onClose={handleCloseAccount} />
 						</CSSTransition>
 					</Router>
 				</HeaderProvider>

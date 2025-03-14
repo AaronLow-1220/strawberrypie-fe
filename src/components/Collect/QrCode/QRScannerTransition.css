@@ -27,27 +27,6 @@
   z-index: 20 !important;
 }
 
-/* 移除 reward-dialog 相關樣式，因為現在使用通用的 modal 樣式 */
-/* 保留 reward-dialog-content 相關樣式，用於內容的縮放效果 */
-.reward-dialog-content-enter {
-  opacity: 0;
-  transform: scale(0.9);
-}
-.reward-dialog-content-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
-}
-.reward-dialog-content-exit {
-  opacity: 1;
-  transform: scale(1);
-}
-.reward-dialog-content-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 300ms ease-in-out, transform 300ms ease-in-out;
-}
-
 /* 淡出動畫 */
 @keyframes fadeOut {
   from {
@@ -56,10 +35,6 @@
   to {
     opacity: 0;
   }
-}
-
-.reward-dialog-closing {
-  animation: fadeOut 0.3s ease-out forwards;
 }
 
 /* 確保掃描器容器在動畫過程中保持良好的定位 */

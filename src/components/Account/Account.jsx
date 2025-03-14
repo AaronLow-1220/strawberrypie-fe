@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import { Link } from 'react-router-dom';
 
 export const Account = ({ onClose }) => {
 	// 控制對話框關閉動畫
@@ -100,7 +101,7 @@ export const Account = ({ onClose }) => {
 
 	return (
 		<div
-			className={`fixed z-50 inset-0 h-screen flex items-center justify-center px-5 bg-black bg-opacity-60`}
+			className="fixed inset-0 flex items-center justify-center z-[1000]"
 			onClick={handleBackdropClick}
 		>
 			<CSSTransition
@@ -112,7 +113,7 @@ export const Account = ({ onClose }) => {
 			>
 				<div
 					ref={contentRef}
-					className="bg-[#361014] rounded-[24px] w-full max-w-md p-6 relative"
+					className="bg-[#361014] modal rounded-[24px] w-full max-w-md p-6 relative"
 					onClick={(e) => e.stopPropagation()}
 				>
 					{/* 關閉按鈕 */}
@@ -134,14 +135,14 @@ export const Account = ({ onClose }) => {
 						</div>
 
 						{/* 已登入狀態 */}
-						<h2 className="text-white text-[36px] mb-5" style={{ fontFamily: 'B' }}>{username}</h2>
+						<h2 className="text-white text-[36px] mb-5 text-center" style={{ fontFamily: 'B' }}>{username}</h2>
 						<div className="flex flex-col gap-4 w-full">
-							<a href="/collect" className="primary-button text-white py-3 text-center">
+							<Link to="/collect" onClick={handleClose} className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
 								我的集章
-							</a>
+							</Link>
 							<button
 								onClick={handleLogout}
-								className="mx-auto text-white w-fit text-center opacity-60 hover:underline"
+								className="mx-auto text-white w-fit text-center opacity-80 hover:underline"
 							>
 								登出
 							</button>
