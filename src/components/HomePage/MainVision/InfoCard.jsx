@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useDeviceType } from "./useDeviceType";
 
 export const InfoCard = ({
   title,
@@ -12,12 +13,12 @@ export const InfoCard = ({
   customTitleSize = null,
   customDateSize = null,
 }) => {
-  const [deviceType, setDeviceType] = useState("desktop");
+  const { deviceType } = useDeviceType();
 
-  const getResponsiveStyles = (width) => {
-    if (width < 768) {
+  // 使用 useMemo 緩存樣式計算結果，避免不必要的重新計算
+  const styles = useMemo(() => {
+    if (deviceType === "mobile") {
       // 手機版
-      setDeviceType("mobile");
       return {
         container: {
           fontSize: customTitleSize || "1rem",
@@ -26,9 +27,8 @@ export const InfoCard = ({
           fontSize: customDateSize || "28px",
         },
       };
-    } else if (width < 1536) {
-      // 平板版和桌面版
-      setDeviceType("tablet");
+    } else if (deviceType === "tablet") {
+      // 平板版
       return {
         container: {
           fontSize: customTitleSize || "28px",
@@ -40,7 +40,6 @@ export const InfoCard = ({
       };
     } else {
       // 桌面版
-      setDeviceType("desktop");
       return {
         container: {
           fontSize: customTitleSize || "28px",
@@ -51,22 +50,7 @@ export const InfoCard = ({
         },
       };
     }
-  };
-
-  // 初始化時只調用一次
-  const [styles, setStyles] = useState(() =>
-    getResponsiveStyles(window.innerWidth)
-  );
-
-  // 監聽視窗大小變化
-  useEffect(() => {
-    const handleResize = () => {
-      setStyles(getResponsiveStyles(window.innerWidth));
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [deviceType, customTitleSize, customDateSize]);
 
   const containerStyle = {
     ...styles.container,
