@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export const Card = ({
   img, // 卡片圖片來源
@@ -14,6 +14,14 @@ export const Card = ({
   media, // 媒體信息
   onClick, // 點擊卡片時的回調函數
 }) => {
+  // 添加圖片加載完成狀態
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  // 處理圖片加載完成事件
+  const handleImageLoad = () => {
+    setImgLoaded(true);
+  };
+
   // 處理卡片點擊事件，將卡片資料傳遞給父組件
   const handleCardClick = useCallback(() => {
     if (onClick) {
@@ -56,23 +64,16 @@ export const Card = ({
       {/* 卡片容器，使用 flex 佈局 */}
       <div className="relative flex flex-col justify-center group">
         {/* 卡片圖片區域 */}
-        <div className={`max-w-full aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
-          {imageLoading ? (
-            // 圖片加載時顯示骨架屏
-            <ImageSkeleton />
-          ) : img ? (
-            // 圖片已加載完成
+        <div className={`max-w-full relative aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
+        <ImageSkeleton />
+
             <img
-              className="w-full h-full object-cover"
+              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
               src={img}
               alt={title || "卡片圖片"}
+              onLoad={handleImageLoad}
             />
-          ) : (
-            // 無圖片可用或加載失敗
-            <div className="w-full h-full bg-[#361014] flex justify-center items-center">
-                  <p className="text-white text-lg">無圖片</p>
-            </div>
-          )}
+
         </div>
 
         {/* 卡片內容區域 */}
