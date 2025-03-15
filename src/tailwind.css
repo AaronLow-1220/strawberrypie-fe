@@ -383,6 +383,10 @@ body, * {
     row-gap: 1.4em;
   }
 
+  .group-block__body:not(.expand) .group-block-item:hover {
+    transform: scale(1) !important;
+  }
+
   .group-block__body.expand .group-block-item {
     margin-right: 0;
   }
