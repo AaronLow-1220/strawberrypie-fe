@@ -153,7 +153,7 @@ export const FocusCard = memo(
         onClick={handleContainerClick} // 點擊背景關閉
       >
         <div className="my-auto">
-          <div className="focus-card modal my-8 max-w-[1200px] bg-[#361014] p-[64px] rounded-[48px] flex gap-[48px] relative">
+          <div className="focus-card modal !my-8 max-w-[1200px] bg-[#361014] p-[64px] rounded-[48px] flex gap-[48px] relative">
             {/* 左側區域 - 圖片和成員信息 */}
             <div className="w-full">
               {renderImage()} {/* 渲染圖片 */}
@@ -217,11 +217,11 @@ export const FocusCard = memo(
             </div>
             {/* 關閉按鈕 */}
             <button
-              className="absolute top-8 right-8 cursor-pointer"
+              className="absolute w-12 h-12 flex items-center justify-center top-6 right-6 cursor-pointer hover:bg-[rgba(0,0,0,0.2)] transition-colors duration-300 rounded-full z-10"
               onClick={handleClose}
               aria-label="關閉"
             >
-              <img src="/Group/close.svg" alt="關閉按鈕" />
+              <img className="w-8 h-8" src="/Group/close.svg" alt="關閉按鈕" />
             </button>
           </div>
         </div>
@@ -236,7 +236,7 @@ export const FocusCard = memo(
       >
         <div className="my-auto">
           <div
-            className="max-w-[480px] modal w-[calc(100vw-50px)] rounded-3xl overflow-hidden my-8 bg-[#361014] rounded-[12px] mx-auto"
+            className="max-w-[480px] modal w-[calc(100vw-50px)] rounded-3xl overflow-hidden !my-8 bg-[#361014] rounded-[12px] mx-auto"
             onClick={handleContainerClick}
           >
             <div className="relative flex flex-col justify-center align-top">
@@ -244,7 +244,7 @@ export const FocusCard = memo(
               <div className="w-full aspect-[4/3] relative rounded-t-[12px]">
                 {/* 關閉按鈕 */}
                 <button
-                  className="flex items-center justify-center absolute top-[12px] right-[12px] w-9 h-9 cursor-pointer bg-[rgba(0,0,0,0.2)] rounded-full z-10"
+                  className="flex items-center justify-center absolute top-[12px] right-[12px] w-9 h-9 cursor-pointer bg-[rgba(0,0,0,0.2)] hover:bg-[rgba(0,0,0,0.4)] transition-colors duration-300 rounded-full z-10"
                   onClick={handleClose}
                   aria-label="關閉"
                 >
