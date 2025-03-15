@@ -1,11 +1,11 @@
-import { useState, useCallback } from "react"; // 移除 useEffect 引入，因為已經不需要
+import { useState, useCallback, useRef } from "react"; // 移除 useEffect 引入，因為已經不需要
 import { CSSTransition } from "react-transition-group"; // 添加 CSSTransition 引入
 import { ProgressBar } from "./ProgressBar/ProgressBar"; // 匯入進度條組件
 import { GroupBlock } from "./GroupBlock"; // 匯入組別區塊組件
 import { GroupBlockItem } from "./GroupBlockItem"; // 匯入組別區塊項目組件
 import { QRScanner } from "./QrCode/QRScanner"; // 匯入 QRScanner 組件
 import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
-import { Hint } from "./Hint/CountHint"; // 匯入 Hint 組件
+import { CountHint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import { useEffect } from "react";
 import { FocusCard } from "../Group/Card/FocusCard";
 import { Link } from "react-router-dom";
@@ -22,6 +22,14 @@ export const Stamps = () => {
     const totalStamps = 22;
 
     const [stamps, setStamps] = useState([]);
+    // 用於存儲從 group API 獲取的卡片數據
+    const [cards, setCards] = useState([]);
+    // 用於追蹤當前焦點卡片的資料
+    const [focusedCard, setFocusedCard] = useState(null);
+
+    // 新增節點引用
+    const focusCardRef = useRef(null);
+    const overlayRef = useRef(null);
 
     useEffect(() => {
         window.addEventListener("keydown", (e) => {
@@ -34,7 +42,6 @@ export const Stamps = () => {
             console.log("loadImagesInOrder");
             // 載入單個卡片的圖片
             const loadStampImage = async (stamp, index) => {
-                console.log(stamp.icon_id);
                 if (!stamp.icon_id || loadedImages[stamp.id]) return;
 
                 try {
@@ -134,6 +141,133 @@ export const Stamps = () => {
         fetchStamps();
     }, []);
 
+    const parseJsonArray = (jsonString) => {
+        try {
+            const obj = JSON.parse(jsonString);
+            return Object.values(obj);
+        } catch (error) {
+            console.error("解析 JSON 失敗", error);
+            return [];
+        }
+    };
+
+    const mediaArray = (jsonString) => {
+        try {
+            const obj = JSON.parse(jsonString);
+            return Object.entries(obj).filter(([key, value]) => value !== "");
+        } catch (error) {
+            console.error("解析 media 失敗", error);
+            return [];
+        }
+    };
+
+    const fetchGroupData = async (stampName) => {
+        try {
+            let cardsData = cards;
+
+            // 只有當 cards 為空時才進行 API 請求
+            if (cards.length === 0) {
+                const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+                let responseData;
+
+                if (window.preloadedData && window.preloadedData.groupData) {
+                    responseData = window.preloadedData.groupData;
+                } else {
+                    console.log("從 API 獲取組別數據");
+                    const response = await axios.post(
+                        `${apiBaseUrl}/fe/group/search`,
+                        {
+                            pageSize: 25,
+                        },
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    );
+                    responseData = response.data;
+                }
+
+                // 處理文字內容
+                cardsData = responseData._data.map(card => ({
+                    id: card.id,
+                    logo_id: card.logo_id,
+                    category: mapGenreToCategory(card.genre),
+                    img: "", // 先設置為空，稍後再載入
+                    title: card.work_name,
+                    content: card.short_description,
+                    secondTitle: card.name,
+                    detailedContent: card.description,
+                    member: parseJsonArray(card.member),
+                    teachers: parseJsonArray(card.tutor),
+                    media: mediaArray(card.media),
+                    imageLoading: !!card.logo_id,
+                }));
+
+                // 保存處理後的數據到 cards 狀態
+                setCards(cardsData);
+            } else {
+                console.log("使用緩存的組別數據");
+            }
+
+            // 從 cardsData 中找到匹配的卡片
+            const matchedCard = cardsData.find(card => card.title === stampName);
+            if (matchedCard) {
+                // 檢查卡片是否已經有圖片
+                if (!matchedCard.img && matchedCard.logo_id) {
+                    // 創建一個新的卡片對象以避免修改 cards 中的原始數據
+                    const cardWithImageLoading = { ...matchedCard };
+                    setFocusedCard(cardWithImageLoading);
+                    setShowFocusCard(true);
+
+                    // 載入圖片
+                    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+                    loadCardImage(cardWithImageLoading, apiBaseUrl);
+                } else {
+                    // 卡片已有圖片或沒有圖片需要載入
+                    setFocusedCard(matchedCard);
+                    setShowFocusCard(true);
+                }
+            } else {
+                console.error(`未找到標題為 "${stampName}" 的卡片`);
+            }
+        } catch (error) {
+            console.error("獲取或處理組別資料失敗: ", error);
+        }
+    };
+
+    // 載入卡片圖片
+    const loadCardImage = async (card, apiBaseUrl) => {
+        try {
+            const imgResponse = await axios.get(
+                `${apiBaseUrl}/fe/file/download/${card.logo_id}`,
+                {
+                    headers: {
+                        "Content-Type": "application/octet-stream",
+                    },
+                    responseType: "blob",
+                }
+            );
+
+            const imageURL = URL.createObjectURL(imgResponse.data);
+
+            // 更新焦點卡片的圖片
+            setFocusedCard(prev => ({
+                ...prev,
+                img: imageURL,
+                imageLoading: false
+            }));
+        } catch (imgError) {
+            console.error(`無法下載圖片 (logo_id: ${card.logo_id})`, imgError);
+
+            // 標記圖片載入失敗
+            setFocusedCard(prev => ({
+                ...prev,
+                imageLoading: false
+            }));
+        }
+    };
+
     const stampsDataSorted = stamps.reduce((acc, stamp) => {
         const { genre } = stamp;
         if (!acc[genre]) {
@@ -143,7 +277,6 @@ export const Stamps = () => {
         return acc;
     }, {});
 
-    console.log(stampsDataSorted);
 
     const mapGenreToCategory = (genre) => {
         const genreMap = {
@@ -168,7 +301,7 @@ export const Stamps = () => {
 
     // 處理開啟掃描器
     const handleOpenScanner = () => {
-        if(localStorage.getItem("token") == null) { 
+        if (localStorage.getItem("accessToken") == null) {
             handleOpenLoginHint();
         } else {
             setShowScanner(true);
@@ -185,7 +318,7 @@ export const Stamps = () => {
 
     // 處理開啟兌獎對話框
     const handleOpenRewardDialog = () => {
-        if(localStorage.getItem("token") == null) { 
+        if (localStorage.getItem("accessToken") == null) {
             handleOpenLoginHint();
         } else {
             setShowRewardDialog(true);
@@ -218,17 +351,18 @@ export const Stamps = () => {
     };
 
     // 處理開啟卡片彈出層
-    const handleOpenFocusCard = () => {
-        if(localStorage.getItem("token") == null) { 
+    const handleOpenFocusCard = (stampName) => {
+        if (localStorage.getItem("accessToken") == null) {
             handleOpenLoginHint();
         } else {
-            setShowFocusCard(true);
+            fetchGroupData(stampName);
         }
     };
 
     // 處理關閉卡片彈出層
     const handleCloseFocusCard = () => {
         setShowFocusCard(false);
+        // 不再立即清除焦點卡片數據，而是等待動畫完成後由 onExited 回調處理
     };
 
 
@@ -274,15 +408,15 @@ export const Stamps = () => {
                                     stamps={stamps}
                                 >
                                     {stamps.map((stamp, index) => (
-                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} onClick={handleOpenFocusCard} />
+                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} onClick={() => handleOpenFocusCard(stamp.name)} />
                                     ))}
                                 </GroupBlock>
                             ) : (
                                 currentCount == 21 ? (
-                                    <div className="w-full flex flex-col justify-center items-center p-8">
-                                        <h2 className="text-[36px] mb-2 text-center font-bold" style={{ fontFamily: "B"}}>最終章點！</h2>
-                                        <p className="text-[20px] mb-6 text-center text-secondary-color">填寫意見回饋，搜集第22章以獲得抽獎資格！</p>
-                                        <Link to="/feedback" className="primary-button text-white px-4 py-2 rounded-lg">填寫意見回饋</Link>
+                                    <div className="w-full max-w-[540px] flex flex-col justify-center items-center p-8">
+                                        <h2 className="text-[36px] mb-2 text-center font-bold" style={{ fontFamily: "B" }}>最終章點！</h2>
+                                        <p className="text-[20px] mb-6 text-center text-secondary-color">填寫意見回饋，搜集第22個章以獲得抽獎資格！</p>
+                                        <Link to="/feedback" className="primary-button text-white px-4 py-2 rounded-lg">意見回饋</Link>
                                     </div>
                                 ) : null
                             )
@@ -303,14 +437,56 @@ export const Stamps = () => {
 
             {/* 提示對話框彈出層 */}
             <CSSTransition in={showHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-                <Hint currentCount={currentCount} onClose={handleCloseHint} handleOpenRewardDialog={handleOpenRewardDialog} />
+                <CountHint currentCount={currentCount} onClose={handleCloseHint} handleOpenRewardDialog={handleOpenRewardDialog} />
             </CSSTransition>
 
-            {/* 卡片彈出層 */}
-            <CSSTransition in={showFocusCard} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-                <FocusCard
-                    onClose={handleCloseFocusCard} />
-            </CSSTransition>
+
+            {/* 焦點卡片 */}
+            <>
+                {/* 背景遮罩 */}
+                <CSSTransition
+                    in={showFocusCard}
+                    nodeRef={overlayRef}
+                    timeout={300}
+                    classNames="overlay"
+                    unmountOnExit
+                    mountOnEnter
+                >
+                    <div
+                        ref={overlayRef}
+                        className="fixed inset-0 bg-black bg-opacity-40 z-[999]"
+                    ></div>
+                </CSSTransition>
+
+                {/* 卡片內容 */}
+                <CSSTransition
+                    in={showFocusCard}
+                    nodeRef={focusCardRef}
+                    timeout={300}
+                    classNames="modal"
+                    unmountOnExit
+                    mountOnEnter
+                    onExited={() => setFocusedCard(null)} // 過渡結束後清除焦點卡片資料
+                >
+                    <div
+                        ref={focusCardRef}
+                        className="fixed inset-0 flex items-center justify-center overflow-y-auto z-[1000]"
+                    >
+                        {focusedCard && (
+                            <FocusCard
+                                img={focusedCard.img}
+                                title={focusedCard.title}
+                                secondTitle={focusedCard.secondTitle}
+                                detailedContent={focusedCard.detailedContent}
+                                member={focusedCard.member}
+                                teachers={focusedCard.teachers}
+                                media={focusedCard.media}
+                                onCancel={handleCloseFocusCard}
+                            />
+                        )}
+                    </div>
+                </CSSTransition>
+            </>
 
             {/* 登入提示彈出層 */}
             <CSSTransition in={showLoginHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
