@@ -51,7 +51,7 @@ const PRELOAD_ASSETS = {
 		'/IPs/行銷.png',
 		'/IPs/動畫.png',
 		'/HomePage/Background_web.jpg',
-		'/Header/Headline.webp',
+		'/Header/Headline.svg',
 		// 在這裡添加更多需要預載的圖片
 	],
 
