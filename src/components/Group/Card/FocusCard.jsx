@@ -1,9 +1,5 @@
 import { useState, useEffect, useCallback, memo } from "react";
-
-// 圖片骨架屏組件 - 用於圖片加載過程中顯示的佔位元素
-const ImageSkeleton = () => (
-  <div className="w-full aspect-[4/3] bg-[#361014] animate-pulse rounded-lg flex justify-center items-center"></div>
-);
+import { ImageSkeleton } from "../../ImageSkeleton";
 
 // 抽離社交媒體圖標組件 - 用於顯示各種社交媒體連結按鈕
 const SocialMediaIcon = memo(({ src, alt, url }) => (
@@ -109,43 +105,6 @@ export const FocusCard = memo(
       return "text-[48px]"; // 標題較短時使用較大字體
     };
 
-    // 渲染圖片區域 - 處理不同狀態下的圖片顯示
-    const renderImage = () => {
-      // 無圖片或圖片加載錯誤時顯示提示
-      if (!img || imgError) {
-        return (
-          <div className="w-full aspect-[4/3] bg-[#361014] flex justify-center items-center">
-            <p className="text-white text-lg">無圖片</p>
-          </div>
-        );
-      }
-
-      // 圖片加載中顯示骨架屏
-      if (!imgLoaded) {
-        return (
-          <>
-            <ImageSkeleton />
-            <img
-              className="hidden" // 隱藏實際圖片，僅用於加載
-              src={img}
-              alt={title || "卡片圖片"}
-              onLoad={handleImageLoad} // 圖片加載完成時觸發
-              onError={handleImageError} // 圖片加載錯誤時觸發
-            />
-          </>
-        );
-      }
-
-      // 圖片加載完成後顯示
-      return (
-        <img
-          className="aspect-[4/3] bg-white w-full object-cover rounded-[8px]"
-          src={img}
-          alt={title || "卡片圖片"}
-        />
-      );
-    };
-
     // 寬屏佈局 - 左右分欄顯示
     const WideScreenLayout = (
       <div
@@ -155,8 +114,17 @@ export const FocusCard = memo(
         <div className="my-auto">
           <div className="focus-card modal !my-8 max-w-[1200px] bg-[#361014] p-[64px] rounded-[48px] flex gap-[48px] relative">
             {/* 左側區域 - 圖片和成員信息 */}
-            <div className="w-full">
-              {renderImage()} {/* 渲染圖片 */}
+            <div className="w-full relative">
+              <div className="w-full aspect-[4/3] relative rounded-[8px] overflow-hidden">
+              <ImageSkeleton />
+
+                <img
+                  className={`absolute top-0 left-0 aspect-[4/3] z-10 bg-white w-full object-cover transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  src={img}
+                  alt={title || "卡片圖片"}
+                  onLoad={handleImageLoad}
+                />
+              </div>
               <div className="px-3 mt-5">
                 {/* 成員信息 */}
                 <div className="text-[20px] text-white opacity-[80%] mt-5">

@@ -90,11 +90,6 @@ const transitionStyles = `
   }
 `;
 
-// 圖片骨架屏組件
-const ImageSkeleton = () => (
-  <div className="w-full h-full aspect-[4/3] bg-[hsl(354,54%,20%)] animate-pulse flex justify-center items-center"></div>
-);
-
 // 滾動按鈕組件
 const ScrollArrow = ({ direction, isVisible, onClick }) => {
   return (
@@ -465,7 +460,6 @@ export const Group = () => {
                   key={index}
                   img={card.img}
                   imageLoading={card.imageLoading}
-                  ImageSkeleton={ImageSkeleton}
                   title={card.title}
                   content={card.content}
                   secondTitle={card.secondTitle}
@@ -520,7 +514,6 @@ export const Group = () => {
                         key={index}
                         img={card.img}
                         imageLoading={card.imageLoading}
-                        ImageSkeleton={ImageSkeleton}
                         title={card.title}
                         content={card.content}
                         secondTitle={card.secondTitle}

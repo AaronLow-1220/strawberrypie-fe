@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
+import { ImageSkeleton } from "../../ImageSkeleton";
 
 export const Card = ({
   img, // 卡片圖片來源
   imageLoading, // 圖片是否正在加載
-  ImageSkeleton, // 圖片骨架屏組件
   title, // 卡片標題
   content, // 卡片內容摘要
   secondTitle, // 卡片副標題
@@ -53,11 +53,10 @@ export const Card = ({
 
   return (
     <div
-      className={`${
-        selectedFilter === "全部"
+      className={`${selectedFilter === "全部"
           ? "w-[calc(100vw-40px)] max-w-[300px]"
           : "w-full"
-      }
+        }
         shrink-0 snap-start bg-[#361014]  overflow-hidden rounded-[12px] cursor-pointer`}
       onClick={handleCardClick}
     >
@@ -65,15 +64,13 @@ export const Card = ({
       <div className="relative flex flex-col justify-center group">
         {/* 卡片圖片區域 */}
         <div className={`max-w-full relative aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
-        <ImageSkeleton />
-
-            <img
-              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-              src={img}
-              alt={title || "卡片圖片"}
-              onLoad={handleImageLoad}
-            />
-
+          <ImageSkeleton />
+          <img
+            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            src={img}
+            alt={title || "卡片圖片"}
+            onLoad={handleImageLoad}
+          />
         </div>
 
         {/* 卡片內容區域 */}
