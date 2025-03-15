@@ -93,35 +93,61 @@ export const Header = ({ onOpenAccount }) => {
     setIsHome(location.pathname === "/");
   })
 
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    // 解析 JWT token
-    const tokenData = parseJwt(accessToken);
-
-    // 設置頭像 (如果 token 中有頭像 URL)
-    if (tokenData.avatar) {
-      setAvatarUrl(tokenData.avatar);
-    }
-  }, [isLoggedIn]);
-
   // 解析 JWT token 的函數
-  const parseJwt = (token) => {
+  const parseJwt = useCallback((token) => {
+    if (!token) {
+      return {};
+    }
+    
     try {
-      const base64Url = token.split('.')[1];
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        console.error('Invalid token format');
+        return {};
+      }
+      
+      const base64Url = parts[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      );
-      return JSON.parse(jsonPayload);
+      
+      try {
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+        return JSON.parse(jsonPayload);
+      } catch (decodeError) {
+        console.error('Failed to decode token payload:', decodeError);
+        return {};
+      }
     } catch (error) {
       console.error('Token 解析錯誤:', error);
       return {};
     }
-  };
+  }, []);
+
+  // 更新頭像的 useEffect
+  useEffect(() => {
+    if (isLoggedIn) {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        if (!accessToken) {
+          return;
+        }
+        
+        // 解析 JWT token
+        const tokenData = parseJwt(accessToken);
+        
+        // 設置頭像 (如果 token 中有頭像 URL)
+        if (tokenData && tokenData.avatar) {
+          setAvatarUrl(tokenData.avatar);
+        }
+      } catch (error) {
+        console.error('處理頭像時出錯:', error);
+      }
+    }
+  }, [isLoggedIn, parseJwt]);
 
   // 每次路由變化時重新判斷是否為首頁
   useEffect(() => {
@@ -298,13 +324,13 @@ export const Header = ({ onOpenAccount }) => {
               </li>
               <li className="text-[2rem]">
                 <Link
-                  to="/collect"
+                  to="/stamps"
                   className="flex items-center"
                   onClick={() => setMenuOpen(false)}
                 >
                   <div>集章兌換</div>
                   <div className="ms-[1rem]">
-                    <img src="/Header/feedback.svg" alt="Feedback" />
+                    <img src="/Header/stamp.svg" alt="Stamps" />
                   </div>
                 </Link>
               </li>
@@ -328,7 +354,7 @@ export const Header = ({ onOpenAccount }) => {
                 >
                   <div>意見回饋</div>
                   <div className="ms-[1rem]">
-                    <img src="/Header/stamp.svg" alt="Stamp" />
+                    <img src="/Header/feedback.svg" alt="Feedback" />
                   </div>
                 </Link>
               </li>
@@ -346,7 +372,7 @@ export const Header = ({ onOpenAccount }) => {
         >
           <div className="w-full flex mx-auto justify-center mt-[48px] pb-5 navContainer">
             <LinkLarge to={"/groups"} text="組別介紹" />
-            <LinkLarge to={"/collect"} text="集章兌換" />
+            <LinkLarge to={"/stamps"} text="集章兌換" />
             <Link to="/" className={`${isHome ? "w-0 !opacity-0" : "w-[180px]"} navHover !transition-all !duration-500 ease-in-out`}>
               <img
                 src="/Header/Headline.svg"
