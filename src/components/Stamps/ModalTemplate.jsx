@@ -1,12 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-export const Hint = ({ onClose, handleOpenRewardDialog, currentCount }) => {
-  // 生成隨機獎勵代碼
-  
-  // 控制對話框關閉動畫
-  const [isClosing, setIsClosing] = useState(false);
-  
+export const ModalTemplate = ({ onClose, children }) => {
   // 控制內容可見性，用於內容的縮放效果
   const [contentVisible, setContentVisible] = useState(false);
   
@@ -33,8 +28,6 @@ export const Hint = ({ onClose, handleOpenRewardDialog, currentCount }) => {
   const handleClose = () => {
     // 先隱藏內容
     setContentVisible(false);
-    // 設置關閉狀態，啟動淡出動畫
-    setIsClosing(true);
     // 延遲調用關閉回調，等待內容縮放動畫完成
     setTimeout(() => {
       onClose();
@@ -62,27 +55,12 @@ export const Hint = ({ onClose, handleOpenRewardDialog, currentCount }) => {
         classNames="modal"
         unmountOnExit
       >
-        <div 
+        <div
           ref={contentRef}
-          className="bg-layer1 modal rounded-[24px] w-[90%] max-w-md p-6 relative" 
+          className="bg-layer1 modal rounded-[24px] w-[90%] max-w-md p-6 relative"
           onClick={(e) => e.stopPropagation()}
         >
-          
-          {/* 標題 */}
-          <h2 className="text-white text-xl font-bold mb-4 text-center">{currentCount}</h2>
-          
-          {/* 獎勵內容 */}
-          <div className="flex flex-col gap-4 w-full">
-							<button onClick={() => { onClose(); handleOpenRewardDialog(); }} className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
-								兌換小獎
-							</button>
-							<button
-								onClick={onClose}
-								className="mx-auto text-white w-fit text-center opacity-80 hover:underline"
-							>
-							  不用，謝謝
-							</button>
-						</div>
+          {children}
         </div>
       </CSSTransition>
     </div>
