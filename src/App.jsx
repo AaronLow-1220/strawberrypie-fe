@@ -13,7 +13,7 @@ const Group = lazy(() => import("./components/Group/Group").then(module => ({ de
 //Result
 const Result = lazy(() => import("./components/Result/Result").then(module => ({ default: module.Result })));
 //Collect
-const Collect = lazy(() => import("./components/Collect/Collect").then(module => ({ default: module.Collect })));
+const Stamps = lazy(() => import("./components/Stamps/Stamps").then(module => ({ default: module.Stamps })));
 //ComingSoon
 const ComingSoon = lazy(() => import("./components/ComingSoon").then(module => ({ default: module.ComingSoon })));
 //Account
@@ -292,7 +292,7 @@ function App() {
 								<Route path="/psychometric-test" element={<PsychometricTest />} />
 								<Route path="/groups" element={<Group />} />
 								<Route path="/result/:id" element={<Result />} />
-								<Route path="/collect" element={<Collect />} />
+								<Route path="/stamps" element={<Stamps />} />
 								{/* <Route path="/collect" element={<ComingSoon />} /> */}
 								<Route path="/feedback" element={<ComingSoon />} />
 								<Route path="/login" element={<LogIn />} />
