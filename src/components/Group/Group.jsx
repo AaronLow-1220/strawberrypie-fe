@@ -146,16 +146,28 @@ export const Group = () => {
   // 用於防止 resize 事件頻繁觸發
   const resizeTimeoutRef = useRef(null);
 
+  // 定義類別順序和映射，使用單一數據源
+  const categoryConfig = [
+    { id: 0, name: "互動" },
+    { id: 4, name: "行銷" },
+    { id: 3, name: "動畫" },
+    { id: 1, name: "遊戲" },
+    { id: 2, name: "影視" },
+  ];
+
+  // 將 genre ID 映射到類別名稱
   const mapGenreToCategory = (genre) => {
-    const genreMap = {
-      0: "互動",
-      1: "遊戲",
-      2: "影視",
-      3: "動畫",
-      4: "行銷",
-    };
-    return genreMap[genre] || "其他";
+    // 確保 genre 是數字類型
+    const genreId = Number(genre);
+    // 使用數字比較找到對應的類別
+    const category = categoryConfig.find(cat => cat.id === genreId);
+    return category ? category.name : "其他";
   };
+
+  // 獲取所有類別名稱，按照定義的順序
+  const getAllCategories = useCallback(() => {
+    return categoryConfig.map(cat => cat.name);
+  }, []);
 
   const parseJsonArray = (jsonString) => {
     try {
@@ -264,6 +276,8 @@ export const Group = () => {
           responseData = response.data;
         }
 
+        console.log(responseData);
+
         // 先處理文字內容，不等待圖片
         const cardsData = responseData._data.map(card => ({
           id: card.id,
@@ -302,7 +316,9 @@ export const Group = () => {
   // 獲取需要顯示的類別（用於分類顯示模式）
   const filteredCategories =
     selectedFilter === "全部"
-      ? [...new Set(cards.map((item) => item.category))]
+      ? getAllCategories().filter(category => 
+          cards.some(card => card.category === category)
+        )
       : [selectedFilter];
 
   // 更新特定類別的左右滾動按鈕可見性
@@ -470,7 +486,7 @@ export const Group = () => {
       return (
         <>
           {filteredCategories.map((item, index) => (
-            <div key={index} className="relative">
+            <div key={index} className={`relative ${index}`}>
               {/* 類別標題 */}
               <div className="flex mt-10 group-padding">
                 <div
