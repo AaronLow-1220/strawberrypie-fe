@@ -1,7 +1,7 @@
 import { GroupBlockItem } from "./GroupBlockItem";
 import { useState, useRef, useEffect } from "react";
 
-export const GroupBlock = ({ num, key, stampid, name, genre, icon, imageLoading }) => {
+export const GroupBlock = ({ num, catagory, stampid, name, genre, icon, imageLoading, children}) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const bodyRef = useRef(null);
 	const containerRef = useRef(null);
@@ -158,7 +158,7 @@ export const GroupBlock = ({ num, key, stampid, name, genre, icon, imageLoading 
 			<div className="flex justify-between p-[16px_20px_0px_20px] mb-4 items-center cursor-pointer" onClick={handleToggle}>
 				<div className="flex items-center">
 					<div className="text-white text-[20px]" style={{ fontFamily: "B" }}>
-						遊戲
+						{catagory}
 					</div>
 					<div className="text-secondary-color text-[20px] ms-[5px]" style={{ fontFamily: "R" }}>
 						{num}/{num}
@@ -169,13 +169,7 @@ export const GroupBlock = ({ num, key, stampid, name, genre, icon, imageLoading 
 				</div>
 			</div>
 			<div ref={bodyRef} className={`group-block__body p-[0px_20px_20px_20px] ${isExpanded ? "expand" : ""}`}>
-				{Array(num)
-					.fill(null)
-					.map((_, index) => (
-						<div key={index} ref={(el) => (itemsRef.current[index] = el)} className="item-wrapper">
-							<GroupBlockItem />
-						</div>
-					))}
+				{children}
 			</div>
 		</div>
 	);

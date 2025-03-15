@@ -2,37 +2,26 @@ import { useState, useCallback } from "react"; // 移除 useEffect 引入，因�
 import { CSSTransition } from "react-transition-group"; // 添加 CSSTransition 引入
 import { ProgressBar } from "./ProgressBar/ProgressBar"; // 匯入進度條組件
 import { GroupBlock } from "./GroupBlock"; // 匯入組別區塊組件
+import { GroupBlockItem } from "./GroupBlockItem"; // 匯入組別區塊項目組件
 import { QRScanner } from "./QrCode/QRScanner"; // 匯入 QRScanner 組件
 import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
-import { Hint } from "./Hint/Hint"; // 匯入 Hint 組件
+import { Hint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import { useEffect } from "react";
+import { FocusCard } from "../Group/Card/FocusCard";
+import { Link } from "react-router-dom";
+import { LoginHint } from "./Hint/LoginHint";
 import axios from "axios";
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
 
 export const Stamps = () => {
-    // 定義收集的類別及對應數量
-    const array = [
-        { name: "遊戲", num: 6 },
-        { name: "互動", num: 11 },
-        { name: "影視", num: 2 },
-        { name: "動畫", num: 1 },
-        { name: "行銷", num: 3 },
-        { name: "其他", num: 1 },
-    ];
 
-    const mapGenreToCategory = (genre) => {
-        const genreMap = {
-            0: "互動",
-            1: "遊戲",
-            2: "影視",
-            3: "動畫",
-            4: "行銷",
-            5: "其他",
-        };
-        return genreMap[genre] || "其他";
-    };
+    // 假設目前集到的張數與總數
+    const currentCount = 21;
+    const totalStamps = 22;
+
+    const [stamps, setStamps] = useState([]);
 
     useEffect(() => {
         window.addEventListener("keydown", (e) => {
@@ -42,11 +31,14 @@ export const Stamps = () => {
         });
 
         const loadImagesInOrder = async (stampsData, apiBaseUrl) => {
+            console.log("loadImagesInOrder");
             // 載入單個卡片的圖片
             const loadStampImage = async (stamp, index) => {
+                console.log(stamp.icon_id);
                 if (!stamp.icon_id || loadedImages[stamp.id]) return;
 
                 try {
+                    console.log("try");
                     const imgResponse = await axios.get(`${apiBaseUrl}/fe/file/download/${stamp.icon_id}`, {
                         headers: {
                             "Content-Type": "application/octet-stream",
@@ -55,6 +47,7 @@ export const Stamps = () => {
                     });
 
                     const imageURL = URL.createObjectURL(imgResponse.data);
+                    console.log(imageURL);
 
                     // 更新已載入的圖片
                     setLoadedImages((prev) => ({
@@ -126,11 +119,13 @@ export const Stamps = () => {
                     genre: mapGenreToCategory(stamp.genre),
                     icon: "",
                     imageLoading: !!stamp.icon_id,
+                    icon_id: stamp.icon_id,
                 }));
 
                 setStamps(stampsData);
 
                 loadImagesInOrder(stampsData, apiBaseUrl);
+                console.log("success");
             } catch (error) {
                 console.error("獲取印章失敗: ", error);
             }
@@ -139,16 +134,45 @@ export const Stamps = () => {
         fetchStamps();
     }, []);
 
+    const stampsDataSorted = stamps.reduce((acc, stamp) => {
+        const { genre } = stamp;
+        if (!acc[genre]) {
+            acc[genre] = [];
+        }
+        acc[genre].push(stamp);
+        return acc;
+    }, {});
+
+    console.log(stampsDataSorted);
+
+    const mapGenreToCategory = (genre) => {
+        const genreMap = {
+            0: "互動",
+            1: "遊戲",
+            2: "影視",
+            3: "動畫",
+            4: "行銷",
+            5: "其他",
+        };
+        return genreMap[genre] || "其他";
+    };
+
+
     // 添加狀態來控制 QRScanner 和 RewardDialog 的顯示
     const [showScanner, setShowScanner] = useState(false);
     const [showRewardDialog, setShowRewardDialog] = useState(false);
     const [showHint, setShowHint] = useState(false);
-    const [stamps, setStamps] = useState([]);
     const [loadedImages, setLoadedImages] = useState({});
+    const [showFocusCard, setShowFocusCard] = useState(false);
+    const [showLoginHint, setShowLoginHint] = useState(false);
 
     // 處理開啟掃描器
     const handleOpenScanner = () => {
-        setShowScanner(true);
+        if(localStorage.getItem("token") == null) { 
+            handleOpenLoginHint();
+        } else {
+            setShowScanner(true);
+        }
     };
 
     // 處理關閉掃描器 - 使用 useCallback 避免不必要的重新渲染
@@ -161,7 +185,11 @@ export const Stamps = () => {
 
     // 處理開啟兌獎對話框
     const handleOpenRewardDialog = () => {
-        setShowRewardDialog(true);
+        if(localStorage.getItem("token") == null) { 
+            handleOpenLoginHint();
+        } else {
+            setShowRewardDialog(true);
+        }
     };
 
     // 處理關閉兌獎對話框
@@ -179,9 +207,30 @@ export const Stamps = () => {
         setShowHint(false);
     }, []);
 
-    // 假設目前集到的張數與總數
-    const currentCount = 5;
-    const totalStamps = 22;
+    // 處理開啟登入提示彈出層
+    const handleOpenLoginHint = () => {
+        setShowLoginHint(true);
+    };
+
+    // 處理關閉登入提示彈出層
+    const handleCloseLoginHint = () => {
+        setShowLoginHint(false);
+    };
+
+    // 處理開啟卡片彈出層
+    const handleOpenFocusCard = () => {
+        if(localStorage.getItem("token") == null) { 
+            handleOpenLoginHint();
+        } else {
+            setShowFocusCard(true);
+        }
+    };
+
+    // 處理關閉卡片彈出層
+    const handleCloseFocusCard = () => {
+        setShowFocusCard(false);
+    };
+
 
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
@@ -216,22 +265,28 @@ export const Stamps = () => {
                 </div>
                 <div className="block my-auto w-full max-h-full lg:overflow-y-scroll">
                     <div className="block-content flex flex-col items-center lg:items-start gap-3 my-8 mb-24 lg:my-[max(20vh,96px)]">
-                        {array.map((item, index) => (
-                            <GroupBlock key={index} num={item.num} /> // 渲染各組區塊
+                        {Object.entries(stampsDataSorted).map(([genre, stamps]) => (
+                            genre !== "其他" ? (
+                                <GroupBlock
+                                    key={genre}
+                                    catagory={genre}
+                                    num={stamps.length}
+                                    stamps={stamps}
+                                >
+                                    {stamps.map((stamp, index) => (
+                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} onClick={handleOpenFocusCard} />
+                                    ))}
+                                </GroupBlock>
+                            ) : (
+                                currentCount == 21 ? (
+                                    <div className="w-full flex flex-col justify-center items-center p-8">
+                                        <h2 className="text-[36px] mb-2 text-center font-bold" style={{ fontFamily: "B"}}>最終章點！</h2>
+                                        <p className="text-[20px] mb-6 text-center text-secondary-color">填寫意見回饋，搜集第22章以獲得抽獎資格！</p>
+                                        <Link to="/feedback" className="primary-button text-white px-4 py-2 rounded-lg">填寫意見回饋</Link>
+                                    </div>
+                                ) : null
+                            )
                         ))}
-                        {console.log(stamps)/* {stamps.map((stamp, index) => (
-							<GroupBlock
-								key={index}
-								name={stamp.name}
-								num={stamp.num}
-								icon={stamp.icon}
-								imageLoading={stamp.imageLoading}
-							/>
-						))} */}
-
-						<GroupBlock>
-							<GroupItem>
-						</GroupBlock>
                     </div>
                 </div>
             </div>
@@ -246,8 +301,20 @@ export const Stamps = () => {
                 <Redeem onClose={handleCloseRewardDialog} />
             </CSSTransition>
 
+            {/* 提示對話框彈出層 */}
             <CSSTransition in={showHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
                 <Hint currentCount={currentCount} onClose={handleCloseHint} handleOpenRewardDialog={handleOpenRewardDialog} />
+            </CSSTransition>
+
+            {/* 卡片彈出層 */}
+            <CSSTransition in={showFocusCard} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <FocusCard
+                    onClose={handleCloseFocusCard} />
+            </CSSTransition>
+
+            {/* 登入提示彈出層 */}
+            <CSSTransition in={showLoginHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <LoginHint onClose={handleCloseLoginHint} />
             </CSSTransition>
         </div>
     );
