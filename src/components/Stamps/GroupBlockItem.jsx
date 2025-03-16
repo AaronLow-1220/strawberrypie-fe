@@ -1,6 +1,6 @@
-export const GroupBlockItem = ({ name, icon, onClick }) => {
+export const GroupBlockItem = ({ name, icon, onClick, collected }) => {
   return (
-    <div className="group-block-item transition-transform duration-300 hover:scale-110 cursor-pointer" onClick={onClick}>
+    <div className={`group-block-item transition-transform duration-300 hover:scale-110 cursor-pointer ${collected ? "" : "brightness-50"}`} onClick={onClick}>
       <div className="group-block-item__icon relative bg-white rounded-full overflow-hidden">
         <img 
           src={icon || null} 

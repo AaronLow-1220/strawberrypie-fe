@@ -26,6 +26,7 @@ export const Stamps = () => {
     const [stamps, setStamps] = useState([]);
     // 用於存儲從 group API 獲取的卡片數據
     const [cards, setCards] = useState([]);
+    const [stampCollects, setStampCollects] = useState([]);
     // 用於追蹤當前焦點卡片的資料
     const [focusedCard, setFocusedCard] = useState(null);
     // 從 URL 獲取的印章 ID
@@ -160,6 +161,43 @@ export const Stamps = () => {
             }
         };
 
+        const fetchStampCollects = async () => {
+            try {
+                const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+                let responseData;
+
+                if (window.preloadedData && window.preloadedData.stampCollectData) {
+                    responseData = window.preloadedData.stampCollectData;
+                } else {
+                    const response = await axios.post(
+                        `${apiBaseUrl}/stamp-collect/search`,
+                        {
+                            userId: parseJwt(localStorage.getItem("accessToken")).id,
+                            pageSize: 25,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    );
+                    responseData = response.data;
+                }
+
+                const stampCollectsData = responseData._data.map((stampCollect) => ({
+                    id: stampCollect.id,
+                    stamp_id: stampCollect.stamp_id,
+                    user_id: stampCollect.user_id,
+                }));
+
+                setStampCollects(stampCollectsData);
+            } catch (error) {
+                console.error("獲取印章失敗: ", error);
+            }
+        }
+
+        fetchStampCollects();
         fetchStamps();
     }, [location.pathname]); // 添加 location.pathname 作為依賴
 
@@ -172,6 +210,24 @@ export const Stamps = () => {
             return [];
         }
     };
+
+    // 解析 JWT token 的函數
+	const parseJwt = (token) => {
+		try {
+			const base64Url = token.split('.')[1];
+			const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+			const jsonPayload = decodeURIComponent(
+				atob(base64)
+					.split('')
+					.map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+					.join('')
+			);
+			return JSON.parse(jsonPayload);
+		} catch (error) {
+			console.error('Token 解析錯誤:', error);
+			return {};
+		}
+	};
 
     const mediaArray = (jsonString) => {
         try {
@@ -451,6 +507,7 @@ export const Stamps = () => {
 
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
+            {console.log(stampCollects)}
             <div className="w-full lg:h-screen lg:gap-9 2xl:gap-24 max-w-[1600px] flex flex-col lg:flex-row">
                 <div className="block my-auto w-full max-h-full lg:overflow-y-scroll">
                     <div className="block-content flex flex-col justify-center items-center mt-20 lg:mt-24">
@@ -491,7 +548,10 @@ export const Stamps = () => {
                                     stamps={stamps}
                                 >
                                     {stamps.map((stamp, index) => (
-                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} onClick={() => handleOpenFocusCard(stamp.name)} />
+                                        stampCollects.find(stampCollect => stampCollect.stamp_id === stamp.id) ? (
+                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} collected={true} onClick={() => handleOpenFocusCard(stamp.name)} />) : (
+                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} collected={false} onClick={() => handleOpenFocusCard(stamp.name)} />)
+
                                     ))}
                                 </GroupBlock>
                             ) : (
@@ -512,7 +572,6 @@ export const Stamps = () => {
                     </div>
                 </div>
             </div>
-
             {/* QR 掃描器彈出層 - 使用更長的過渡時間 */}
             <CSSTransition in={showScanner} timeout={500} classNames="qr-scanner" unmountOnExit mountOnEnter>
                 <QRScanner onClose={handleCloseScanner} onScanSuccess={handleStampSuccess} />
