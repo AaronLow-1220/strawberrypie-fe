@@ -9,10 +9,12 @@ import { FocusCard } from "../Group/Card/FocusCard";
 import { Link, useLocation } from "react-router-dom";
 import { LoginHint } from "./Hint/LoginHint";
 import { IntroHint } from "./Hint/IntroHint";
+import { NotYetHint } from "./Hint/NotYetHint";
 import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
 import { CountHint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import axios from "axios";
 import { StampCollector } from "./QrCode/StampCollector";
+import { ScanResultModal } from "./QrCode/ScanResultModal"; // 匯入 ScanResultModal 組件
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
@@ -20,7 +22,7 @@ import "./QrCode/QRScannerTransition.css";
 export const Stamps = () => {
 
     // 假設目前集到的張數與總數
-    const currentCount = 20;
+    const [currentCount, setCurrentCount] = useState(0);
     const totalStamps = 22;
 
     const [stamps, setStamps] = useState([]);
@@ -39,167 +41,42 @@ export const Stamps = () => {
     const overlayRef = useRef(null);
     const location = useLocation(); // 獲取當前 URL 資訊
 
-    useEffect(() => {
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "h") {
-                handleOpenHint();
-            }
-        });
+    // 添加狀態來控制 QRScanner 和 RewardDialog 的顯示
+    const [showScanner, setShowScanner] = useState(false);
+    const [showRedeemDialog, setShowRedeemDialog] = useState(false);
+    const [showHint, setShowHint] = useState(false);
+    const [loadedImages, setLoadedImages] = useState({});
+    const [showFocusCard, setShowFocusCard] = useState(false);
+    const [showLoginHint, setShowLoginHint] = useState(false);
+    const [showIntroHint, setShowIntroHint] = useState(false);
+    const [showNotYetHint, setShowNotYetHint] = useState(false);
+    const [onDate, setOnDate] = useState(true);
+    const [scanSuccess, setScanSuccess] = useState(false);  // 添加掃描成功狀態
+    const [urlProcessStarted, setUrlProcessStarted] = useState(false); // 追蹤是否已開始處理 URL 印章 ID
 
-        window.addEventListener("keydown", (e) => {
-            if (e.key === "g") {
-                localStorage.clear("hideIntroHint");
-            }
-        });
+    // 新增狀態用於顯示掃描結果
+    const [showScanResult, setShowScanResult] = useState(false);
+    const [scanResultInfo, setScanResultInfo] = useState(null);
+    const [scanStampInfo, setScanStampInfo] = useState(null);
+    const scanResultRef = useRef(null); // 用於掃描結果的動畫參考 (已不再需要，但保留變數避免其他地方仍有引用)
 
-        // 檢查 URL 路徑是否包含印章 ID
-        const pathParts = location.pathname.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'stamps') {
-            const stampId = pathParts[2];
-            if (stampId && stampId.trim() !== '') {
-                console.log(`從 URL 獲取到印章 ID: ${stampId}`);
-                setUrlStampId(stampId);
-            }
+    // 解析 JWT token 的函數
+    const parseJwt = (token) => {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join('')
+            );
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error('Token 解析錯誤:', error);
+            return {};
         }
-        setUrlParamsProcessed(true);
-
-        const loadImagesInOrder = async (stampsData, apiBaseUrl) => {
-            console.log("loadImagesInOrder");
-            // 載入單個卡片的圖片
-            const loadStampImage = async (stamp, index) => {
-                if (!stamp.icon_id || loadedImages[stamp.id]) return;
-
-                try {
-                    const imgResponse = await axios.get(`${apiBaseUrl}/fe/file/download/${stamp.icon_id}`, {
-                        headers: {
-                            "Content-Type": "application/octet-stream",
-                        },
-                        responseType: "blob",
-                    });
-
-                    const imageURL = URL.createObjectURL(imgResponse.data);
-
-                    // 更新已載入的圖片
-                    setLoadedImages((prev) => ({
-                        ...prev,
-                        [stamp.id]: imageURL,
-                    }));
-
-                    // 更新卡片列表中的圖片
-                    setStamps((stampArray) => {
-                        const newStamps = [...stampArray];
-                        if (newStamps[index]) {
-                            newStamps[index] = {
-                                ...newStamps[index],
-                                icon: imageURL,
-                                imageLoading: false,
-                            };
-                        }
-                        return newStamps;
-                    });
-                } catch (imgError) {
-                    console.error(`無法下載圖片 (icon_id: ${stamp.icon_id})`, imgError);
-
-                    // 標記圖片載入失敗
-                    setStamps((stampArray) => {
-                        const newStamps = [...stampArray];
-                        if (newStamps[index]) {
-                            newStamps[index] = {
-                                ...newStamps[index],
-                                imageLoading: false,
-                            };
-                        }
-                        return newStamps;
-                    });
-                }
-            };
-
-            // 開始載入所有卡片的圖片
-            stampsData.forEach((stamp, index) => {
-                loadStampImage(stamp, index);
-            });
-        };
-
-        const fetchStamps = async () => {
-            try {
-                const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-                let responseData;
-
-                if (window.preloadedData && window.preloadedData.stampData) {
-                    responseData = window.preloadedData.stampData;
-                } else {
-                    const response = await axios.post(
-                        `${apiBaseUrl}/fe/stamp/search`,
-                        {
-                            pageSize: 25,
-                        },
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
-                    responseData = response.data;
-                }
-
-                const stampsData = responseData._data.map((stamp) => ({
-                    id: stamp.id,
-                    stampid: stamp.stampid,
-                    name: stamp.name,
-                    genre: mapGenreToCategory(stamp.genre),
-                    icon: "",
-                    imageLoading: !!stamp.icon_id,
-                    icon_id: stamp.icon_id,
-                }));
-
-                setStamps(stampsData);
-
-                loadImagesInOrder(stampsData, apiBaseUrl);
-                console.log("success");
-            } catch (error) {
-                console.error("獲取印章失敗: ", error);
-            }
-        };
-
-        const fetchStampCollects = async () => {
-            try {
-                const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
-                let responseData;
-
-                if (window.preloadedData && window.preloadedData.stampCollectData) {
-                    responseData = window.preloadedData.stampCollectData;
-                } else {
-                    const response = await axios.post(
-                        `${apiBaseUrl}/stamp-collect/search`,
-                        {
-                            userId: parseJwt(localStorage.getItem("accessToken")).id,
-                            pageSize: 25,
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
-                    responseData = response.data;
-                }
-
-                const stampCollectsData = responseData._data.map((stampCollect) => ({
-                    id: stampCollect.id,
-                    stamp_id: stampCollect.stamp_id,
-                    user_id: stampCollect.user_id,
-                }));
-
-                setStampCollects(stampCollectsData);
-            } catch (error) {
-                console.error("獲取印章失敗: ", error);
-            }
-        }
-
-        fetchStampCollects();
-        fetchStamps();
-    }, [location.pathname]); // 添加 location.pathname 作為依賴
+    };
 
     const parseJsonArray = (jsonString) => {
         try {
@@ -211,24 +88,6 @@ export const Stamps = () => {
         }
     };
 
-    // 解析 JWT token 的函數
-	const parseJwt = (token) => {
-		try {
-			const base64Url = token.split('.')[1];
-			const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-			const jsonPayload = decodeURIComponent(
-				atob(base64)
-					.split('')
-					.map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-					.join('')
-			);
-			return JSON.parse(jsonPayload);
-		} catch (error) {
-			console.error('Token 解析錯誤:', error);
-			return {};
-		}
-	};
-
     const mediaArray = (jsonString) => {
         try {
             const obj = JSON.parse(jsonString);
@@ -239,6 +98,314 @@ export const Stamps = () => {
         }
     };
 
+    const mapGenreToCategory = (genre) => {
+        const genreMap = {
+            0: "互動",
+            1: "遊戲",
+            2: "影視",
+            3: "動畫",
+            4: "行銷",
+            5: "其他",
+        };
+        return genreMap[genre] || "其他";
+    };
+
+    // 載入所有印章圖片
+    const loadImagesInOrder = async (stampsData, apiBaseUrl) => {
+        console.log("loadImagesInOrder");
+        // 載入單個卡片的圖片
+        const loadStampImage = async (stamp, index) => {
+            if (!stamp.icon_id || loadedImages[stamp.id]) return;
+
+            try {
+                const imgResponse = await axios.get(`${apiBaseUrl}/fe/file/download/${stamp.icon_id}`, {
+                    headers: {
+                        "Content-Type": "application/octet-stream",
+                    },
+                    responseType: "blob",
+                });
+
+                const imageURL = URL.createObjectURL(imgResponse.data);
+
+                // 更新已載入的圖片
+                setLoadedImages((prev) => ({
+                    ...prev,
+                    [stamp.id]: imageURL,
+                }));
+
+                // 更新卡片列表中的圖片
+                setStamps((stampArray) => {
+                    const newStamps = [...stampArray];
+                    if (newStamps[index]) {
+                        newStamps[index] = {
+                            ...newStamps[index],
+                            icon: imageURL,
+                            imageLoading: false,
+                        };
+                    }
+                    return newStamps;
+                });
+            } catch (imgError) {
+                console.error(`無法下載圖片 (icon_id: ${stamp.icon_id})`, imgError);
+
+                // 標記圖片載入失敗
+                setStamps((stampArray) => {
+                    const newStamps = [...stampArray];
+                    if (newStamps[index]) {
+                        newStamps[index] = {
+                            ...newStamps[index],
+                            imageLoading: false,
+                        };
+                    }
+                    return newStamps;
+                });
+            }
+        };
+
+        // 開始載入所有卡片的圖片
+        stampsData.forEach((stamp, index) => {
+            loadStampImage(stamp, index);
+        });
+    };
+
+    // 獲取所有印章資料
+    const fetchStamps = async () => {
+        try {
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+            let responseData;
+
+            if (window.preloadedData && window.preloadedData.stampData) {
+                responseData = window.preloadedData.stampData;
+            } else {
+                const response = await axios.post(
+                    `${apiBaseUrl}/fe/stamp/search`,
+                    {
+                        pageSize: 25,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                responseData = response.data;
+            }
+
+            const stampsData = responseData._data.map((stamp) => ({
+                id: stamp.id,
+                stampid: stamp.stampid,
+                name: stamp.name,
+                genre: mapGenreToCategory(stamp.genre),
+                icon: "",
+                imageLoading: !!stamp.icon_id,
+                icon_id: stamp.icon_id,
+            }));
+
+            setStamps(stampsData);
+
+            loadImagesInOrder(stampsData, apiBaseUrl);
+            console.log("success");
+        } catch (error) {
+            console.error("獲取印章失敗: ", error);
+        }
+    };
+
+    // 獲取用戶已收集的印章
+    const fetchStampCollects = async () => {
+        try {
+            const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+            let responseData;
+
+            if (window.preloadedData && window.preloadedData.stampCollectData) {
+                responseData = window.preloadedData.stampCollectData;
+            } else {
+                const response = await axios.post(
+                    `${apiBaseUrl}/stamp-collect/search`,
+                    {
+                        userId: parseJwt(localStorage.getItem("accessToken")).id,
+                        pageSize: 25,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                responseData = response.data;
+            }
+
+            const stampCollectsData = responseData._data.map((stampCollect) => ({
+                id: stampCollect.id,
+                stamp_id: stampCollect.stamp_id,
+                user_id: stampCollect.user_id,
+            }));
+
+            setCurrentCount(stampCollectsData.length);
+            setStampCollects(stampCollectsData);
+        } catch (error) {
+            console.error("獲取印章失敗: ", error);
+        }
+    };
+
+    // 處理開啟掃描器
+    const handleOpenScanner = () => {
+        if (!onDate) {
+            handleOpenNotYetHint();
+            return;
+        }
+
+        if (localStorage.getItem("accessToken") == null) {
+            handleOpenLoginHint();
+        } else {
+            setShowScanner(true);
+        }
+    };
+
+    // 處理關閉掃描器 - 使用 useCallback 避免不必要的重新渲染
+    const handleCloseScanner = useCallback(() => {
+        // 延遲設置 showScanner 為 false，讓淡出動畫有時間完成
+        setTimeout(() => {
+            setShowScanner(false);
+            // 重置掃描成功狀態
+            if (scanSuccess) {
+                setScanSuccess(false);
+            }
+        }, 500); // 與 CSSTransition 的 timeout 相同
+    }, [scanSuccess]);
+
+    // 關閉掃描結果顯示
+    const handleCloseScanResult = useCallback(() => {
+        setShowScanResult(false);
+        setScanResultInfo(null);
+        setScanStampInfo(null);
+    }, []);
+
+    // 處理掃描成功
+    const handleStampSuccess = useCallback((response, stampInfo) => {
+        console.log("集章成功，回應:", response);
+        console.log("印章信息:", stampInfo);
+        setScanSuccess(true);
+
+        // 設置掃描結果資訊
+        setScanResultInfo(response);
+        setScanStampInfo(stampInfo);
+        setShowScanResult(true);
+
+        // 如果是從 URL 參數獲取的印章 ID，成功後清除 URL 中的印章 ID
+        if (urlStampId) {
+            // 使用 history.replaceState 更新 URL，但不觸發頁面重新載入
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+
+        // 關閉掃描器 (如果開啟的話)
+        if (showScanner) {
+            handleCloseScanner();
+        }
+
+        // 刷新用戶已收集的印章和全部印章數據
+        const refreshData = async () => {
+            if (localStorage.getItem("accessToken") != null) {
+                await fetchStampCollects();
+                await fetchStamps();
+            }
+        };
+
+        refreshData();
+
+        // 3秒後自動關閉結果顯示
+        setTimeout(() => {
+            handleCloseScanResult();
+        }, 3000);
+    }, [urlStampId, showScanner, handleCloseScanner]);
+
+    // 處理錯誤
+    const handleStampError = useCallback((error, stampInfo) => {
+        console.error("集章失敗:", error);
+
+        // 特別處理400錯誤（已收集過的印章）
+        if (error.response && error.response.status === 400 ||
+            (typeof error.response?.data?.message === 'string' && error.response?.data?.message.includes("已收集")) ||
+            (typeof error.message === 'string' && error.message.startsWith("ALREADY_COLLECTED:"))) {
+
+            // 設置為"已收集過"錯誤，顯示相應信息
+            setScanResultInfo({
+                status: 'already_collected',
+                message: '此印章已收集過'
+            });
+            setScanStampInfo(stampInfo);
+            setShowScanResult(true);
+
+            // 關閉掃描器 (如果開啟的話)
+            if (showScanner) {
+                handleCloseScanner();
+            }
+
+            // 3秒後自動關閉結果顯示
+            setTimeout(() => {
+                handleCloseScanResult();
+            }, 3000);
+        }
+
+        // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
+        if (urlStampId) {
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+    }, [urlStampId, showScanner, handleCloseScanner]);
+
+    // 當用戶未登入時的處理
+    const handleLoginRequired = useCallback(() => {
+        handleOpenLoginHint();
+
+        // 清除 URL 中的印章 ID
+        if (urlStampId) {
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+    }, [urlStampId]);
+
+    // 處理開啟兌獎對話框
+    const handleOpenRedeemDialog = () => {
+        if (!onDate) {
+            handleOpenNotYetHint();
+            return;
+        }
+
+        if (localStorage.getItem("accessToken") == null) {
+            handleOpenLoginHint();
+        } else {
+            setShowRedeemDialog(true);
+        }
+    };
+
+    // 處理關閉兌獎對話框
+    const handleCloseRedeemDialog = useCallback(() => {
+        setShowRedeemDialog(false);
+    }, []);
+
+    // 處理開啟提示對話框
+    const handleOpenHint = () => {
+        setShowHint(true);
+    };
+
+    // 處理關閉提示對話框
+    const handleCloseHint = useCallback(() => {
+        setShowHint(false);
+    }, []);
+
+    // 處理開啟登入提示彈出層
+    const handleOpenLoginHint = () => {
+        setShowLoginHint(true);
+    };
+
+    // 處理關閉登入提示彈出層
+    const handleCloseLoginHint = () => {
+        setShowLoginHint(false);
+    };
+
+    // 獲取並顯示組別詳細資料
     const fetchGroupData = async (stampName) => {
         try {
             let cardsData = cards;
@@ -346,144 +513,12 @@ export const Stamps = () => {
         }
     };
 
-    const stampsDataSorted = stamps.reduce((acc, stamp) => {
-        const { genre } = stamp;
-        if (!acc[genre]) {
-            acc[genre] = [];
-        }
-        acc[genre].push(stamp);
-        return acc;
-    }, {});
-
-
-    const mapGenreToCategory = (genre) => {
-        const genreMap = {
-            0: "互動",
-            1: "遊戲",
-            2: "影視",
-            3: "動畫",
-            4: "行銷",
-            5: "其他",
-        };
-        return genreMap[genre] || "其他";
-    };
-
-
-    // 添加狀態來控制 QRScanner 和 RewardDialog 的顯示
-    const [showScanner, setShowScanner] = useState(false);
-    const [showRedeemDialog, setShowRedeemDialog] = useState(false);
-    const [showHint, setShowHint] = useState(false);
-    const [loadedImages, setLoadedImages] = useState({});
-    const [showFocusCard, setShowFocusCard] = useState(false);
-    const [showLoginHint, setShowLoginHint] = useState(false);
-    const [showIntroHint, setShowIntroHint] = useState(false);
-    const [scanSuccess, setScanSuccess] = useState(false);  // 添加掃描成功狀態
-    const [urlProcessStarted, setUrlProcessStarted] = useState(false); // 追蹤是否已開始處理 URL 印章 ID
-
-    // 處理開啟掃描器
-    const handleOpenScanner = () => {
-        if (localStorage.getItem("accessToken") == null) {
-            handleOpenLoginHint();
-        } else {
-            setShowScanner(true);
-        }
-    };
-
-    // 處理關閉掃描器 - 使用 useCallback 避免不必要的重新渲染
-    const handleCloseScanner = useCallback(() => {
-        // 延遲設置 showScanner 為 false，讓淡出動畫有時間完成
-        setTimeout(() => {
-            setShowScanner(false);
-
-            // 如果掃描成功，刷新頁面數據
-            if (scanSuccess) {
-                setScanSuccess(false);
-                fetchStamps();  // 刷新印章數據
-            }
-        }, 500); // 與 CSSTransition 的 timeout 相同
-    }, [scanSuccess]);
-
-    // 處理掃描成功
-    const handleStampSuccess = useCallback((response) => {
-        console.log("集章成功，回應:", response);
-        setScanSuccess(true);
-
-        // 如果是從 URL 參數獲取的印章 ID，成功後清除 URL 中的印章 ID
-        if (urlStampId) {
-            // 使用 history.replaceState 更新 URL，但不觸發頁面重新載入
-            window.history.replaceState({}, "", "/stamps");
-            setUrlStampId(null);
-        }
-
-        // 延遲一段時間後刷新頁面數據
-        setTimeout(() => {
-            fetchStamps();
-        }, 500);
-    }, [urlStampId]);
-
-    // 處理錯誤
-    const handleStampError = useCallback((error) => {
-        console.error("集章失敗:", error);
-        // 可以添加顯示錯誤訊息的邏輯
-
-        // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
-        if (urlStampId) {
-            window.history.replaceState({}, "", "/stamps");
-            setUrlStampId(null);
-        }
-    }, [urlStampId]);
-
-    // 當用戶未登入時的處理
-    const handleLoginRequired = useCallback(() => {
-        handleOpenLoginHint();
-
-        // 清除 URL 中的印章 ID
-        if (urlStampId) {
-            window.history.replaceState({}, "", "/stamps");
-            setUrlStampId(null);
-        }
-    }, [urlStampId]);
-
-    // 處理開啟兌獎對話框
-    const handleOpenRedeemDialog = () => {
-        if (localStorage.getItem("accessToken") == null) {
-            handleOpenLoginHint();
-        } else {
-            setShowRedeemDialog(true);
-        }
-    };
-
-    // 處理關閉兌獎對話框
-    const handleCloseRedeemDialog = useCallback(() => {
-        setShowRedeemDialog(false);
-    }, []);
-
-    // 處理開啟提示對話框
-    const handleOpenHint = () => {
-        setShowHint(true);
-    };
-
-    // 處理關閉提示對話框
-    const handleCloseHint = useCallback(() => {
-        setShowHint(false);
-    }, []);
-
-    // 處理開啟登入提示彈出層
-    const handleOpenLoginHint = () => {
-        setShowLoginHint(true);
-    };
-
-    // 處理關閉登入提示彈出層
-    const handleCloseLoginHint = () => {
-        setShowLoginHint(false);
-    };
-
-    // 處理開啟卡片彈出層
+    // 處理開啟焦點卡片彈出層
     const handleOpenFocusCard = (stampName) => {
         fetchGroupData(stampName);
     };
 
-    // 處理關閉卡片彈出層
+    // 處理關閉焦點卡片彈出層
     const handleCloseFocusCard = () => {
         setShowFocusCard(false);
         // 不再立即清除焦點卡片數據，而是等待動畫完成後由 onExited 回調處理
@@ -499,15 +534,109 @@ export const Stamps = () => {
         setShowIntroHint(false);
     };
 
+    // 處理開啟未開放提示彈出層
+    const handleOpenNotYetHint = () => {
+        setShowNotYetHint(true);
+    };
+
+    // 處理關閉未開放提示彈出層
+    const handleCloseNotYetHint = () => {
+        setShowNotYetHint(false);
+    };
+
+    // 將印章按類別排序
+    const stampsDataSorted = stamps.reduce((acc, stamp) => {
+        const { genre } = stamp;
+        if (!acc[genre]) {
+            acc[genre] = [];
+        }
+        acc[genre].push(stamp);
+        return acc;
+    }, {});
+
+    // 在組件掛載時解析 URL 參數並初始化
+    useEffect(() => {
+        // 綁定鍵盤事件
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "h") {
+                handleOpenHint();
+            }
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "g") {
+                localStorage.setItem("hideIntroHint", false);
+            }
+        });
+
+        // 檢查URL參數是否包含印章ID
+        const searchParams = new URLSearchParams(location.search);
+        const stampParam = searchParams.get('stampid');
+
+        // 檢查路徑是否包含印章ID
+        const pathParts = location.pathname.split('/');
+        if (pathParts.length >= 3 && pathParts[1] === 'stamps') {
+            const stampId = pathParts[3];
+            if (stampId && stampId.trim() !== '') {
+                console.log(`從路徑獲取到印章 ID: ${stampId}`);
+                setUrlStampId(stampId);
+            }
+        } else if (stampParam) {
+            console.log("從 URL 參數獲取印章 ID:", stampParam);
+            setUrlStampId(stampParam);
+        }
+
+        // 獲取初始數據
+        if (localStorage.getItem("accessToken") != null) {
+            fetchStampCollects();
+        }
+        fetchStamps();
+
+        setUrlParamsProcessed(true);
+
+        // 清理事件監聽器
+        return () => {
+            window.removeEventListener("keydown", (e) => {
+                if (e.key === "h") handleOpenHint();
+            });
+            window.removeEventListener("keydown", (e) => {
+                if (e.key === "g") localStorage.setItem("hideIntroHint", false);
+            });
+        };
+    }, [location]);
+
+    /**
+     * 處理來自 URL 的印章 ID
+     * 為防止重複執行，使用 urlParamsProcessed 和 urlProcessStarted 狀態
+     */
+    useEffect(() => {
+        if (urlParamsProcessed && urlStampId && !urlProcessStarted && stamps.length > 0) {
+            setUrlProcessStarted(true);
+            console.log("處理 URL 印章 ID:", urlStampId);
+        }
+    }, [urlParamsProcessed, urlStampId, urlProcessStarted, stamps]);
+
+    // 顯示介紹提示相關邏輯
     useEffect(() => {
         if (localStorage.getItem("hideIntroHint") !== "true") {
             setShowIntroHint(true);
         }
+
+        // 檢測今天是否已到2025/4/7
+        const today = new Date();
+        const targetDate = new Date('2025-04-07');
+        if (today <= targetDate) {
+            // setShowNotYetHint(true);
+            // setOnDate(false);
+        } else {
+            setShowNotYetHint(false);
+            setOnDate(true);
+        }
+        console.log("Date: ", today);
     }, []);
 
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
-            {console.log(stampCollects)}
             <div className="w-full lg:h-screen lg:gap-9 2xl:gap-24 max-w-[1600px] flex flex-col lg:flex-row">
                 <div className="block my-auto w-full max-h-full lg:overflow-y-scroll">
                     <div className="block-content flex flex-col justify-center items-center mt-20 lg:mt-24">
@@ -549,8 +678,8 @@ export const Stamps = () => {
                                 >
                                     {stamps.map((stamp, index) => (
                                         stampCollects.find(stampCollect => stampCollect.stamp_id === stamp.id) ? (
-                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} collected={true} onClick={() => handleOpenFocusCard(stamp.name)} />) : (
-                                        <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} collected={false} onClick={() => handleOpenFocusCard(stamp.name)} />)
+                                            <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} collected={true} onClick={() => handleOpenFocusCard(stamp.name)} />) : (
+                                            <GroupBlockItem key={index} name={stamp.name} icon={stamp.icon} collected={false} onClick={() => handleOpenFocusCard(stamp.name)} />)
 
                                     ))}
                                 </GroupBlock>
@@ -572,9 +701,15 @@ export const Stamps = () => {
                     </div>
                 </div>
             </div>
+
             {/* QR 掃描器彈出層 - 使用更長的過渡時間 */}
             <CSSTransition in={showScanner} timeout={500} classNames="qr-scanner" unmountOnExit mountOnEnter>
-                <QRScanner onClose={handleCloseScanner} onScanSuccess={handleStampSuccess} />
+                <QRScanner
+                    onClose={handleCloseScanner}
+                    onScanSuccess={handleStampSuccess}
+                    onScanError={handleStampError}
+                    stamps={stamps}
+                />
             </CSSTransition>
 
             {/* 兌獎對話框彈出層 */}
@@ -597,6 +732,10 @@ export const Stamps = () => {
                 <IntroHint onClose={handleCloseIntroHint} />
             </CSSTransition>
 
+            {/* 未開放提示彈出層 */}
+            <CSSTransition in={showNotYetHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <NotYetHint onClose={handleCloseNotYetHint} />
+            </CSSTransition>
 
             {/* 焦點卡片 */}
             <>
@@ -645,18 +784,25 @@ export const Stamps = () => {
                 </CSSTransition>
             </>
 
+            {/* 掃描結果彈出層 - 使用新的組件 */}
+            <CSSTransition in={showScanResult} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <ScanResultModal
+                    resultInfo={scanResultInfo}
+                    stampInfo={scanStampInfo}
+                    onClose={handleCloseScanResult}
+                />
+            </CSSTransition>
+
             {/* 處理 URL 中的印章 ID */}
-            {urlParamsProcessed && urlStampId && !urlProcessStarted && (
-                <>
-                    {setUrlProcessStarted(true)}
-                    <StampCollector
-                        stampId={urlStampId}
-                        onSuccess={handleStampSuccess}
-                        onError={handleStampError}
-                        onLoginRequired={handleLoginRequired}
-                        autoSubmit={true}
-                    />
-                </>
+            {urlParamsProcessed && urlStampId && urlProcessStarted && (
+                <StampCollector
+                    stampId={urlStampId}
+                    onSuccess={handleStampSuccess}
+                    onError={handleStampError}
+                    onLoginRequired={handleLoginRequired}
+                    autoSubmit={true}
+                    stamps={stamps}
+                />
             )}
 
         </div>

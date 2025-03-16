@@ -294,7 +294,7 @@ function App() {
 								<Route path="/result/:id" element={<Result />} />
 								<Route path="/stamps" element={<Stamps />} />
 								{/* 添加帶有印章 ID 參數的集章路由 */}
-								<Route path="/stamps/:stampId" element={<Stamps />} />
+								<Route path="/stamps/collect/:stampId" element={<Stamps />} />
 								{/* <Route path="/collect" element={<ComingSoon />} /> */}
 								<Route path="/feedback" element={<ComingSoon />} />
 								<Route path="/login" element={<LogIn />} />
