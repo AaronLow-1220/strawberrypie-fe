@@ -13,7 +13,7 @@ export const CountHint = ({ onClose, handleOpenRewardDialog, currentCount }) => 
         </button>
         <button
           onClick={onClose}
-          className="mx-auto text-white w-fit text-center opacity-80 hover:underline"
+          className="mx-auto text-white w-fit text-center opacity-80 underline underline-offset-2  hover:opacity-100"
         >
           不用，謝謝
         </button>

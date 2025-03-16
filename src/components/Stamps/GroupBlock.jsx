@@ -1,4 +1,3 @@
-import { GroupBlockItem } from "./GroupBlockItem";
 import { useState, useRef, useEffect } from "react";
 
 export const GroupBlock = ({ num, catagory, stampid, name, genre, icon, imageLoading, children}) => {
@@ -52,7 +51,7 @@ export const GroupBlock = ({ num, catagory, stampid, name, genre, icon, imageLoa
 				topValue = rect.top - bodyRect.top - 24;
 			} else {
 				// 收合時的計算方式
-				leftValue = rect.left - bodyRect.left + body.scrollLeft - paddingLeft + 8; // 減少 24px
+				leftValue = rect.left - bodyRect.left + body.scrollLeft - paddingLeft + 16; // 減少 24px
 				topValue = rect.top - bodyRect.top + 16; // 增加 12px
 			}
 
@@ -165,7 +164,7 @@ export const GroupBlock = ({ num, catagory, stampid, name, genre, icon, imageLoa
 					</div>
 				</div>
 				<div className={`group-block__header__dropdown  ${isExpanded ? "expand" : ""}`}>
-					<img src="/Collect/arrow.svg" alt="" />
+					<img src="/Stamps/arrow.svg" alt="" />
 				</div>
 			</div>
 			<div ref={bodyRef} className={`group-block__body p-[0px_20px_20px_20px] ${isExpanded ? "expand" : ""}`}>

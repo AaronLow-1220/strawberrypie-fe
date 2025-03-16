@@ -1,13 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ModalTemplate } from '../ModalTemplate';
 
 export const LoginHint = ({ onClose }) => {
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
-    navigate('/login');
-    onClose();
-  };
 
   return (
     <ModalTemplate onClose={onClose}>
@@ -17,12 +11,12 @@ export const LoginHint = ({ onClose }) => {
       {/* 內容 */}
       <div className="flex flex-col gap-4 w-full">
         <p className="text-white text-center mb-2">您需要登入才能使用此功能</p>
-        <button onClick={handleLogin} className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
+        <Link to="/login" className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
           前往登入
-        </button>
+        </Link>
         <button
           onClick={onClose}
-          className="mx-auto text-white w-fit text-center opacity-80 hover:underline"
+          className="mx-auto text-white w-fit text-center opacity-80 underline underline-offset-2 hover:opacity-100"
         >
           取消
         </button>
