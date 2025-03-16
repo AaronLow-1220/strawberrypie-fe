@@ -316,17 +316,6 @@ function App() {
 							classNames="overlay"
 							unmountOnExit
 							mountOnEnter
-						>
-							<div
-								className="fixed inset-0 bg-black bg-opacity-40 z-[999]"
-							></div>
-						</CSSTransition>
-						<CSSTransition
-							in={isAccountOpen}
-							timeout={300}
-							classNames="modal"
-							unmountOnExit
-							mountOnEnter
 						>	
 							<Account onClose={handleCloseAccount} />
 						</CSSTransition>
