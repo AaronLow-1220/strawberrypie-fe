@@ -58,7 +58,7 @@ export const ModalTemplate = ({ onClose, children }) => {
         <div className="my-auto flex justify-center w-full max-w-md">
           <div
             ref={contentRef}
-            className="bg-layer1 modal rounded-[24px] w-full  p-6 relative"
+            className="bg-layer1 modal rounded-[24px] w-full p-6 py-8 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {children}

@@ -108,11 +108,11 @@ export const FocusCard = memo(
     // 寬屏佈局 - 左右分欄顯示
     const WideScreenLayout = (
       <div
-        className="w-full h-full flex justify-center px-16"
+        className="w-full h-full flex justify-center px-16 py-8"
         onClick={handleContainerClick} // 點擊背景關閉
       >
         <div className="my-auto">
-          <div className="focus-card modal !my-8 max-w-[1200px] bg-[#361014] p-[64px] rounded-[48px] flex gap-[48px] relative">
+          <div className="focus-card modal mb-8 max-w-[1200px] bg-[#361014] p-[64px] rounded-[48px] flex gap-[48px] relative">
             {/* 左側區域 - 圖片和成員信息 */}
             <div className="w-full relative">
               <div className="w-full aspect-[4/3] relative rounded-[8px] overflow-hidden">
@@ -199,12 +199,12 @@ export const FocusCard = memo(
     // 窄屏佈局 - 上下分欄顯示
     const NarrowScreenLayout = (
       <div
-        className="w-full h-full flex justify-center px-16"
+        className="w-full h-full flex justify-center px-5 py-8"
         onClick={handleContainerClick} // 點擊背景關閉
       >
         <div className="my-auto">
           <div
-            className="max-w-[480px] modal w-[calc(100vw-50px)] rounded-3xl overflow-hidden !my-8 bg-[#361014] rounded-[12px] mx-auto"
+            className="max-w-[480px] modal mb-8 w-full rounded-3xl overflow-hidden bg-[#361014] rounded-[24px] mx-auto"
             onClick={handleContainerClick}
           >
             <div className="relative flex flex-col justify-center align-top">

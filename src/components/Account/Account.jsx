@@ -69,7 +69,7 @@ export const Account = ({ onClose }) => {
 				/>
 			</button>
 
-			<div className='w-full h-full flex flex-col items-center justify-center py-8'>
+			<div className='w-full h-full flex flex-col items-center justify-center py-4'>
 				<div className='w-[96px] h-[96px] bg-white rounded-full overflow-hidden mb-6'>
 					<img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
 				</div>
