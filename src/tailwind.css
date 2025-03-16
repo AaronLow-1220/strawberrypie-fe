@@ -627,6 +627,10 @@ body, * {
   box-shadow: 0 0 40px 0 #F748C1;
 }
 
+.text-shadow{
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .max-menu{
   width: 28px;
   height: 28px;

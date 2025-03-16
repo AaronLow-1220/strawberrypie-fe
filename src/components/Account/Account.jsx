@@ -77,7 +77,7 @@ export const Account = ({ onClose }) => {
 				{/* 已登入狀態 */}
 				<h2 className="text-white text-[36px] mb-5 text-center" style={{ fontFamily: 'B' }}>{username}</h2>
 				<div className="flex flex-col gap-4 w-full">
-					<Link to="/collect" onClick={onClose} className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
+					<Link to="/stamps" onClick={onClose} className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
 						我的集章
 					</Link>
 					<button
