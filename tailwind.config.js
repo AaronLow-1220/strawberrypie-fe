@@ -20,6 +20,7 @@ export default withMT({
         "layer1": "#361014",
         "layer1-5": "#51181E",
         "layer2": "#6C2028",
+        "layer3": "#D84050",
       },
       animation: {
         light: "lightAnimation 2s infinite",

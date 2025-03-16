@@ -9,6 +9,7 @@ export const Question = () => {
   const [selectedOptionIds, setSelectedOptionIds] = useState([]);
   const [isAnswer, setIsAnswer] = useState(false);
   const [loadedImages, setLoadedImages] = useState({});
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   // 取得 API 資料
   useEffect(() => {
@@ -115,6 +116,10 @@ export const Question = () => {
     for (let i = 1; i < questionsData.length; i++) {
       loadQuestionImage(i);
     }
+  };
+
+  const handleImageLoad = () => {
+    setImgLoaded(true);
   };
 
   // 當問題索引變更時，確保下一個問題的圖片已預先載入
@@ -267,25 +272,28 @@ export const Question = () => {
   // 渲染問題和選項
   return (
     <>
+      <style>
+        {`
+          .mobile__header {
+            padding-bottom: 0;
+          }
+        `}
+      </style>
       {/* 使用Tailwind響應式類取代JavaScript條件渲染 */}
       {/* 桌面版配置（lg以上顯示） */}
       <div className="hidden lg:flex justify-center max-w-[1600px] mx-auto items-center px-5 xl:px-16 min-h-screen gap-[min(5vw,6rem)]">
         {/* 左側圖片區域 */}
-        <div className="w-full z-10 relative">
+        <div className="w-full z-10 relative navMargin">
           {questions.length > 0 && (
-            questions[currentIndex].imageLoading ? (
+            <>
               <ImageSkeleton />
-            ) : questions[currentIndex].img ? (
               <img
-                className="w-full h-full object-cover rounded-[1rem] navMargin"
+                className={`w-full absolute top-0 h-full object-cover rounded-[1rem] transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
                 src={questions[currentIndex].img}
                 alt=""
+                onLoad={handleImageLoad}
               />
-            ) : (
-              <div className="w-full h-full bg-[#361014] rounded-[1rem] flex justify-center items-center">
-                <p className="text-white text-lg">無圖片可用</p>
-              </div>
-            )
+            </>
           )}
         </div>
 
@@ -327,8 +335,8 @@ export const Question = () => {
                           {/* 選項前的圓點 */}
                           <div
                             className={`min-w-[12px] min-h-[12px] rounded-[50%] border me-[0.625rem] box-border ${selectedOptionIds[currentIndex] === option.id
-                                ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
-                                : "opacity-[60%]"
+                              ? "bg-secondary-color opacity-100 border-[#FFB0CE]"
+                              : "opacity-[60%]"
                               }`}
                           ></div>
 
@@ -416,19 +424,15 @@ export const Question = () => {
         {/* 頂部圖片區域 */}
         <div className="w-full mx-auto sm:max-w-[33.75rem] md:mx-auto mt-[4rem] sm:px-5 relative">
           {questions.length > 0 && (
-            questions[currentIndex].imageLoading ? (
+            <>
               <ImageSkeleton />
-            ) : questions[currentIndex].img ? (
               <img
-                className="w-full h-full object-cover sm:rounded-[1rem] aspect-[4/3]"
+                className={`w-full absolute top-0 h-full object-cover sm:rounded-[1rem] transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
                 src={questions[currentIndex].img}
                 alt=""
+                onLoad={handleImageLoad}
               />
-            ) : (
-              <div className="w-full h-full bg-[#361014] md:rounded-[1rem] flex justify-center items-center">
-                <p className="text-white text-lg">無圖片可用</p>
-              </div>
-            )
+            </>
           )}
         </div>
 
@@ -472,8 +476,8 @@ export const Question = () => {
                       {/* 選項前的圓點 */}
                       <div
                         className={`min-w-[12px] min-h-[12px] rounded-[50%] opacity-[60%] border me-[0.625rem] box-border ${selectedOptionIds[currentIndex] === option.id
-                            ? "bg-secondary-color !opacity-100 border-[#FFB0CE]"
-                            : "opacity-[60%]"
+                          ? "bg-secondary-color !opacity-100 border-[#FFB0CE]"
+                          : "opacity-[60%]"
                           }`}
                       ></div>
 

@@ -22,8 +22,6 @@ export const Model = ({ logoAnimation, onAnimationEnd }) => {
   const [animate, setAnimate] = useState(""); // Logo 動畫類名
   const [LightStripHeight, setLightStripHeight] = useState(""); // 光條動畫狀態
 
-  console.log(deviceType);
-  
   // 載入 3D 模型
   const gltf = useLoader(GLTFLoader, "/GT_Scene.glb");
 

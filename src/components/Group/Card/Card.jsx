@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { ImageSkeleton } from "../../ImageSkeleton";
 
 export const Card = ({
   img, // 卡片圖片來源
   imageLoading, // 圖片是否正在加載
-  ImageSkeleton, // 圖片骨架屏組件
   title, // 卡片標題
   content, // 卡片內容摘要
   secondTitle, // 卡片副標題
@@ -14,6 +14,14 @@ export const Card = ({
   media, // 媒體信息
   onClick, // 點擊卡片時的回調函數
 }) => {
+  // 添加圖片加載完成狀態
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  // 處理圖片加載完成事件
+  const handleImageLoad = () => {
+    setImgLoaded(true);
+  };
+
   // 處理卡片點擊事件，將卡片資料傳遞給父組件
   const handleCardClick = useCallback(() => {
     if (onClick) {
@@ -45,34 +53,24 @@ export const Card = ({
 
   return (
     <div
-      className={`${
-        selectedFilter === "全部"
+      className={`${selectedFilter === "全部"
           ? "w-[calc(100vw-40px)] max-w-[300px]"
           : "w-full"
-      }
+        }
         shrink-0 snap-start bg-[#361014]  overflow-hidden rounded-[12px] cursor-pointer`}
       onClick={handleCardClick}
     >
       {/* 卡片容器，使用 flex 佈局 */}
       <div className="relative flex flex-col justify-center group">
         {/* 卡片圖片區域 */}
-        <div className={`max-w-full aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
-          {imageLoading ? (
-            // 圖片加載時顯示骨架屏
-            <ImageSkeleton />
-          ) : img ? (
-            // 圖片已加載完成
-            <img
-              className="w-full h-full object-cover"
-              src={img}
-              alt={title || "卡片圖片"}
-            />
-          ) : (
-            // 無圖片可用或加載失敗
-            <div className="w-full h-full bg-[#361014] flex justify-center items-center">
-                  <p className="text-white text-lg">無圖片</p>
-            </div>
-          )}
+        <div className={`max-w-full relative aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
+          <ImageSkeleton />
+          <img
+            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+            src={img}
+            alt={title || "卡片圖片"}
+            onLoad={handleImageLoad}
+          />
         </div>
 
         {/* 卡片內容區域 */}

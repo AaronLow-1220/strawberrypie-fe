@@ -11,7 +11,7 @@ export const Nav = ({ filter, onFilterChange }) => {
 	}
 
 	return (
-		<div className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] sticky md:relative top-[64px] md:top-[0px] z-10">
+		<div className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] sticky md:relative top-[64px] md:top-[0px] z-10 lg:z-0">
 			<div className={`groups__nav group-padding mt-[72px] md:mt-[88px] lg:mt-[120px] scrollbar-hide lg:mb-[24px] md:justify-center text-white flex space-x-[8px] scroll-px-5 snap-x overflow-x-scroll whitespace-nowrap transition-all duration-300 ease-in-out
 		${filter === "全部" ? "mb-[48px] 2xl:mb-[42px]" : "mb-[24px] lg:mb-[36px] 2xl:mb-[42px]"}`}>
 				{navList.map((item) => (

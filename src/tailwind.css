@@ -383,6 +383,10 @@ body, * {
     row-gap: 1.4em;
   }
 
+  .group-block__body:not(.expand) .group-block-item:hover {
+    transform: scale(1) !important;
+  }
+
   .group-block__body.expand .group-block-item {
     margin-right: 0;
   }
@@ -416,7 +420,6 @@ body, * {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: white;
     border-radius: 100%;
     width: 48px;
     height: 48px;
