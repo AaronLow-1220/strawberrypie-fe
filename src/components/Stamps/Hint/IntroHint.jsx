@@ -117,10 +117,7 @@ export const IntroHint = ({ onClose }) => {
             <div className="flex flex-col gap-4 w-full">
               <div>
                 <p className='text-white text-[16px] text-center'>
-                  先登入才能開始呦
-                </p>
-                <p className='text-white text-[16px] text-center'>
-                  我們才能記錄您的章數
+                  登入以記錄您的章點
                 </p>
               </div>
               <Link to="/login" className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center">
