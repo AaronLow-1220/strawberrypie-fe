@@ -314,10 +314,10 @@ export const Stamps = () => {
 
         refreshData();
 
-        // 3秒後自動關閉結果顯示
+        // 5秒後自動關閉結果顯示
         setTimeout(() => {
             handleCloseScanResult();
-        }, 3000);
+        }, 5000);
     }, [urlStampId, showScanner, handleCloseScanner]);
 
     // 處理錯誤

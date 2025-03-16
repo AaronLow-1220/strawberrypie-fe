@@ -24,13 +24,13 @@ export const ScanResultModal = ({ resultInfo, stampInfo, onClose }) => {
 									</div>
 								)}
 							</div>
-							<p className="font-bold mt-12 text-[32px] text-center" style={{ fontFamily: "B" }}>{stampInfo.name || "未知印章"}</p>
+							<p className="font-bold mt-12 mb-2 text-[32px] text-center" style={{ fontFamily: "B" }}>{stampInfo.name || "未知印章"}</p>
 						</div>
 						{/* 顯示印章資訊和狀態 */}
 						{resultInfo?.status === 'already_collected' ? (
-							<p className="text-secondary-color text-center text-[18px]">此印章已收集過，你少來：）</p>
+							<p className="text-secondary-color text-center text-[18px]">此印章已收集過，你少來 (`へ´≠)</p>
 						) : (
-							<p className="text-secondary-color font-bold mb-2 text-xl">成功搜集！</p>
+							<p className="text-secondary-color text-center text-[18px]">成功搜集！</p>
 						)}
 					</div>
 				)}
