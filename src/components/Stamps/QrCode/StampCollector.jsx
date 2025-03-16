@@ -60,12 +60,15 @@ export const StampCollector = ({
         handleOpenLoginHint();
         return;
       }
+
+      console.log("提交印章 ID:", stampId);
       
       const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
       const response = await axios.get(
         `${apiBaseUrl}/stamp/collect/${stampId}`,
         {
           headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${accessToken}`,
           },
         }
