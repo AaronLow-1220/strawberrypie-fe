@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-export const GroupBlock = ({ num, catagory, stampid, name, genre, icon, imageLoading, children}) => {
+export const GroupBlock = ({ total, catagory, num = 0, children}) => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const bodyRef = useRef(null);
 	const containerRef = useRef(null);
@@ -160,7 +160,7 @@ export const GroupBlock = ({ num, catagory, stampid, name, genre, icon, imageLoa
 						{catagory}
 					</div>
 					<div className="text-secondary-color text-[20px] ms-[5px]" style={{ fontFamily: "R" }}>
-						{num}/{num}
+						{num}/{total}
 					</div>
 				</div>
 				<div className={`group-block__header__dropdown  ${isExpanded ? "expand" : ""}`}>
