@@ -58,7 +58,6 @@ export const Stamps = () => {
     const [showScanResult, setShowScanResult] = useState(false);
     const [scanResultInfo, setScanResultInfo] = useState(null);
     const [scanStampInfo, setScanStampInfo] = useState(null);
-    const scanResultRef = useRef(null); // 用於掃描結果的動畫參考 (已不再需要，但保留變數避免其他地方仍有引用)
 
     // 解析 JWT token 的函數
     const parseJwt = (token) => {
@@ -635,6 +634,12 @@ export const Stamps = () => {
         console.log("Date: ", today);
     }, []);
 
+    useEffect(() => {
+        if(currentCount % 7 == 0){
+            handleOpenHint();
+        }
+    }, [currentCount]);
+
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
             <div className="w-full lg:h-screen lg:gap-9 2xl:gap-24 max-w-[1600px] flex flex-col lg:flex-row">
@@ -673,7 +678,8 @@ export const Stamps = () => {
                                 <GroupBlock
                                     key={genre}
                                     catagory={genre}
-                                    num={stamps.length}
+                                    num={stamps.filter(stamp => stampCollects.some(collect => collect.stamp_id === stamp.id)).length}
+                                    total={stamps.length}
                                     stamps={stamps}
                                 >
                                     {stamps.map((stamp, index) => (
