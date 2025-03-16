@@ -4,12 +4,13 @@ import { ProgressBar } from "./ProgressBar/ProgressBar"; // 匯入進度條組�
 import { GroupBlock } from "./GroupBlock"; // 匯入組別區塊組件
 import { GroupBlockItem } from "./GroupBlockItem"; // 匯入組別區塊項目組件
 import { QRScanner } from "./QrCode/QRScanner"; // 匯入 QRScanner 組件
-import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
-import { CountHint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import { useEffect } from "react";
 import { FocusCard } from "../Group/Card/FocusCard";
 import { Link, useLocation } from "react-router-dom";
 import { LoginHint } from "./Hint/LoginHint";
+import { IntroHint } from "./Hint/IntroHint";
+import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
+import { CountHint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import axios from "axios";
 import { StampCollector } from "./QrCode/StampCollector";
 
@@ -19,7 +20,7 @@ import "./QrCode/QRScannerTransition.css";
 export const Stamps = () => {
 
     // 假設目前集到的張數與總數
-    const currentCount = 21;
+    const currentCount = 20;
     const totalStamps = 22;
 
     const [stamps, setStamps] = useState([]);
@@ -41,6 +42,12 @@ export const Stamps = () => {
         window.addEventListener("keydown", (e) => {
             if (e.key === "h") {
                 handleOpenHint();
+            }
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "g") {
+                localStorage.clear("hideIntroHint");
             }
         });
 
@@ -308,11 +315,12 @@ export const Stamps = () => {
 
     // 添加狀態來控制 QRScanner 和 RewardDialog 的顯示
     const [showScanner, setShowScanner] = useState(false);
-    const [showRewardDialog, setShowRewardDialog] = useState(false);
+    const [showRedeemDialog, setShowRedeemDialog] = useState(false);
     const [showHint, setShowHint] = useState(false);
     const [loadedImages, setLoadedImages] = useState({});
     const [showFocusCard, setShowFocusCard] = useState(false);
     const [showLoginHint, setShowLoginHint] = useState(false);
+    const [showIntroHint, setShowIntroHint] = useState(false);
     const [scanSuccess, setScanSuccess] = useState(false);  // 添加掃描成功狀態
     const [urlProcessStarted, setUrlProcessStarted] = useState(false); // 追蹤是否已開始處理 URL 印章 ID
 
@@ -330,7 +338,7 @@ export const Stamps = () => {
         // 延遲設置 showScanner 為 false，讓淡出動畫有時間完成
         setTimeout(() => {
             setShowScanner(false);
-            
+
             // 如果掃描成功，刷新頁面數據
             if (scanSuccess) {
                 setScanSuccess(false);
@@ -343,14 +351,14 @@ export const Stamps = () => {
     const handleStampSuccess = useCallback((response) => {
         console.log("集章成功，回應:", response);
         setScanSuccess(true);
-        
+
         // 如果是從 URL 參數獲取的印章 ID，成功後清除 URL 中的印章 ID
         if (urlStampId) {
             // 使用 history.replaceState 更新 URL，但不觸發頁面重新載入
             window.history.replaceState({}, "", "/stamps");
             setUrlStampId(null);
         }
-        
+
         // 延遲一段時間後刷新頁面數據
         setTimeout(() => {
             fetchStamps();
@@ -361,7 +369,7 @@ export const Stamps = () => {
     const handleStampError = useCallback((error) => {
         console.error("集章失敗:", error);
         // 可以添加顯示錯誤訊息的邏輯
-        
+
         // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
         if (urlStampId) {
             window.history.replaceState({}, "", "/stamps");
@@ -372,7 +380,7 @@ export const Stamps = () => {
     // 當用戶未登入時的處理
     const handleLoginRequired = useCallback(() => {
         handleOpenLoginHint();
-        
+
         // 清除 URL 中的印章 ID
         if (urlStampId) {
             window.history.replaceState({}, "", "/stamps");
@@ -381,17 +389,17 @@ export const Stamps = () => {
     }, [urlStampId]);
 
     // 處理開啟兌獎對話框
-    const handleOpenRewardDialog = () => {
+    const handleOpenRedeemDialog = () => {
         if (localStorage.getItem("accessToken") == null) {
             handleOpenLoginHint();
         } else {
-            setShowRewardDialog(true);
+            setShowRedeemDialog(true);
         }
     };
 
     // 處理關閉兌獎對話框
-    const handleCloseRewardDialog = useCallback(() => {
-        setShowRewardDialog(false);
+    const handleCloseRedeemDialog = useCallback(() => {
+        setShowRedeemDialog(false);
     }, []);
 
     // 處理開啟提示對話框
@@ -416,11 +424,7 @@ export const Stamps = () => {
 
     // 處理開啟卡片彈出層
     const handleOpenFocusCard = (stampName) => {
-        if (localStorage.getItem("accessToken") == null) {
-            handleOpenLoginHint();
-        } else {
-            fetchGroupData(stampName);
-        }
+        fetchGroupData(stampName);
     };
 
     // 處理關閉卡片彈出層
@@ -429,6 +433,21 @@ export const Stamps = () => {
         // 不再立即清除焦點卡片數據，而是等待動畫完成後由 onExited 回調處理
     };
 
+    // 處理開啟介紹提示彈出層
+    const handleOpenIntroHint = () => {
+        setShowIntroHint(true);
+    };
+
+    // 處理關閉介紹提示彈出層
+    const handleCloseIntroHint = () => {
+        setShowIntroHint(false);
+    };
+
+    useEffect(() => {
+        if (localStorage.getItem("hideIntroHint") !== "true") {
+            setShowIntroHint(true);
+        }
+    }, []);
 
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
@@ -440,11 +459,11 @@ export const Stamps = () => {
                             {/* 兩個圓形圖示按鈕區塊 */}
                             <div className="flex justify-between">
                                 {/* 兌獎按鈕 - 修改為可點擊按鈕 */}
-                                <div className="flex flex-col items-center justify-center gap-2 cursor-pointer transition-opacity" onClick={handleOpenRewardDialog}>
+                                <div className="flex flex-col items-center justify-center gap-2 cursor-pointer transition-opacity" onClick={handleOpenRedeemDialog}>
                                     <div className="relative flex flex-col items-center justify-center h-[72px] w-[72px] 2xl:h-[96px] 2xl:w-[96px] rounded-full">
                                         <div className="z-0 absolute w-full h-full bg-white rounded-full mix-blend-overlay"></div>
                                         <div className="z-10 absolute w-full h-full border-4 2xl:border-[6px] border-[rgba(255,255,255,0.1)] rounded-full"></div>
-                                        <img className="z-10 w-9 2xl:w-12" src="/Collect/gifts.svg" alt="" />
+                                        <img className="z-10 w-9 2xl:w-12" src="/Stamps/gifts.svg" alt="" />
                                     </div>
                                     <p className="text-[14px] lg:text-[20px] opacity-80">兌獎</p>
                                 </div>
@@ -453,7 +472,7 @@ export const Stamps = () => {
                                     <div className="relative flex flex-col items-center justify-center h-[72px] w-[72px] 2xl:h-[96px] 2xl:w-[96px] rounded-full">
                                         <div className="z-0 absolute w-full h-full bg-white rounded-full mix-blend-overlay"></div>
                                         <div className="z-10 absolute w-full h-full border-4 2xl:border-[6px] border-[rgba(255,255,255,0.1)] rounded-full"></div>
-                                        <img className="z-10 w-9 2xl:w-12" src="/Collect/qr_codes.svg" alt="" />
+                                        <img className="z-10 w-9 2xl:w-12" src="/Stamps/qr_codes.svg" alt="" />
                                     </div>
                                     <p className="text-[14px] lg:text-[20px] opacity-80">集章</p>
                                 </div>
@@ -485,6 +504,11 @@ export const Stamps = () => {
                                 ) : null
                             )
                         ))}
+                        <div className="max-w-[540px] flex w-full mt-4">
+                            <button onClick={handleOpenIntroHint} className=" text-white mx-auto px-4 py-2 rounded-lg opacity-80 underline underline-offset-2 hover:opacity-100">
+                                獎品及規則 ?
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -495,13 +519,23 @@ export const Stamps = () => {
             </CSSTransition>
 
             {/* 兌獎對話框彈出層 */}
-            <CSSTransition in={showRewardDialog} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-                <Redeem onClose={handleCloseRewardDialog} />
+            <CSSTransition in={showRedeemDialog} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <Redeem onClose={handleCloseRedeemDialog} />
             </CSSTransition>
 
             {/* 提示對話框彈出層 */}
             <CSSTransition in={showHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-                <CountHint currentCount={currentCount} onClose={handleCloseHint} handleOpenRewardDialog={handleOpenRewardDialog} />
+                <CountHint currentCount={currentCount} onClose={handleCloseHint} handleOpenRedeemDialog={handleOpenRedeemDialog} />
+            </CSSTransition>
+
+            {/* 登入提示彈出層 */}
+            <CSSTransition in={showLoginHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <LoginHint onClose={handleCloseLoginHint} />
+            </CSSTransition>
+
+            {/* 介紹提示彈出層 */}
+            <CSSTransition in={showIntroHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <IntroHint onClose={handleCloseIntroHint} />
             </CSSTransition>
 
 
@@ -566,10 +600,6 @@ export const Stamps = () => {
                 </>
             )}
 
-            {/* 登入提示彈出層 */}
-            <CSSTransition in={showLoginHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-                <LoginHint onClose={handleCloseLoginHint} />
-            </CSSTransition>
         </div>
     );
 };
