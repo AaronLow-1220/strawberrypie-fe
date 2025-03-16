@@ -8,9 +8,10 @@ import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
 import { CountHint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import { useEffect } from "react";
 import { FocusCard } from "../Group/Card/FocusCard";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { LoginHint } from "./Hint/LoginHint";
 import axios from "axios";
+import { StampCollector } from "./QrCode/StampCollector";
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
@@ -26,10 +27,15 @@ export const Stamps = () => {
     const [cards, setCards] = useState([]);
     // 用於追蹤當前焦點卡片的資料
     const [focusedCard, setFocusedCard] = useState(null);
+    // 從 URL 獲取的印章 ID
+    const [urlStampId, setUrlStampId] = useState(null);
+    // 添加狀態來追蹤 URL 參數是否已處理
+    const [urlParamsProcessed, setUrlParamsProcessed] = useState(false);
 
     // 新增節點引用
     const focusCardRef = useRef(null);
     const overlayRef = useRef(null);
+    const location = useLocation(); // 獲取當前 URL 資訊
 
     useEffect(() => {
         window.addEventListener("keydown", (e) => {
@@ -38,6 +44,17 @@ export const Stamps = () => {
             }
         });
 
+        // 檢查 URL 路徑是否包含印章 ID
+        const pathParts = location.pathname.split('/');
+        if (pathParts.length >= 3 && pathParts[1] === 'stamps') {
+            const stampId = pathParts[2];
+            if (stampId && stampId.trim() !== '') {
+                console.log(`從 URL 獲取到印章 ID: ${stampId}`);
+                setUrlStampId(stampId);
+            }
+        }
+        setUrlParamsProcessed(true);
+
         const loadImagesInOrder = async (stampsData, apiBaseUrl) => {
             console.log("loadImagesInOrder");
             // 載入單個卡片的圖片
@@ -45,7 +62,6 @@ export const Stamps = () => {
                 if (!stamp.icon_id || loadedImages[stamp.id]) return;
 
                 try {
-                    console.log("try");
                     const imgResponse = await axios.get(`${apiBaseUrl}/fe/file/download/${stamp.icon_id}`, {
                         headers: {
                             "Content-Type": "application/octet-stream",
@@ -54,7 +70,6 @@ export const Stamps = () => {
                     });
 
                     const imageURL = URL.createObjectURL(imgResponse.data);
-                    console.log(imageURL);
 
                     // 更新已載入的圖片
                     setLoadedImages((prev) => ({
@@ -139,7 +154,7 @@ export const Stamps = () => {
         };
 
         fetchStamps();
-    }, []);
+    }, [location.pathname]); // 添加 location.pathname 作為依賴
 
     const parseJsonArray = (jsonString) => {
         try {
@@ -298,6 +313,8 @@ export const Stamps = () => {
     const [loadedImages, setLoadedImages] = useState({});
     const [showFocusCard, setShowFocusCard] = useState(false);
     const [showLoginHint, setShowLoginHint] = useState(false);
+    const [scanSuccess, setScanSuccess] = useState(false);  // 添加掃描成功狀態
+    const [urlProcessStarted, setUrlProcessStarted] = useState(false); // 追蹤是否已開始處理 URL 印章 ID
 
     // 處理開啟掃描器
     const handleOpenScanner = () => {
@@ -313,8 +330,55 @@ export const Stamps = () => {
         // 延遲設置 showScanner 為 false，讓淡出動畫有時間完成
         setTimeout(() => {
             setShowScanner(false);
+            
+            // 如果掃描成功，刷新頁面數據
+            if (scanSuccess) {
+                setScanSuccess(false);
+                fetchStamps();  // 刷新印章數據
+            }
         }, 500); // 與 CSSTransition 的 timeout 相同
-    }, []);
+    }, [scanSuccess]);
+
+    // 處理掃描成功
+    const handleStampSuccess = useCallback((response) => {
+        console.log("集章成功，回應:", response);
+        setScanSuccess(true);
+        
+        // 如果是從 URL 參數獲取的印章 ID，成功後清除 URL 中的印章 ID
+        if (urlStampId) {
+            // 使用 history.replaceState 更新 URL，但不觸發頁面重新載入
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+        
+        // 延遲一段時間後刷新頁面數據
+        setTimeout(() => {
+            fetchStamps();
+        }, 500);
+    }, [urlStampId]);
+
+    // 處理錯誤
+    const handleStampError = useCallback((error) => {
+        console.error("集章失敗:", error);
+        // 可以添加顯示錯誤訊息的邏輯
+        
+        // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
+        if (urlStampId) {
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+    }, [urlStampId]);
+
+    // 當用戶未登入時的處理
+    const handleLoginRequired = useCallback(() => {
+        handleOpenLoginHint();
+        
+        // 清除 URL 中的印章 ID
+        if (urlStampId) {
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+    }, [urlStampId]);
 
     // 處理開啟兌獎對話框
     const handleOpenRewardDialog = () => {
@@ -413,7 +477,7 @@ export const Stamps = () => {
                                 </GroupBlock>
                             ) : (
                                 currentCount == 21 ? (
-                                    <div className="w-full max-w-[540px] flex flex-col justify-center items-center p-8">
+                                    <div key="final-stamp" className="w-full max-w-[540px] flex flex-col justify-center items-center p-8">
                                         <h2 className="text-[36px] mb-2 text-center font-bold" style={{ fontFamily: "B" }}>最終章點！</h2>
                                         <p className="text-[20px] mb-6 text-center text-secondary-color">填寫意見回饋，搜集第22個章以獲得抽獎資格！</p>
                                         <Link to="/feedback" className="primary-button text-white px-4 py-2 rounded-lg">意見回饋</Link>
@@ -427,7 +491,7 @@ export const Stamps = () => {
 
             {/* QR 掃描器彈出層 - 使用更長的過渡時間 */}
             <CSSTransition in={showScanner} timeout={500} classNames="qr-scanner" unmountOnExit mountOnEnter>
-                <QRScanner onClose={handleCloseScanner} />
+                <QRScanner onClose={handleCloseScanner} onScanSuccess={handleStampSuccess} />
             </CSSTransition>
 
             {/* 兌獎對話框彈出層 */}
@@ -487,6 +551,20 @@ export const Stamps = () => {
                     </div>
                 </CSSTransition>
             </>
+
+            {/* 處理 URL 中的印章 ID */}
+            {urlParamsProcessed && urlStampId && !urlProcessStarted && (
+                <>
+                    {setUrlProcessStarted(true)}
+                    <StampCollector
+                        stampId={urlStampId}
+                        onSuccess={handleStampSuccess}
+                        onError={handleStampError}
+                        onLoginRequired={handleLoginRequired}
+                        autoSubmit={true}
+                    />
+                </>
+            )}
 
             {/* 登入提示彈出層 */}
             <CSSTransition in={showLoginHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
