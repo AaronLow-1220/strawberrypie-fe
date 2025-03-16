@@ -45,7 +45,7 @@ export const ModalTemplate = ({ onClose, children }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center overflow-y-scroll justify-center z-[1000] bg-black bg-opacity-40"
+      className="fixed inset-0 flex items-center overflow-y-scroll px-[30px] py-8 justify-center z-[1000] bg-black bg-opacity-40"
       onClick={handleBackdropClick}
     >
       <CSSTransition
@@ -55,10 +55,10 @@ export const ModalTemplate = ({ onClose, children }) => {
         classNames="modal"
         unmountOnExit
       >
-        <div className="m-auto flex justify-center w-full max-w-md">
+        <div className="my-auto flex justify-center w-full max-w-md">
           <div
             ref={contentRef}
-            className="bg-layer1 modal rounded-[24px] !my-8 w-full  p-6 relative"
+            className="bg-layer1 modal rounded-[24px] w-full  p-6 relative"
             onClick={(e) => e.stopPropagation()}
           >
             {children}
