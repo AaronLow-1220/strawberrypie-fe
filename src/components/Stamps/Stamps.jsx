@@ -10,11 +10,13 @@ import { Link, useLocation } from "react-router-dom";
 import { LoginHint } from "./Hint/LoginHint";
 import { IntroHint } from "./Hint/IntroHint";
 import { NotYetHint } from "./Hint/NotYetHint";
+import { LuckyDrawHint } from "./Hint/LuckyDrawHint";
 import { Redeem } from "./QrCode/Redeem"; // 匯入 Redeem 組件
 import { CountHint } from "./Hint/CountHint"; // 匯入 Hint 組件
 import axios from "axios";
 import { StampCollector } from "./QrCode/StampCollector";
 import { ScanResultModal } from "./QrCode/ScanResultModal"; // 匯入 ScanResultModal 組件
+import { jwtDecode } from 'jwt-decode';
 
 // 添加 CSS 樣式到檔案頂部
 import "./QrCode/QRScannerTransition.css";
@@ -56,25 +58,24 @@ export const Stamps = () => {
 
     // 新增狀態用於顯示掃描結果
     const [showScanResult, setShowScanResult] = useState(false);
+    const [showLuckyDrawHint, setShowLuckyDrawHint] = useState(false);
     const [scanResultInfo, setScanResultInfo] = useState(null);
     const [scanStampInfo, setScanStampInfo] = useState(null);
 
-    // 解析 JWT token 的函數
-    const parseJwt = (token) => {
-        try {
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const jsonPayload = decodeURIComponent(
-                atob(base64)
-                    .split('')
-                    .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-                    .join('')
-            );
-            return JSON.parse(jsonPayload);
-        } catch (error) {
-            console.error('Token 解析錯誤:', error);
-            return {};
-        }
+    // 處理開啟抽獎提示彈出層
+    const [luckyDrawResult, setLuckyDrawResult] = useState(null);
+    
+    const handleOpenLuckyDrawHint = (result) => {
+        setLuckyDrawResult(result);
+        setShowLuckyDrawHint(true);
+    };
+
+    // 處理關閉抽獎提示彈出層
+    const handleCloseLuckyDrawHint = () => {
+        setShowLuckyDrawHint(false);
+        setTimeout(() => {
+            setLuckyDrawResult(null);
+        }, 300);
     };
 
     const parseJsonArray = (jsonString) => {
@@ -221,7 +222,7 @@ export const Stamps = () => {
                 const response = await axios.post(
                     `${apiBaseUrl}/stamp-collect/search`,
                     {
-                        userId: parseJwt(localStorage.getItem("accessToken")).id,
+                        userId: jwtDecode(localStorage.getItem("accessToken")).id,
                         pageSize: 25,
                     },
                     {
@@ -276,8 +277,11 @@ export const Stamps = () => {
     // 關閉掃描結果顯示
     const handleCloseScanResult = useCallback(() => {
         setShowScanResult(false);
-        setScanResultInfo(null);
-        setScanStampInfo(null);
+        setTimeout(() => {
+            setScanResultInfo(null);
+            setScanStampInfo(null);
+    }, 1000)
+
     }, []);
 
     // 處理掃描成功
@@ -303,20 +307,15 @@ export const Stamps = () => {
             handleCloseScanner();
         }
 
-        // 刷新用戶已收集的印章和全部印章數據
+        // 只更新用戶已收集的印章數據，不重新獲取所有印章
         const refreshData = async () => {
             if (localStorage.getItem("accessToken") != null) {
                 await fetchStampCollects();
-                await fetchStamps();
             }
         };
 
         refreshData();
 
-        // 5秒後自動關閉結果顯示
-        setTimeout(() => {
-            handleCloseScanResult();
-        }, 5000);
     }, [urlStampId, showScanner, handleCloseScanner]);
 
     // 處理錯誤
@@ -341,10 +340,19 @@ export const Stamps = () => {
                 handleCloseScanner();
             }
 
-            // 3秒後自動關閉結果顯示
-            setTimeout(() => {
-                handleCloseScanResult();
-            }, 3000);
+        } else if (error.message === 'INVALID_QR_CODE') {
+            // 處理無效QR碼的情況
+            setScanResultInfo({
+                status: 'invalid_qr_code',
+                message: '無效的QR碼'
+            });
+            setScanStampInfo(null);
+            setShowScanResult(true);
+            
+            // 關閉掃描器 (如果開啟的話)
+            if (showScanner) {
+                handleCloseScanner();
+            }
         }
 
         // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
@@ -353,56 +361,6 @@ export const Stamps = () => {
             setUrlStampId(null);
         }
     }, [urlStampId, showScanner, handleCloseScanner]);
-
-    // 當用戶未登入時的處理
-    const handleLoginRequired = useCallback(() => {
-        handleOpenLoginHint();
-
-        // 清除 URL 中的印章 ID
-        if (urlStampId) {
-            window.history.replaceState({}, "", "/stamps");
-            setUrlStampId(null);
-        }
-    }, [urlStampId]);
-
-    // 處理開啟兌獎對話框
-    const handleOpenRedeemDialog = () => {
-        if (!onDate) {
-            handleOpenNotYetHint();
-            return;
-        }
-
-        if (localStorage.getItem("accessToken") == null) {
-            handleOpenLoginHint();
-        } else {
-            setShowRedeemDialog(true);
-        }
-    };
-
-    // 處理關閉兌獎對話框
-    const handleCloseRedeemDialog = useCallback(() => {
-        setShowRedeemDialog(false);
-    }, []);
-
-    // 處理開啟提示對話框
-    const handleOpenHint = () => {
-        setShowHint(true);
-    };
-
-    // 處理關閉提示對話框
-    const handleCloseHint = useCallback(() => {
-        setShowHint(false);
-    }, []);
-
-    // 處理開啟登入提示彈出層
-    const handleOpenLoginHint = () => {
-        setShowLoginHint(true);
-    };
-
-    // 處理關閉登入提示彈出層
-    const handleCloseLoginHint = () => {
-        setShowLoginHint(false);
-    };
 
     // 獲取並顯示組別詳細資料
     const fetchGroupData = async (stampName) => {
@@ -510,6 +468,56 @@ export const Stamps = () => {
                 imageLoading: false
             }));
         }
+    };
+
+    // 當用戶未登入時的處理
+    const handleLoginRequired = useCallback(() => {
+        handleOpenLoginHint();
+
+        // 清除 URL 中的印章 ID
+        if (urlStampId) {
+            window.history.replaceState({}, "", "/stamps");
+            setUrlStampId(null);
+        }
+    }, [urlStampId]);
+
+    // 處理開啟兌獎對話框
+    const handleOpenRedeemDialog = () => {
+        if (!onDate) {
+            handleOpenNotYetHint();
+            return;
+        }
+
+        if (localStorage.getItem("accessToken") == null) {
+            handleOpenLoginHint();
+        } else {
+            setShowRedeemDialog(true);
+        }
+    };
+
+    // 處理關閉兌獎對話框
+    const handleCloseRedeemDialog = useCallback(() => {
+        setShowRedeemDialog(false);
+    }, []);
+
+    // 處理開啟提示對話框
+    const handleOpenHint = () => {
+        setShowHint(true);
+    };
+
+    // 處理關閉提示對話框
+    const handleCloseHint = useCallback(() => {
+        setShowHint(false);
+    }, []);
+
+    // 處理開啟登入提示彈出層
+    const handleOpenLoginHint = () => {
+        setShowLoginHint(true);
+    };
+
+    // 處理關閉登入提示彈出層
+    const handleCloseLoginHint = () => {
+        setShowLoginHint(false);
     };
 
     // 處理開啟焦點卡片彈出層
@@ -624,21 +632,40 @@ export const Stamps = () => {
         // 檢測今天是否已到2025/4/7
         const today = new Date();
         const targetDate = new Date('2025-04-07');
-        if (today <= targetDate) {
-            // setShowNotYetHint(true);
-            // setOnDate(false);
+        
+        // 在開發模式下不啟用，在生產環境下啟用
+        if (import.meta.env.PROD && today <= targetDate) {
+            setShowNotYetHint(true);
+            setOnDate(false);
         } else {
             setShowNotYetHint(false);
             setOnDate(true);
         }
         console.log("Date: ", today);
+        console.log("Environment: ", import.meta.env.MODE);
     }, []);
 
     useEffect(() => {
-        if(currentCount % 7 == 0){
+        if (currentCount > 1 && currentCount % 7 == 0) {
             handleOpenHint();
         }
     }, [currentCount]);
+
+    // 獲取URL中的印章ID
+    useEffect(() => {
+        // 確保只處理一次URL參數
+        if (urlProcessStarted) return;
+        setUrlProcessStarted(true);
+
+        const pathParts = location.pathname.split('/');
+        if (pathParts.length >= 3 && pathParts[1] === 'stamps') {
+            const stampId = pathParts[2]; // 修正為索引2
+            if (stampId && stampId.trim() !== '') {
+                console.log(`從路徑獲取到印章 ID: ${stampId}`);
+                setUrlStampId(stampId);
+            }
+        }
+    }, [location, urlProcessStarted, setUrlStampId]);
 
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
@@ -720,7 +747,7 @@ export const Stamps = () => {
 
             {/* 兌獎對話框彈出層 */}
             <CSSTransition in={showRedeemDialog} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-                <Redeem onClose={handleCloseRedeemDialog} />
+                <Redeem currentCount={currentCount} onClose={handleCloseRedeemDialog} handleOpenLuckyDrawHint={handleOpenLuckyDrawHint} />
             </CSSTransition>
 
             {/* 提示對話框彈出層 */}
@@ -741,6 +768,11 @@ export const Stamps = () => {
             {/* 未開放提示彈出層 */}
             <CSSTransition in={showNotYetHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
                 <NotYetHint onClose={handleCloseNotYetHint} />
+            </CSSTransition>
+
+            {/* 抽獎提示彈出層 */}
+            <CSSTransition in={showLuckyDrawHint} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
+                <LuckyDrawHint onClose={handleCloseLuckyDrawHint} result={luckyDrawResult} />
             </CSSTransition>
 
             {/* 焦點卡片 */}
