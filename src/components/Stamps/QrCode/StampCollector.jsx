@@ -3,6 +3,7 @@ import axios from 'axios';
 import { CSSTransition } from 'react-transition-group';
 import { LoginHint } from '../Hint/LoginHint';
 import { useRef } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 export const StampCollector = ({ 
   stampId, 
@@ -162,7 +163,7 @@ export const StampCollector = ({
   };
 
   /**
-   * 獲取印章信息的備選方法
+   * 通過備選方法獲取印章資訊
    */
   const fetchStampInfoAlternative = async (stampId) => {
     try {
@@ -178,7 +179,7 @@ export const StampCollector = ({
       const collectResponse = await axios.post(
         `${apiBaseUrl}/stamp-collect/search`,
         {
-          userId: parseJwt(accessToken).id,
+          userId: jwtDecode(accessToken).id,
           pageSize: 100,
         },
         {
@@ -252,24 +253,6 @@ export const StampCollector = ({
     } catch (error) {
       console.error("備選方法獲取印章資訊失敗:", error);
       return null;
-    }
-  };
-
-  // 解析 JWT token 的函數
-  const parseJwt = (token) => {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      );
-      return JSON.parse(jsonPayload);
-    } catch (error) {
-      console.error('Token 解析錯誤:', error);
-      return {};
     }
   };
 

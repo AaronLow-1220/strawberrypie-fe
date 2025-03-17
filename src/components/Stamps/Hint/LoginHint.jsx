@@ -6,7 +6,7 @@ export const LoginHint = ({ onClose }) => {
   return (
     <ModalTemplate onClose={onClose}>
       {/* 標題 */}
-      <h2 className="text-[36px] mb-3 mt-2 text-center font-bold" style={{ fontFamily: "B" }}>請先登入</h2>
+      <h2 className="text-[36px] mb-4 text-center font-bold" style={{ fontFamily: "B" }}>請先登入</h2>
       <p className="text-[18px] opacity-80 mb-6 text-center">以便記錄您的章點</p>
 
       {/* 獎勵內容 */}

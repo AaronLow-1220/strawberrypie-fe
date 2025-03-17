@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { HeaderContext } from "./HeaderContext";
+import { jwtDecode } from "jwt-decode";
 
 
 const LinkLarge = ({ to, text }) => {
@@ -100,27 +101,7 @@ export const Header = ({ onOpenAccount }) => {
     }
     
     try {
-      const parts = token.split('.');
-      if (parts.length !== 3) {
-        console.error('Invalid token format');
-        return {};
-      }
-      
-      const base64Url = parts[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      
-      try {
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split('')
-            .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
-        );
-        return JSON.parse(jsonPayload);
-      } catch (decodeError) {
-        console.error('Failed to decode token payload:', decodeError);
-        return {};
-      }
+      return jwtDecode(token);
     } catch (error) {
       console.error('Token 解析錯誤:', error);
       return {};
@@ -137,7 +118,7 @@ export const Header = ({ onOpenAccount }) => {
         }
         
         // 解析 JWT token
-        const tokenData = parseJwt(accessToken);
+        const tokenData = jwtDecode(accessToken);
         
         // 設置頭像 (如果 token 中有頭像 URL)
         if (tokenData && tokenData.avatar) {
@@ -147,7 +128,7 @@ export const Header = ({ onOpenAccount }) => {
         console.error('處理頭像時出錯:', error);
       }
     }
-  }, [isLoggedIn, parseJwt]);
+  }, [isLoggedIn]);
 
   // 每次路由變化時重新判斷是否為首頁
   useEffect(() => {
@@ -229,7 +210,7 @@ export const Header = ({ onOpenAccount }) => {
       {windowWidth < 1024 ? (
         // 行動版 Header
         <div
-          className="mobile__header z-20 fixed top-0 left-0 right-0 pb-6"
+          className="mobile__header z-20 fixed top-0 left-0 right-0 pb-2"
           style={{
             background:
               "linear-gradient(to bottom, rgba(27, 8, 10, 0.8) 0%, rgba(27, 8, 10, 0) 100%)",

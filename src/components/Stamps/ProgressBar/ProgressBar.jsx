@@ -6,26 +6,11 @@ import {
 } from "react-circular-progressbar";
 // Animation
 import AnimatedProgressProvider from "./AnimatedProgressProvider";
-import resolveConfig from "tailwindcss/resolveConfig";
-import tailwindConfig from "../../../../tailwind.config";
 
 export const ProgressBar = ({ currentCount, totalStamps }) => {
 
   // 計算百分比
   const percentValue = (currentCount / totalStamps) * 100;
-
-  // 從 tailwind 配置中獲取 primary-color
-  const fullConfig = resolveConfig(tailwindConfig);
-  const primaryColor = fullConfig.theme.colors["primary-color"];
-
-  // 定義收集的類別及對應數量
-  const array = [
-    { name: "遊戲", num: 6 },
-    { name: "互動", num: 11 },
-    { name: "影視", num: 2 },
-    { name: "動畫", num: 1 },
-    { name: "行銷", num: 3 },
-  ];
 
   return (
     <div className="overflow-visible -z-10 progress-bar w-full min-w-[200px] max-w-[240px] w-[clamp(15rem,0rem+23.4375vw,22.5rem)] lg:max-w-[360px]">
@@ -47,7 +32,7 @@ export const ProgressBar = ({ currentCount, totalStamps }) => {
               backgroundPadding={6}
               styles={buildStyles({
                 pathTransition: "none",
-                pathColor: primaryColor,
+                pathColor: "#F748C1",
                 trailColor: "rgba(255,255,255,0.05)",
                 backgroundColor: "rgba(0,0,0,0.2)",
                 strokeLinecap: "round",

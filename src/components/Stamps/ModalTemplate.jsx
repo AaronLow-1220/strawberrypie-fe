@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-export const ModalTemplate = ({ onClose, children }) => {
+export const ModalTemplate = ({ onClose = "", children }) => {
   // 控制內容可見性，用於內容的縮放效果
   const [contentVisible, setContentVisible] = useState(false);
 
@@ -27,11 +27,13 @@ export const ModalTemplate = ({ onClose, children }) => {
   // 處理關閉按鈕點擊
   const handleClose = () => {
     // 先隱藏內容
-    setContentVisible(false);
-    // 延遲調用關閉回調，等待內容縮放動畫完成
-    setTimeout(() => {
-      onClose();
-    }, 300);
+    if (onClose) {
+      setContentVisible(false);
+      // 延遲調用關閉回調，等待內容縮放動畫完成
+      setTimeout(() => {
+        onClose();
+      }, 300);
+    }
   };
 
   // 禁用背景滾動

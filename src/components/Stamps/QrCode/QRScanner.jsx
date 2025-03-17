@@ -4,6 +4,8 @@ import { CSSTransition } from "react-transition-group";
 import { LoginHint } from "../Hint/LoginHint";
 // 引入 StampCollector 組件
 import { StampCollector } from "./StampCollector";
+// 引入 ModalTemplate 組件
+import { ModalTemplate } from "../ModalTemplate";
 
 /**
  * QR Code 掃描器組件
@@ -25,6 +27,7 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
   const [apiResponse, setApiResponse] = useState(null);        // 儲存 API 回應
   const [isSubmitting, setIsSubmitting] = useState(false);     // API 提交中狀態
   const [showLoginHint, setShowLoginHint] = useState(false);   // 登入提示顯示狀態
+  const [showResultModal, setShowResultModal] = useState(false); // 結果模態框顯示狀態
   const scannerRef = useRef(null);                             // 儲存掃描器實例的參考
   const loginHintRef = useRef(null);                           // 登入提示參考
 
@@ -38,12 +41,22 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
     setShowLoginHint(false);
   };
 
+  // 處理關閉結果模態框
+  const handleCloseResultModal = () => {
+    setShowResultModal(false);
+    // 延遲清除掃描結果，讓動畫有時間完成
+    setTimeout(() => {
+      setScanResult(null);
+    }, 300);
+  };
+
   // 集章成功回調函數
   const handleStampSuccess = (response, stampData) => {
     // 設置本地狀態以保持追蹤
     setApiResponse(response);
     setIsSubmitting(false);
     setStampInfo(stampData);
+    setShowResultModal(true);
     
     // 調用父組件的掃描成功回調函數，傳遞 API 回應和印章信息
     if (onScanSuccess) {
@@ -134,9 +147,27 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
               const lastSlashIndex = decodedText.lastIndexOf('/');
               if (lastSlashIndex !== -1) {
                 const extractedId = decodedText.substring(lastSlashIndex + 1);
-                setStampId(extractedId);
-                console.log(`提取的印章 ID: ${extractedId}`);
-                handleBeforeSubmit();
+                if (extractedId && extractedId.trim() !== '') {
+                  setStampId(extractedId);
+                  console.log(`提取的印章 ID: ${extractedId}`);
+                  handleBeforeSubmit();
+                } else {
+                  // 提取的ID為空
+                  console.log("提取的印章 ID 為空");
+                  
+                  // 通知父組件處理無效QR碼
+                  if (onScanError) {
+                    onScanError({ message: 'INVALID_QR_CODE', scanResult: decodedText });
+                  }
+                }
+              } else {
+                // QR碼不包含斜線，無法提取ID
+                console.log("QR碼格式不正確，無法提取印章 ID");
+                
+                // 通知父組件處理無效QR碼
+                if (onScanError) {
+                  onScanError({ message: 'INVALID_QR_CODE', scanResult: decodedText });
+                }
               }
 
               // 停止掃描器
@@ -150,7 +181,7 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
             (errorMessage) => {
               // 掃描過程中出錯的回調函數
               if (!isScanning) {
-                console.warn(`掃描錯誤: ${errorMessage}`);
+                // console.warn(`掃描錯誤: ${errorMessage}`);
               }
             }
           );
@@ -285,20 +316,6 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
           </div>
         )}
 
-        {/* 掃描結果區域 - 當有掃描結果時顯示loading */}
-        {scanResult && (
-          <div className="absolute inset-0 flex items-center justify-center z-50 p-4">
-            <div className="bg-layer1 p-6 rounded-lg w-full max-w-md">
-              {isSubmitting && (
-                <div className="flex flex-col items-center justify-center py-4">
-                  <div className="inline-block w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-                  <p className="text-black">正在提交資料...</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
         {/* 載入中區域 - 當相機未就緒、無錯誤、無掃描結果時顯示 */}
         {!cameraReady && !error && !scanResult && (
           <div className="absolute inset-0 flex items-center justify-center z-40 bg-black">
@@ -342,8 +359,36 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
         </div>
       </div>
 
+      {/* 掃描結果模態框 - 使用 ModalTemplate */}
+      {showResultModal && scanResult && (
+        <ModalTemplate onClose={handleCloseResultModal}>
+          {isSubmitting ? (
+            <div className="flex flex-col items-center justify-center py-4">
+              <div className="inline-block w-8 h-8 border-4 border-secondary-color border-t-transparent rounded-full animate-spin mb-2"></div>
+              <p className="text-white">正在提交資料...</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-4">
+              <p className="text-white">{scanResult}</p>
+              {stampInfo && (
+                <div className="mt-4 flex flex-col items-center">
+                  {stampInfo.icon && (
+                    <img 
+                      src={stampInfo.icon} 
+                      alt={stampInfo.name} 
+                      className="w-24 h-24 object-contain mb-2"
+                    />
+                  )}
+                  <h3 className="text-xl font-bold">{stampInfo.name}</h3>
+                </div>
+              )}
+            </div>
+          )}
+        </ModalTemplate>
+      )}
+
       {/* 使用 StampCollector 組件處理集章 API 請求 */}
-      {stampId && (
+      {stampId != "" && stampId && (
         <StampCollector
           stampId={stampId}
           onSuccess={handleStampSuccess}

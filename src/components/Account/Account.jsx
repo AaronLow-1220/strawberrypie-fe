@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ModalTemplate } from '../Stamps/ModalTemplate';
+import { jwtDecode } from 'jwt-decode';
 
 export const Account = ({ onClose }) => {
 	// 使用者資訊狀態
@@ -11,41 +12,27 @@ export const Account = ({ onClose }) => {
 	useEffect(() => {
 		const accessToken = localStorage.getItem('accessToken');
 		if (accessToken) {
-			// 解析 JWT token
-			const tokenData = parseJwt(accessToken);
+			try {
+				// 解析 JWT token
+				const tokenData = jwtDecode(accessToken);
 
-			// 設置使用者名稱 (根據您的 token 結構調整)
-			if (tokenData.username) {
-				setUsername(tokenData.username);
-			} else if (tokenData.email) {
-				// 如果沒有名稱，使用郵箱前綴
-				setUsername(tokenData.email.split('@')[0]);
-			}
+				// 設置使用者名稱 (根據您的 token 結構調整)
+				if (tokenData.username) {
+					setUsername(tokenData.username);
+				} else if (tokenData.email) {
+					// 如果沒有名稱，使用郵箱前綴
+					setUsername(tokenData.email.split('@')[0]);
+				}
 
-			// 設置頭像 (如果 token 中有頭像 URL)
-			if (tokenData.avatar) {
-				setAvatarUrl(tokenData.avatar);
+				// 設置頭像 (如果 token 中有頭像 URL)
+				if (tokenData.avatar) {
+					setAvatarUrl(tokenData.avatar);
+				}
+			} catch (error) {
+				console.error('Token 解析錯誤:', error);
 			}
 		}
 	}, []);
-
-	// 解析 JWT token 的函數
-	const parseJwt = (token) => {
-		try {
-			const base64Url = token.split('.')[1];
-			const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-			const jsonPayload = decodeURIComponent(
-				atob(base64)
-					.split('')
-					.map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-					.join('')
-			);
-			return JSON.parse(jsonPayload);
-		} catch (error) {
-			console.error('Token 解析錯誤:', error);
-			return {};
-		}
-	};
 
 	// 處理登出
 	const handleLogout = () => {

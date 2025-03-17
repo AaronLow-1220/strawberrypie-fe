@@ -5,7 +5,7 @@ export const NotYetHint = ({ onClose, handleOpenRewardDialog, currentCount }) =>
   return (
     <ModalTemplate onClose={onClose}>
       {/* 標題 */}
-      <h2 className="text-[36px] mb-3 mt-2 text-center font-bold" style={{ fontFamily: "B" }}>尚未開放</h2>
+      <h2 className="text-[36px] mb-4 text-center font-bold" style={{ fontFamily: "B" }}>尚未開放</h2>
       <p className="text-[18px] opacity-80 mb-6 text-center">展覽當天才開放集章功能，不過你想先看看的話也可以</p>
 
       {/* 獎勵內容 */}
