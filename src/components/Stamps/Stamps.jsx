@@ -573,6 +573,7 @@ export const Stamps = () => {
         window.addEventListener("keydown", (e) => {
             if (e.key === "g") {
                 localStorage.setItem("hideIntroHint", false);
+                localStorage.setItem("allCollected", false);
             }
         });
 
@@ -648,6 +649,11 @@ export const Stamps = () => {
     useEffect(() => {
         if (currentCount > 1 && currentCount % 7 == 0) {
             handleOpenHint();
+        }
+        if (currentCount == 22 && localStorage.getItem("allCollected") !== "true") {
+            localStorage.setItem("allCollected", true);
+            handleOpenHint();
+            console.log("allCollected: ", localStorage.getItem("allCollected"));
         }
     }, [currentCount]);
 
