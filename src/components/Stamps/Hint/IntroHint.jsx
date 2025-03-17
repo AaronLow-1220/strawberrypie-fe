@@ -93,16 +93,19 @@ export const IntroHint = ({ onClose }) => {
       </div>
       <div className='w-full mb-6'>
         <img src="/Stamps/merches.png" alt="" />
-        <p className='text-white text-[18px] text-center'>還有眾多精美周邊等你領取！</p>
+        <p className='text-white text-[20px] text-center' style={{ fontFamily: "R" }}>及周邊商品等你來抽！</p>
       </div>
+      <hr className='mx-4 opacity-20 mb-4' />
       <div className='w-full mb-6'>
         <ol>
-          <li>sjkfhdnskjf</li>
-          <li>sjkfhdnskjf</li>
-          <li>sjkfhdnskjf</li>
-          <li>sjkfhdnskjf</li>
+          <li className='text-center'>每<span className='text-[32px] px-1 text-secondary-color' style={{ fontFamily: "B"}}>7</span>個章，即可抽周邊商品</li>
+          <li className='text-center'>集滿<span className='text-[32px] px-1 text-secondary-color' style={{ fontFamily: "B"}}>22</span>個章，即可線上抽大獎 !</li>
+          <li className='text-[14px] opacity-60 px-6 mt-4 text-center'>將於 4 月 30 號禮拜三進行 instagram 直播抽大獎，並以電子信箱的方式聯繫得主! 詳細時間會再公布於
+          <a className='ps-1 inline-block underline underline-offset-2 hover:opacity-100' target='_blank' href='https://www.instagram.com/yzuic_28?igsh=ZWNvMDd6NzV4bTM1'>instagram: @yzuic_28</a></li>
         </ol>
       </div>
+      <hr className='mx-4 opacity-20 mb-8' />
+
       {/* 確認按鈕 */}
       <div className="flex justify-center mt-4">
         {localStorage.getItem("accessToken") ? (
