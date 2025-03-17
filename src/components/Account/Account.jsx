@@ -18,16 +18,23 @@ export const Account = ({ onClose }) => {
 
 				// 設置使用者名稱 (根據您的 token 結構調整)
 				if (tokenData.username) {
+					// 直接使用 username，不進行拼接
 					setUsername(tokenData.username);
 				} else if (tokenData.email) {
 					// 如果沒有名稱，使用郵箱前綴
 					setUsername(tokenData.email.split('@')[0]);
+				} else if (tokenData.sub) {
+					// 有些 JWT 使用 sub 作為用戶標識
+					setUsername(tokenData.sub);
 				}
 
 				// 設置頭像 (如果 token 中有頭像 URL)
 				if (tokenData.avatar) {
 					setAvatarUrl(tokenData.avatar);
 				}
+				
+				// 輸出 token 資料以便調試
+				console.log('Token 資料:', tokenData);
 			} catch (error) {
 				console.error('Token 解析錯誤:', error);
 			}
