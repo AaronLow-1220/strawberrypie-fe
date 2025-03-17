@@ -63,7 +63,7 @@ export const IntroHint = ({ onClose }) => {
     <ModalTemplate onClose={onClose}>
       <h2 className="text-xl mb-1 text-center text-secondary-color">造訪各組，搜集章點</h2>
       <h1 className="text-white text-center text-[32px] font-bold mb-4" style={{ fontFamily: "B" }}>即有機會抽中大獎 !</h1>
-      <div className="w-full px-4 mt-8 mb-6">
+      <div className="w-full px-2 mt-8 mb-6">
         {/* 首獎 */}
         <PrizeItem 
           rank="首獎"
@@ -98,10 +98,10 @@ export const IntroHint = ({ onClose }) => {
       <hr className='mx-4 opacity-20 mb-4' />
       <div className='w-full mb-6'>
         <ol>
-          <li className='text-center'>每<span className='text-[32px] px-1 text-secondary-color' style={{ fontFamily: "B"}}>7</span>個章，即可抽周邊商品</li>
+          <li className='text-center'>每集<span className='text-[32px] px-1 text-secondary-color' style={{ fontFamily: "B"}}>7</span>個章，即可抽周邊商品乙件</li>
           <li className='text-center'>集滿<span className='text-[32px] px-1 text-secondary-color' style={{ fontFamily: "B"}}>22</span>個章，即可線上抽大獎 !</li>
-          <li className='text-[14px] opacity-60 px-6 mt-4 text-center'>將於 4 月 30 號禮拜三進行 instagram 直播抽大獎，並以電子信箱的方式聯繫得主! 詳細時間會再公布於
-          <a className='ps-1 inline-block underline underline-offset-2 hover:opacity-100' target='_blank' href='https://www.instagram.com/yzuic_28?igsh=ZWNvMDd6NzV4bTM1'>instagram: @yzuic_28</a></li>
+          <li className='text-[14px] opacity-60 px-4 mt-4 text-center'>將於 4 月 30 號禮拜三進行 Instagram 直播抽大獎，並以電子信箱的方式聯繫得主！ 詳細時間會再公布於<br></br>
+          <a className='ps-1 inline-block underline underline-offset-2 hover:opacity-100' target='_blank' href='https://www.instagram.com/yzuic_28?igsh=ZWNvMDd6NzV4bTM1'>Instagram: @yzuic_28</a></li>
         </ol>
       </div>
       <hr className='mx-4 opacity-20 mb-8' />
