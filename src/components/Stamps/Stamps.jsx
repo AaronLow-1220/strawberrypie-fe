@@ -250,6 +250,11 @@ export const Stamps = () => {
 
     // 處理開啟掃描器
     const handleOpenScanner = () => {
+        if(import.meta.env.VITE_APP_ENV === "production") {
+            setShowScanner(true);
+            return;
+        }
+
         if (!onDate) {
             handleOpenNotYetHint();
             return;
@@ -634,8 +639,7 @@ export const Stamps = () => {
         const today = new Date();
         const targetDate = new Date('2025-04-07');
         
-        // 在開發模式下不啟用，在生產環境下啟用
-        if (import.meta.env.PROD && today <= targetDate) {
+        if (import.meta.env.MODE !== 'development' && today <= targetDate) {
             setShowNotYetHint(true);
             setOnDate(false);
         } else {
