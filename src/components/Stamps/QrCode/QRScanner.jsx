@@ -89,7 +89,8 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
             fps: 10,
             videoConstraints: {
               width: 1920,
-              height: 1080
+              height: 1080,
+              facingMode: "environment"
             }
           },
           async (decodedText) => {
