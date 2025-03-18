@@ -1,20 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
-import { CSSTransition } from "react-transition-group";
-import { LoginHint } from "../Hint/LoginHint";
 // 引入 StampCollector 組件
 import { StampCollector } from "./StampCollector";
-// 引入 ModalTemplate 組件
-import { ModalTemplate } from "../ModalTemplate";
 
-/**
- * QR Code 掃描器組件
- * 提供相機啟動、QR 碼掃描、結果顯示及關閉功能
- * @param {Function} onClose 關閉掃描器的回調函數
- * @param {Function} onScanSuccess 掃描成功後的回調函數，用於通知父組件刷新資料
- * @param {Function} onScanError 掃描錯誤後的回調函數
- * @param {Array} stamps 印章數組
- */
 export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) => {
   // 狀態管理
   const [scanResult, setScanResult] = useState(null);          // 儲存掃描結果
@@ -23,40 +11,15 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
   const [cameraReady, setCameraReady] = useState(false);       // 相機就緒狀態
   const [isClosing, setIsClosing] = useState(false);           // 掃描器關閉中狀態
   const [stampId, setStampId] = useState(null);                // 儲存提取的印章 ID
-  const [stampInfo, setStampInfo] = useState(null);            // 儲存印章信息
-  const [apiResponse, setApiResponse] = useState(null);        // 儲存 API 回應
   const [isSubmitting, setIsSubmitting] = useState(false);     // API 提交中狀態
   const [showLoginHint, setShowLoginHint] = useState(false);   // 登入提示顯示狀態
-  const [showResultModal, setShowResultModal] = useState(false); // 結果模態框顯示狀態
   const scannerRef = useRef(null);                             // 儲存掃描器實例的參考
-  const loginHintRef = useRef(null);                           // 登入提示參考
-
-  // 處理開啟登入提示彈出層
-  const handleOpenLoginHint = () => {
-    setShowLoginHint(true);
-  };
-
-  // 處理關閉登入提示彈出層
-  const handleCloseLoginHint = () => {
-    setShowLoginHint(false);
-  };
-
-  // 處理關閉結果模態框
-  const handleCloseResultModal = () => {
-    setShowResultModal(false);
-    // 延遲清除掃描結果，讓動畫有時間完成
-    setTimeout(() => {
-      setScanResult(null);
-    }, 300);
-  };
 
   // 集章成功回調函數
   const handleStampSuccess = (response, stampData) => {
-    // 設置本地狀態以保持追蹤
-    setApiResponse(response);
+
     setIsSubmitting(false);
-    setStampInfo(stampData);
-    setShowResultModal(true);
+    handleClose();
     
     // 調用父組件的掃描成功回調函數，傳遞 API 回應和印章信息
     if (onScanSuccess) {
@@ -93,128 +56,95 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
     const startScanner = async () => {
       try {
         setIsScanning(true);
-        // 獲取可用的相機設備列表
-        const devices = await Html5Qrcode.getCameras();
+        
+        // 創建並添加自定義樣式，控制掃描器視頻元素的顯示
+        const styleSheet = document.createElement("style");
+        styleSheet.id = "qr-scanner-styles";
+        styleSheet.textContent = `
+          #qr-reader video {
+            width: 100vw !important;
+            height: 100vh !important;
+            object-fit: cover !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 10 !important;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+          }
+          #qr-reader__dashboard {
+            display: none !important;
+          }
+          #qr-reader__scan_region {
+            background: transparent !important;
+            border: none !important;
+          }
+        `;
+        document.head.appendChild(styleSheet);
 
-        if (devices && devices.length) {
-          // 優先使用後置相機（如果有）
-          const backCamera = devices.find((device) =>
-            device.label.toLowerCase().includes("back")
-          );
-          const cameraId = backCamera ? backCamera.id : devices[0].id;
-
-          // 創建並添加自定義樣式，控制掃描器視頻元素的顯示
-          const styleSheet = document.createElement("style");
-          styleSheet.id = "qr-scanner-styles";
-          styleSheet.textContent = `
-            #qr-reader video {
-              width: 100vw !important;
-              height: 100vh !important;
-              object-fit: cover !important;
-              position: fixed !important;
-              top: 0 !important;
-              left: 0 !important;
-              z-index: 10 !important;
-              opacity: 0;
-              transition: opacity 0.3s ease;
+        // 簡化掃描器啟動代碼，遵循官方文檔寫法
+        await scanner.start(
+          { facingMode: "environment" },
+          { 
+            fps: 10,
+            videoConstraints: {
+              width: 1920,
+              height: 1080
             }
-            #qr-reader__dashboard {
-              display: none !important;
-            }
-            #qr-reader__scan_region {
-              background: transparent !important;
-              border: none !important;
-            }
-          `;
-          document.head.appendChild(styleSheet);
+          },
+          async (decodedText) => {
+            // 成功掃描到 QR 碼時的回調函數
+            setScanResult(decodedText);
+            console.log(`掃描結果: ${decodedText}`);
 
-          // 啟動掃描器，配置視頻約束並設置回調函數
-          await scanner.start(
-            cameraId,
-            {
-              videoConstraints: {
-                width: { ideal: window.innerWidth },
-                height: { ideal: window.innerHeight },
-                facingMode: backCamera ? "environment" : "user"
-              }
-            },
-            async (decodedText) => {
-              // 成功掃描到 QR 碼時的回調函數
-              setScanResult(decodedText);
-              console.log(`掃描結果: ${decodedText}`);
-
-              // 從 URL 中提取最後一個斜線後的內容作為 ID
-              const lastSlashIndex = decodedText.lastIndexOf('/');
-              if (lastSlashIndex !== -1) {
-                const extractedId = decodedText.substring(lastSlashIndex + 1);
-                if (extractedId && extractedId.trim() !== '') {
-                  setStampId(extractedId);
-                  console.log(`提取的印章 ID: ${extractedId}`);
-                  handleBeforeSubmit();
-                } else {
-                  // 提取的ID為空
-                  console.log("提取的印章 ID 為空");
-                  
-                  // 通知父組件處理無效QR碼
-                  if (onScanError) {
-                    onScanError({ message: 'INVALID_QR_CODE', scanResult: decodedText });
-                  }
-                }
+            // 從 URL 中提取最後一個斜線後的內容作為 ID
+            const lastSlashIndex = decodedText.lastIndexOf('/');
+            if (lastSlashIndex !== -1) {
+              const extractedId = decodedText.substring(lastSlashIndex + 1);
+              if (extractedId && extractedId.trim() !== '') {
+                setStampId(extractedId);
+                console.log(`提取的印章 ID: ${extractedId}`);
+                handleBeforeSubmit();
               } else {
-                // QR碼不包含斜線，無法提取ID
-                console.log("QR碼格式不正確，無法提取印章 ID");
+                // 提取的ID為空
+                console.log("提取的印章 ID 為空");
                 
                 // 通知父組件處理無效QR碼
                 if (onScanError) {
                   onScanError({ message: 'INVALID_QR_CODE', scanResult: decodedText });
                 }
               }
-
-              // 停止掃描器
-              if (scanner) {
-                scanner.stop().then(() => {
-                  console.log("掃描已停止");
-                  setIsScanning(false);
-                });
-              }
-            },
-            (errorMessage) => {
-              // 掃描過程中出錯的回調函數
-              if (!isScanning) {
-                // console.warn(`掃描錯誤: ${errorMessage}`);
+            } else {
+              // QR碼不包含斜線，無法提取ID
+              console.log("QR碼格式不正確，無法提取印章 ID");
+              
+              // 通知父組件處理無效QR碼
+              if (onScanError) {
+                onScanError({ message: 'INVALID_QR_CODE', scanResult: decodedText });
               }
             }
-          );
 
-          // 延遲設置視頻元素的樣式，確保 DOM 已完全渲染
+            // 停止掃描器
+            if (scanner) {
+              handleClose();
+              setIsScanning(false);
+            }
+          },
+        );
+
+        const videoElement = document.querySelector('#qr-reader video');
+        if (videoElement) {
+          // 淡入顯示視頻元素
           setTimeout(() => {
-            const videoElement = document.querySelector('#qr-reader video');
-            if (videoElement) {
-              videoElement.style.width = '100vw';
-              videoElement.style.height = '100vh';
-              videoElement.style.objectFit = 'cover';
-              videoElement.style.position = 'fixed';
-              videoElement.style.top = '0';
-              videoElement.style.left = '0';
-              videoElement.style.zIndex = '10';
-
-              // 淡入顯示視頻元素
-              setTimeout(() => {
-                videoElement.style.opacity = '1';
-                setCameraReady(true);
-              }, 100);
-            }
-
-            // 隱藏掃描器控制台
-            const dashboardElement = document.querySelector('#qr-reader__dashboard');
-            if (dashboardElement) {
-              dashboardElement.style.display = 'none';
-            }
+            videoElement.style.opacity = '1';
+            setCameraReady(true);
           }, 300);
+        }
 
-        } else {
-          // 沒有找到可用的相機設備
-          setError("找不到可用的相機設備");
+        // 隱藏掃描器控制台
+        const dashboardElement = document.querySelector('#qr-reader__dashboard');
+        if (dashboardElement) {
+          dashboardElement.style.display = 'none';
         }
       } catch (err) {
         // 啟動相機過程中發生錯誤
@@ -237,15 +167,7 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
 
       // 停止掃描器
       if (scannerRef.current && isScanning) {
-        scannerRef.current
-          .stop()
-          .then(() => {
-            console.log("掃描器已停止");
-            setIsScanning(false);
-          })
-          .catch((err) => {
-            console.log("停止掃描器:", err);
-          });
+        handleClose();
       }
     };
   }, []); // 空依賴陣列，表示只在組件掛載時執行一次
@@ -255,38 +177,15 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
    * 執行淡出動畫並停止掃描器
    */
   const handleClose = () => {
-    setIsClosing(true);
-
-    // 淡出視頻元素
-    const videoElement = document.querySelector('#qr-reader video');
-    if (videoElement) {
-      videoElement.style.transition = 'opacity 0.5s ease';
-      videoElement.style.opacity = '0';
-    }
-
-    // 延遲停止掃描器，以便完成淡出動畫
+    onClose();
     setTimeout(() => {
-      if (scannerRef.current && isScanning) {
-        scannerRef.current
-          .stop()
-          .then(() => {
-            console.log("掃描器已手動停止");
-            setIsScanning(false);
-            onClose();
-          })
-          .catch((err) => {
-            console.log("停止掃描器:", err);
-            onClose();
-          });
-      } else {
-        onClose();
-      }
-    }, 500);
+      scannerRef.current.stop();
+    }, 1000);
   };
 
   // 渲染掃描器 UI
   return (
-    <div className={`fixed inset-0 flex flex-col items-center justify-center bg-black z-[1000] ${isClosing ? 'qr-scanner-closing' : ''}`}>
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-black z-[1000]">
       {/* 右上角關閉按鈕 - 只在相機就緒且無錯誤、無掃描結果、非關閉中狀態時顯示 */}
       {cameraReady && !error && !scanResult && !isClosing && (
         <button
@@ -301,21 +200,6 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
       )}
 
       <div className="w-full h-full flex flex-col items-center justify-center relative">
-        {/* 錯誤提示區域 - 當有錯誤時顯示 */}
-        {error && !scanResult && (
-          <div className="absolute inset-0 flex items-center justify-center z-50 p-4">
-            <div className="bg-red-500 text-white p-4 rounded-lg w-full max-w-md">
-              <p>{error}</p>
-              <button
-                onClick={handleClose}
-                className="mt-2 bg-white text-red-500 px-4 py-2 rounded-lg"
-              >
-                關閉
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* 載入中區域 - 當相機未就緒、無錯誤、無掃描結果時顯示 */}
         {!cameraReady && !error && !scanResult && (
           <div className="absolute inset-0 flex items-center justify-center z-40 bg-black">
@@ -334,11 +218,11 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
           ></div>
 
           {/* 掃描框和提示 - 當相機就緒、無掃描結果、無錯誤、非關閉中狀態時顯示 */}
-          {cameraReady && !scanResult && !error && !isClosing && (
+          {cameraReady && !error && (
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
               {/* 標題移至掃描框上方 */}
-              <h1 className="text-white text-xl font-bold mb-4 text-center">
-                QR Code 掃描器
+              <h1 className="text-white text-[32px] font-bold mb-4 text-center" style={{ fontFamily: 'B' }}>
+                集章掃描器
               </h1>
 
               {/* 掃描框 - 用於引導用戶對準 QR 碼位置 */}
@@ -353,42 +237,14 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
                 {/* 掃描框內部空白，用於對準 QR 碼 */}
               </div>
 
-              <p className="text-white text-center mt-4">將 QR Code 放入框內</p>
+              <p className="text-white text-center mt-4">將組別 QR Code 放入框內</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* 掃描結果模態框 - 使用 ModalTemplate */}
-      {showResultModal && scanResult && (
-        <ModalTemplate onClose={handleCloseResultModal}>
-          {isSubmitting ? (
-            <div className="flex flex-col items-center justify-center py-4">
-              <div className="inline-block w-8 h-8 border-4 border-secondary-color border-t-transparent rounded-full animate-spin mb-2"></div>
-              <p className="text-white">正在提交資料...</p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-4">
-              <p className="text-white">{scanResult}</p>
-              {stampInfo && (
-                <div className="mt-4 flex flex-col items-center">
-                  {stampInfo.icon && (
-                    <img 
-                      src={stampInfo.icon} 
-                      alt={stampInfo.name} 
-                      className="w-24 h-24 object-contain mb-2"
-                    />
-                  )}
-                  <h3 className="text-xl font-bold">{stampInfo.name}</h3>
-                </div>
-              )}
-            </div>
-          )}
-        </ModalTemplate>
-      )}
-
       {/* 使用 StampCollector 組件處理集章 API 請求 */}
-      {stampId != "" && stampId && (
+      {stampId && stampId !== "" && (
         <StampCollector
           stampId={stampId}
           onSuccess={handleStampSuccess}
@@ -398,13 +254,6 @@ export const QRScanner = ({ onClose, onScanSuccess, onScanError, stamps = [] }) 
           stamps={stamps}
         />
       )}
-
-      {/* 登入提示彈出層 */}
-      <CSSTransition in={showLoginHint} nodeRef={loginHintRef} timeout={300} classNames="overlay" unmountOnExit mountOnEnter>
-        <div ref={loginHintRef}>
-          <LoginHint onClose={handleCloseLoginHint} />
-        </div>
-      </CSSTransition>
     </div>
   );
 };
