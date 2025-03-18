@@ -640,8 +640,8 @@ export const Stamps = () => {
         const targetDate = new Date('2025-04-07');
         
         if (import.meta.env.MODE !== 'development' && today <= targetDate) {
-            setShowNotYetHint(true);
-            setOnDate(false);
+            // setShowNotYetHint(true);
+            // setOnDate(false);
         } else {
             setShowNotYetHint(false);
             setOnDate(true);
