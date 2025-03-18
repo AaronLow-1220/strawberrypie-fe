@@ -82,7 +82,7 @@ export const Redeem = ({ currentCount, onClose, handleOpenLuckyDrawHint }) => {
 
   return (
     <ModalTemplate onClose={onClose}>
-      {22 != 22 ? (
+      {currentCount != 22 ? (
         <>
           {/* 標題 */}
           <h2 className="text-white text-xl font-bold mb-4 text-center">兌換獎品</h2>
