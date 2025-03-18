@@ -32,16 +32,20 @@ export const IntroHint = ({ onClose }) => {
   const DoNotShow = () => {
     return (
       <div className="flex items-center justify-center mt-4 mb-2">
-      <label className="flex items-center cursor-pointer">
-        <input
-          type="checkbox"
-          checked={hideForever}
-          onChange={handleCheckboxChange}
-          className="h-4 w-4 rounded focus:ring-0 accent-white"
-        />
-        <span className="ml-2 text-white text-sm">不再顯示</span>
-      </label>
-    </div>
+        <div 
+          className="flex items-center cursor-pointer" 
+          onClick={() => setHideForever(!hideForever)}
+        >
+          <div className={`h-4 w-4 rounded border flex items-center justify-center ${hideForever ? 'bg-white' : 'border-white'}`}>
+            {hideForever && (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+          </div>
+          <span className="ml-2 text-white text-sm">不再顯示</span>
+        </div>
+      </div>
     )
   }
 
