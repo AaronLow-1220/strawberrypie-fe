@@ -18,7 +18,7 @@ export const ScanResultModal = ({ resultInfo, stampInfo, onClose }) => {
 								<img
 									src={stampInfo.icon}
 									alt={stampInfo.name || "印章圖示"}
-									className="w-full h-full scale-75 invert object-cover"
+									className="w-full h-full scale-75 invert"
 								/>
 							) : (
 								<div className="text-gray-400 text-sm flex items-center justify-center h-full w-full">
