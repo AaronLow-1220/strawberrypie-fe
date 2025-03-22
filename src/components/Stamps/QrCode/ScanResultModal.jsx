@@ -6,8 +6,8 @@ export const ScanResultModal = ({ resultInfo, stampInfo, onClose }) => {
 		<ModalTemplate onClose={onClose}>
 			{resultInfo?.status === 'invalid_qr_code' ? (
 				<div className="flex flex-col items-center justify-center">
-					<p className="font-bold mb-4 text-[32px] text-center" style={{ fontFamily: "B" }}>(⁠ノ⁠｀⁠Д⁠´⁠)⁠ノ</p>
-					<p className="text-secondary-color text-center text-[18px]">哩洗勒</p>
+					<p className="font-bold mb-4 text-[32px] text-center" style={{ fontFamily: "B" }}>(⁠;⁠ŏ⁠﹏⁠ŏ⁠)⁠</p>
+					<p className="text-secondary-color text-center text-[18px]">章跡未顯，或許另有深意。再尋，方知其妙。</p>
 				</div>
 			) : stampInfo ? (
 				<div className="flex flex-col items-center justify-center">
@@ -39,8 +39,8 @@ export const ScanResultModal = ({ resultInfo, stampInfo, onClose }) => {
 				</div>
 			) : (
 				<div className="flex flex-col items-center justify-center">
-					<p className="font-bold mb-4 text-[32px] text-center" style={{ fontFamily: "B" }}>¯⁠\⁠_⁠ಠ⁠_⁠ಠ⁠_⁠/⁠¯</p>
-					<p className="text-secondary-color text-center text-[18px]">你在玩我嗎 ?</p>
+					<p className="font-bold mb-4 text-[32px] text-center" style={{ fontFamily: "B" }}>¯⁠\⁠_⁠(⁠ツ⁠)⁠_⁠/⁠¯</p>
+					<p className="text-secondary-color text-center text-[18px]">此章非吾之所認，或許另有歸屬？</p>
 				</div>
 			)}
 
