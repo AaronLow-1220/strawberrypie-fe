@@ -23,7 +23,7 @@ import "./QrCode/QRScannerTransition.css";
 
 export const Stamps = () => {
 
-    // 假設目前集到的張數與總數
+    // 狀態管理
     const [currentCount, setCurrentCount] = useState(0);
     const totalStamps = 22;
 
@@ -37,6 +37,8 @@ export const Stamps = () => {
     const [urlStampId, setUrlStampId] = useState(null);
     // 添加狀態來追蹤 URL 參數是否已處理
     const [urlParamsProcessed, setUrlParamsProcessed] = useState(false);
+    // 添加狀態來追蹤印章數據是否已經加載完成
+    const [stampsLoaded, setStampsLoaded] = useState(false);
 
     // 新增節點引用
     const focusCardRef = useRef(null);
@@ -171,6 +173,12 @@ export const Stamps = () => {
     // 獲取所有印章資料
     const fetchStamps = async () => {
         try {
+            // 如果已經加載了印章數據且有圖標，則不需要重新獲取
+            if (stampsLoaded && stamps.length > 0 && stamps.some(stamp => stamp.icon)) {
+                console.log("使用已加載的印章數據");
+                return;
+            }
+
             const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
             let responseData;
 
@@ -191,19 +199,29 @@ export const Stamps = () => {
                 responseData = response.data;
             }
 
-            const stampsData = responseData._data.map((stamp) => ({
-                id: stamp.id,
-                stampid: stamp.stampid,
-                name: stamp.name,
-                genre: mapGenreToCategory(stamp.genre),
-                icon: "",
-                imageLoading: !!stamp.icon_id,
-                icon_id: stamp.icon_id,
-            }));
+            // 將新獲取的印章數據與現有的已加載圖像合併
+            const stampsData = responseData._data.map((stamp) => {
+                const existingStamp = stamps.find(s => s.id === stamp.id);
+                return {
+                    id: stamp.id,
+                    stampid: stamp.stampid,
+                    name: stamp.name,
+                    genre: mapGenreToCategory(stamp.genre),
+                    // 如果已經有圖標，則保留現有圖標
+                    icon: existingStamp?.icon || loadedImages[stamp.id] || "",
+                    imageLoading: existingStamp ? existingStamp.imageLoading : !!stamp.icon_id && !loadedImages[stamp.id],
+                    icon_id: stamp.icon_id,
+                };
+            });
 
             setStamps(stampsData);
+            setStampsLoaded(true);
 
-            loadImagesInOrder(stampsData, apiBaseUrl);
+            // 只為沒有圖標的印章加載圖片
+            loadImagesInOrder(
+                stampsData.filter(stamp => !stamp.icon && stamp.icon_id), 
+                apiBaseUrl
+            );
             console.log("success");
         } catch (error) {
             console.error("獲取印章失敗: ", error);
@@ -603,6 +621,8 @@ export const Stamps = () => {
         if (localStorage.getItem("accessToken") != null) {
             fetchStampCollects();
         }
+        
+        // 確保獲取印章數據
         fetchStamps();
 
         setUrlParamsProcessed(true);
