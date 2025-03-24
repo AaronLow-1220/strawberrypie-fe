@@ -33,26 +33,26 @@ export const Redeem = ({ currentCount, onClose, handleOpenLuckyDrawHint }) => {
         }
       );
       console.log("抽獎結果:", response.data);
-      
+
       // 設置抽獎結果並調用父組件的handleOpenLuckyDrawHint函數
       const result = {
         status: 'success',
         data: response.data
       };
       setLuckyDrawResult(result);
-      
+
       // 調用父組件的handleOpenLuckyDrawHint函數，傳遞抽獎結果
       if (handleOpenLuckyDrawHint) {
         handleOpenLuckyDrawHint(result);
       }
-      
+
       return response.data;
     } catch (error) {
       console.error("抽獎失敗:", error);
-      
+
       // 準備錯誤結果
       let result;
-      
+
       // 檢查是否為400錯誤
       if (error.response && error.response.status === 400) {
         result = {
@@ -67,22 +67,35 @@ export const Redeem = ({ currentCount, onClose, handleOpenLuckyDrawHint }) => {
           data: error.response?.data
         };
       }
-      
+
       setLuckyDrawResult(result);
-      
+
       // 調用父組件的handleOpenLuckyDrawHint函數，傳遞錯誤結果
       if (handleOpenLuckyDrawHint) {
         handleOpenLuckyDrawHint(result);
         onClose();
       }
-      
+
       return null;
     }
   }
 
   return (
     <ModalTemplate onClose={onClose}>
-      {currentCount != 22 ? (
+      {currentCount < 7 ? (
+        <div className='flex flex-col items-center'>
+          <h2 className="text-[36px] mb-2 text-center font-bold" style={{ fontFamily: "B" }}>章數不足</h2>
+
+          {/* 內容 */}
+          <p className="text-white text-[18px] text-center mb-6">至少需收集 <span className="text-secondary-color text-[32px]" style={{ fontFamily: "B" }}>7</span> 個章點才能兌換獎品</p>
+          <button
+            onClick={onClose}
+            className="max-w-[200px] mx-auto w-full primary-button text-white py-3 text-center"
+          >
+            繼續收集
+          </button>
+        </div>
+      ) : currentCount < 22 ? (
         <>
           {/* 標題 */}
           <h2 className="text-white text-xl font-bold mb-4 text-center">兌換獎品</h2>
