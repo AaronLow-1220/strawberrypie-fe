@@ -283,12 +283,12 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
         <>
           <div className="wave-container left-1/2 transform -translate-x-1/2 -mt-6">
             <div className="img-container wave_0">
-              <img src="/HomePage/wave_0.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_0.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_0s.webp" srcSet="/HomePage/wave_0s.webp 1x, /HomePage/wave_0s@2x.webp 2x" alt="" className="wave" />
+              <img src="/HomePage/wave_0s.webp" srcSet="/HomePage/wave_0s.webp 1x, /HomePage/wave_0s@2x.webp 2x" alt="" className="wave" />
             </div>
             <div className="img-container wave_1">
-              <img src="/HomePage/wave_1.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_1.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_1s.webp" srcSet="/HomePage/wave_1s.webp 1x, /HomePage/wave_1s@2x.webp 2x" alt="" className="wave"/>
+              <img src="/HomePage/wave_1s.webp" srcSet="/HomePage/wave_1s.webp 1x, /HomePage/wave_1s@2x.webp 2x" alt="" className="wave" />
             </div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-[20px]  max-w-[380px] w-[100vw]">
               <DateMap
@@ -305,8 +305,8 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
           </div>
           <div className="wave-container left-1/2 transform -translate-x-1/2 -translate-y-[27%]">
             <div className="img-container wave_2">
-              <img src="/HomePage/wave_2.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_2.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_2s.webp" srcSet="/HomePage/wave_2s.webp 1x, /HomePage/wave_2s@2x.webp 2x" alt="" className="wave" />
+              <img src="/HomePage/wave_2s.webp" srcSet="/HomePage/wave_2s.webp 1x, /HomePage/wave_2s@2x.webp 2x" alt="" className="wave" />
             </div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 px-[20px] max-w-[380px] w-[100vw]">
               <DateMap
@@ -333,8 +333,8 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
             <div
               className="img-container wave_3"
             >
-              <img src="/HomePage/wave_3.webp" alt="" className="wave" />
-              <img src="/HomePage/wave_3.webp" alt="" className="wave" />
+              <img src="/HomePage/wave_3s.webp" srcSet="/HomePage/wave_3s.webp 1x, /HomePage/wave_3s@2x.webp 2x" alt="" className="wave" />
+              <img src="/HomePage/wave_3s.webp" srcSet="/HomePage/wave_3s.webp 1x, /HomePage/wave_3s@2x.webp 2x" alt="" className="wave" />
             </div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
           </div>
