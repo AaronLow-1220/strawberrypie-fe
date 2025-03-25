@@ -162,6 +162,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
 
     // 初始化時執行一次
     handleResize();
+    window.scrollTo({top: 0, behavior: 'instant'});
 
     // 添加視窗大小變化的監聽器
     window.addEventListener("resize", handleResize);

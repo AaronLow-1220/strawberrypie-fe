@@ -179,8 +179,10 @@ export const Header = ({ onOpenAccount }) => {
   useEffect(() => {
     if (menuOpen) {
       setIsHeaderOpen(true);
+      document.body.style.overflow = "hidden";
     } else {
       setIsHeaderOpen(false);
+      document.body.style.overflow = "auto";
     }
   }, [menuOpen]);
 

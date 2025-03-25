@@ -34,10 +34,6 @@ export const useDeviceType = () => {
   const [config, setConfig] = useState(() => DEVICE_CONFIGS[getDeviceType(window.innerWidth)]);
 
   useEffect(() => {
-    window.scrollTo({top: 0, behavior: 'instant'});
-  }, []);
-
-  useEffect(() => {
     let timeoutId;
     
     const updateDeviceType = () => {

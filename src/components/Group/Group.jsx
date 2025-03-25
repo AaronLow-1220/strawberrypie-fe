@@ -4,6 +4,7 @@ import { Card } from "./Card/Card";
 import { FocusCard } from "./Card/FocusCard";
 import { Nav } from "./Nav/Nav";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
+import { useLocation } from "react-router-dom";
 
 // 添加 CSS 過渡樣式
 const transitionStyles = `
@@ -118,6 +119,7 @@ const ScrollArrow = ({ direction, isVisible, onClick }) => {
 };
 
 export const Group = () => {
+  const location = useLocation();
   // 用於追蹤各類別的滾動容器參考
   const scrollContainerRefs = useRef({});
   // 用於追蹤各類別的滾動按鈕可見性狀態
@@ -301,6 +303,24 @@ export const Group = () => {
 
     fetchCards();
   }, []);
+
+  // 處理 URL 參數，設置初始過濾器
+  useEffect(() => {
+    // 從 URL 中獲取 category 參數
+    const params = new URLSearchParams(location.search);
+    const categoryParam = params.get('category');
+    
+    if (categoryParam) {
+      // 檢查 categoryParam 是否是有效的類別
+      const validCategories = getAllCategories();
+      if (validCategories.includes(categoryParam)) {
+        setSelectedFilter(categoryParam);
+      }
+    }
+    
+    // 確保頁面滾動到頂部
+    window.scrollTo(0, 0);
+  }, [location, getAllCategories]);
 
   // 根據選擇的過濾類別過濾卡片
   const filteredCards =
