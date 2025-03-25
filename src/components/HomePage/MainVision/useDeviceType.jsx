@@ -34,9 +34,7 @@ export const useDeviceType = () => {
   const [config, setConfig] = useState(() => DEVICE_CONFIGS[getDeviceType(window.innerWidth)]);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
+    window.scrollTo({top: 0, behavior: 'instant'});
   }, []);
 
   useEffect(() => {
