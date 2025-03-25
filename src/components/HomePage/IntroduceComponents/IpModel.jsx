@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export const IpModel = ({
   title,
@@ -66,7 +67,8 @@ export const IpModel = ({
       </div>
     )) ||
     // 手機版
-    <div
+    <Link
+      to="/groups"
       className={`mt-[2rem] flex mx-[30px] -z-0 ${rowReverse === "true" ? "flex-row-reverse" : ""}`}
     >
       <div className="relative h-full ">
@@ -91,6 +93,6 @@ export const IpModel = ({
           {secondTitle}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

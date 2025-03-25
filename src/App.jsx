@@ -288,7 +288,7 @@ function App() {
 						<Suspense fallback={<Loading progress={100} loadingText="學分重算中..." />}>
 							<Routes>
 								{/* 首頁不需要 lazy loading，因為已經直接導入 */}
-								<Route path="/" element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
+								<Route path="/" onUpdate={() => window.scrollTo({top: 0, behavior: 'instant'})} element={<HomePage handleLogoAnimation={handleLogoAnimation} setShowHeader={setShowHeader} />} />
 								<Route path="/psychometric-test" element={<PsychometricTest />} />
 								<Route path="/groups" element={<Group />} />
 								<Route path="/result/:id" element={<Result />} />

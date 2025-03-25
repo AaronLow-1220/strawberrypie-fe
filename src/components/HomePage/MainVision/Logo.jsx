@@ -80,8 +80,7 @@ export const Logo = ({ beginAnimation, className }) => {
       style={{
         "--logo-y": `${config.initialPosition}%`,
         "--logo-scale": config.baseScale,
-        transform:
-          "translate3d(-50%, -50%, 0) scale3d(var(--logo-scale), var(--logo-scale), 1)",
+        transform: `${deviceType === "mobile" ? "translate3d(-51.2%, -48.5%, 0)" : "translate3d(-51.2%, -45%, 0)"} scale3d(var(--logo-scale), var(--logo-scale), 1)`,
         top: "var(--logo-y)",
         willChange: "transform",
       }}
