@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { CatmullRomCurve3, Vector3, Object3D } from "three";
-import { useLocation } from "react-router-dom";
 
 export const SlidingCamera = ({ onAnimationStart }) => {
   const { camera, gl, scene } = useThree();
@@ -9,23 +8,6 @@ export const SlidingCamera = ({ onAnimationStart }) => {
   const [sliding, setSliding] = useState(true);
   const initialY = useRef(null);
   const [deviceType, setDeviceType] = useState("desktop");
-  const location = useLocation();
-  
-  // 判斷是否需要執行相機滑動動畫
-  // 使用 sessionStorage 來判斷是否為首次訪問或頁面重新整理
-  const [shouldAnimate, setShouldAnimate] = useState(() => {
-    // 檢查 sessionStorage 中是否有標記
-    const hasVisited = sessionStorage.getItem('hasVisitedHomePage');
-    
-    // 如果沒有標記，表示是首次訪問或重新整理
-    if (!hasVisited) {
-      // 設置標記，表示已訪問過
-      sessionStorage.setItem('hasVisitedHomePage', 'true');
-      return true; // 執行動畫
-    }
-    
-    return false; // 不執行動畫
-  });
 
   // 創建相機錨點
   const cameraAnchor = useRef(new Object3D());
@@ -198,23 +180,6 @@ export const SlidingCamera = ({ onAnimationStart }) => {
     cameraAnchor.current.add(camera);
     camera.position.set(0, 0, 0);
 
-    // 如果不需要動畫，直接設置相機到最終位置
-    if (!shouldAnimate) {
-      // 設置相機到曲線的最終點
-      const finalPosition = curve.getPoint(1);
-      cameraAnchor.current.position.set(finalPosition.x, finalPosition.y, finalPosition.z);
-      cameraAnchor.current.rotation.x = endRotation;
-      camera.fov = endFov;
-      camera.updateProjectionMatrix();
-      setSliding(false);
-      initialY.current = cameraAnchor.current.position.y;
-      
-      // 允許頁面滾動
-      document.body.style.overflow = "auto";
-      
-      // 觸發動畫開始的回調
-      onAnimationStart?.();
-    }
 
     // 清理函數
     return () => {
@@ -225,7 +190,7 @@ export const SlidingCamera = ({ onAnimationStart }) => {
 
   // 每幀執行的動畫邏輯
   useFrame((state, delta) => {
-    if (sliding && shouldAnimate) {
+    if (sliding) {
       progress.current = Math.min(
         progress.current + delta / ANIMATION_DURATION,
         1

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export const IpModel = ({
   title,
@@ -28,7 +29,13 @@ export const IpModel = ({
   return (
     (windowWidthTrue && (
       // 電腦版
-      <div className="-z-0 w-[12.5rem]">
+      <Link 
+        to={{
+          pathname: "/groups",
+          search: `?category=${encodeURIComponent(title)}`,
+        }}
+        className="-z-0 w-[12.5rem]"
+      >
         <div className="relative h-[15rem] w-[12.5rem] flex flex-col justify-center group">
           <div
             className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2
@@ -63,10 +70,14 @@ export const IpModel = ({
             {secondTitle}
           </div>
         </div>
-      </div>
+      </Link>
     )) ||
     // 手機版
-    <div
+    <Link
+      to={{
+        pathname: "/groups",
+        search: `?category=${encodeURIComponent(title)}`,
+      }}
       className={`mt-[2rem] flex mx-[30px] -z-0 ${rowReverse === "true" ? "flex-row-reverse" : ""}`}
     >
       <div className="relative h-full ">
@@ -91,6 +102,6 @@ export const IpModel = ({
           {secondTitle}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

@@ -20,41 +20,48 @@ const DEVICE_CONFIGS = {
   },
 };
 
+const getDeviceType = (width) => {
+  if (width < DEVICE_CONFIGS.mobile.breakpoint) {
+    return "mobile";
+  } else if (width < DEVICE_CONFIGS.tablet.breakpoint) {
+    return "tablet";
+  }
+  return "desktop";
+};
+
 export const useDeviceType = () => {
-  const [deviceType, setDeviceType] = useState("desktop");
-  const [config, setConfig] = useState(DEVICE_CONFIGS.desktop);
+  const [deviceType, setDeviceType] = useState(() => getDeviceType(window.innerWidth));
+  const [config, setConfig] = useState(() => DEVICE_CONFIGS[getDeviceType(window.innerWidth)]);
 
   useEffect(() => {
+    let timeoutId;
+    
     const updateDeviceType = () => {
       const width = window.innerWidth;
-      console.log("width: ",width);
-      let newType;
-      let newConfig;
-
-      if (width < DEVICE_CONFIGS.mobile.breakpoint) {
-        newType = "mobile";
-        newConfig = DEVICE_CONFIGS.mobile;
-      } else if (width < DEVICE_CONFIGS.tablet.breakpoint) {
-        newType = "tablet";
-        newConfig = DEVICE_CONFIGS.tablet;
-      } else {
-        newType = "desktop";
-        newConfig = DEVICE_CONFIGS.desktop;
+      const newType = getDeviceType(width);
+      
+      if (newType !== deviceType) {
+        setDeviceType(newType);
+        setConfig(DEVICE_CONFIGS[newType]);
       }
-
-      setDeviceType(newType);
-      setConfig(newConfig);
-      console.log("device type: ",newType);
-
     };
 
+    const debouncedUpdate = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(updateDeviceType, 100);
+    };
 
-    window.addEventListener("resize", updateDeviceType);
-    updateDeviceType();
+    window.addEventListener("resize", debouncedUpdate);
 
-
-    return () => window.removeEventListener("resize", updateDeviceType);
-  }, []);
+    return () => {
+      window.removeEventListener("resize", debouncedUpdate);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [deviceType]);
 
   return { deviceType, config };
 };

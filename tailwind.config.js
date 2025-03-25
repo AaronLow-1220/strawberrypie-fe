@@ -47,7 +47,7 @@ export default withMT({
         // 平板版 Logo 動畫
         IpadLogo: {
           "0%": { width: "500px", opacity: 0 },
-          "100%": { width: "350px", opacity: 1 },
+          "100%": { width: "285px", opacity: 1 },
         },
         // 電腦版 Logo 動畫
         WindowLogo: {

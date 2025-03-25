@@ -73,15 +73,15 @@ export const Logo = ({ beginAnimation, className }) => {
 
   return (
     <div
+      onClick={() => window.scrollTo(0, 0)}
       ref={logoRef}
-      className={`fixed lg:absolute left-[50%] z-30 ${
+      className={`fixed lg:absolute left-[50%] z-30 cursor-pointer ${
         className
       } ${shouldAnimate ? config.animateClass : ""}`}
       style={{
         "--logo-y": `${config.initialPosition}%`,
         "--logo-scale": config.baseScale,
-        transform:
-          "translate3d(-50%, -50%, 0) scale3d(var(--logo-scale), var(--logo-scale), 1)",
+        transform: `${deviceType === "mobile" ? "translate(-4px, 2px)" : "translate(-4px, 5.5px)"} translate3d(-50%, -50%, 0) scale3d(var(--logo-scale), var(--logo-scale), 1)`,
         top: "var(--logo-y)",
         willChange: "transform",
       }}
