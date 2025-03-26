@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { ImageSkeleton } from "../../ImageSkeleton";
 
 export const Card = ({
@@ -14,8 +14,8 @@ export const Card = ({
   media, // 媒體信息
   onClick, // 點擊卡片時的回調函數
 }) => {
-  // 添加圖片加載完成狀態
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [hasRound, setHasRound] = useState(false);
 
   // 處理圖片加載完成事件
   const handleImageLoad = () => {
@@ -48,6 +48,16 @@ export const Card = ({
     media,
   ]);
 
+  useEffect(() => {
+    const updateRound = () => {
+      setHasRound(window.innerWidth < 580 && selectedFilter !== "全部");
+    };
+
+    updateRound();
+    window.addEventListener("resize", updateRound);
+    return () => window.removeEventListener("resize", updateRound);
+  }, [selectedFilter]);
+
   // 根據標題字數決定字體大小
   const titleFontSize = title && title.length > 10 ? "24px" : "24px";
 
@@ -63,7 +73,7 @@ export const Card = ({
       {/* 卡片容器，使用 flex 佈局 */}
       <div className="relative flex flex-col justify-center group">
         {/* 卡片圖片區域 */}
-        <div className={`max-w-full relative aspect-[4/3] ${selectedFilter === "全部" ? "rounded-none" : "rounded-[8px] rounded-none"} overflow-hidden`}>
+        <div className={`max-w-full relative aspect-[4/3] overflow-hidden ${hasRound ? "rounded-[8px]" : ""}`}>
           <ImageSkeleton />
           <img
             className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
