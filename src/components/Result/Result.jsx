@@ -415,8 +415,8 @@ export const Result = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-center mx-auto gap-4">
-        <div className="mt-[42px] max-w-[360px]">
+      <div className="flex flex-wrap justify-center mx-auto gap-4 mb-12">
+        <div className="mt-8 max-w-[360px]">
           <div className="bg-[#9F2E78] rounded-t-[12px] py-[12px] relative">
             <div
               className="text-white text-[20px] text-center leading-none text-nowrap"
@@ -434,7 +434,7 @@ export const Result = () => {
             </div>
           </div>
         </div>
-        <div className="mt-[36px] max-w-[360px]">
+        <div className="mt-8 max-w-[360px]">
           <div className="bg-[#9F2E78] rounded-t-[12px] py-[12px] relative">
             <div
               className="text-white text-[20px] text-center leading-none text-nowrap"
@@ -442,7 +442,7 @@ export const Result = () => {
             >
               興趣
             </div>
-            <div className="absolute bottom-[0px] right-[10px]  w-[70px] h-[70px]">
+            <div className="absolute bottom-[0px] right-[10px] w-[70px] h-[70px]">
               <img src="/Result/console.png" alt="" />
             </div>
           </div>
