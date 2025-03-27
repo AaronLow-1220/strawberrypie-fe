@@ -439,7 +439,7 @@ export const Question = () => {
         {/* 問題與選項區域（支援滑動手勢） */}
         <div
           {...swipeHandlers}
-          className="w-full max-w-[28rem] mx-auto px-[24px] mt-[20px] mb-[20px] relative"
+          className="w-full max-w-[28rem] mx-auto px-[24px] mt-[20px] mb-[4rem] relative"
         >
           <div
             className="flex transition-transform duration-500 ease-in-out carousel-container"
@@ -506,7 +506,7 @@ export const Question = () => {
         ) : (
           // 顯示問題進度指示器
           <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
-            <div className="flex justify-center items-center h-[2rem] mx-auto mb-[2rem]">
+            <div className="flex justify-center items-center h-[2rem] mx-auto mb-[2rem] shadow-[0_5px_10px_rgba(0,0,0,0.4)] bg-[#361014] px-2 rounded-full">
               {questions.map((_, index) => {
                 let bgColor = "#6C2028";
                 return (
