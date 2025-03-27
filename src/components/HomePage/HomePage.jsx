@@ -406,7 +406,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
 
       {/* IP 模型區塊 - 展示各專業領域 */}
       <div className="w-full mt-[4rem] md:mt-[8rem]">
-        <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫code" />
+        <Slogan title="創意滿腦永不衰" secondTitle="左手畫圖，右手寫 Code" />
         {renderIpModels()}
       </div>
 
