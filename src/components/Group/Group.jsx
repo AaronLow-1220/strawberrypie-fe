@@ -475,22 +475,38 @@ export const Group = () => {
         <div className="flex justify-center group-padding">
           <div className="w-full mx-auto">
             <div className="card-category">
-              {filteredCards.map((card, index) => (
-                <Card
-                  key={index}
-                  img={card.img}
-                  imageLoading={card.imageLoading}
-                  title={card.title}
-                  content={card.content}
-                  secondTitle={card.secondTitle}
-                  selectedFilter={selectedFilter}
-                  detailedContent={card.detailedContent}
-                  member={card.member}
-                  teachers={card.teachers}
-                  media={card.media}
-                  onClick={() => handleCardClick(card)}
-                />
-              ))}
+              {filteredCards
+                .sort((a, b) => {
+                  // 檢查是否為英文開頭
+                  const isAEnglish = /^[a-zA-Z]/.test(a.title);
+                  const isBEnglish = /^[a-zA-Z]/.test(b.title);
+
+                  // 如果兩個都是英文或都不是英文，則使用對應的語言規則比較
+                  if (isAEnglish === isBEnglish) {
+                    // 英文用 en-US，中文用 zh-TW
+                    const locale = isAEnglish ? 'en-US' : 'zh-TW';
+                    return a.title.localeCompare(b.title, locale);
+                  }
+
+                  // 英文優先
+                  return isAEnglish ? -1 : 1;
+                })
+                .map((card, index) => (
+                  <Card
+                    key={index}
+                    img={card.img}
+                    imageLoading={card.imageLoading}
+                    title={card.title}
+                    content={card.content}
+                    secondTitle={card.secondTitle}
+                    selectedFilter={selectedFilter}
+                    detailedContent={card.detailedContent}
+                    member={card.member}
+                    teachers={card.teachers}
+                    media={card.media}
+                    onClick={() => handleCardClick(card)}
+                  />
+                ))}
             </div>
           </div>
         </div>
@@ -529,6 +545,21 @@ export const Group = () => {
                   {/* 渲染該類別的卡片 */}
                   {filteredCards
                     .filter((card) => card.category === item)
+                    .sort((a, b) => {
+                      // 檢查是否為英文開頭
+                      const isAEnglish = /^[a-zA-Z]/.test(a.title);
+                      const isBEnglish = /^[a-zA-Z]/.test(b.title);
+
+                      // 如果兩個都是英文或都不是英文，則使用對應的語言規則比較
+                      if (isAEnglish === isBEnglish) {
+                        // 英文用 en-US，中文用 zh-TW
+                        const locale = isAEnglish ? 'en-US' : 'zh-TW';
+                        return a.title.localeCompare(b.title, locale);
+                      }
+
+                      // 英文優先
+                      return isAEnglish ? -1 : 1;
+                    })
                     .map((card, index) => (
                       <Card
                         key={index}
