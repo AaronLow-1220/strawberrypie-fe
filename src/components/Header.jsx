@@ -331,7 +331,7 @@ export const Header = ({ onOpenAccount }) => {
               </li>
               <li className="text-[2rem]">
                 <Link
-                  to="/feedback"
+                  to="https://forms.gle/k73vyKFFRP7JZo648"
                   className="flex items-center"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -364,7 +364,7 @@ export const Header = ({ onOpenAccount }) => {
               />
             </Link>
             <LinkLarge to={"/psychometric-test"} text="心理測驗" />
-            <LinkLarge to={"/feedback"} text="意見回饋" />
+            <LinkLarge to={"https://forms.gle/k73vyKFFRP7JZo648"} text="意見回饋" />
           </div>
           {/* 桌面版登入/個人資料按鈕 */}
           <div className="absolute right-10 top-[48px]">
