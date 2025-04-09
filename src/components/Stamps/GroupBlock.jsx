@@ -7,8 +7,8 @@ export const GroupBlock = ({ total, catagory, num = 0, children}) => {
 	const itemsRef = useRef([]);
 
 	// 定義動畫時長常數
-	const TRANSITION_DURATION = 0.33; // 秒
-	const TRANSITION_TIMING = "ease";
+	const TRANSITION_DURATION = 0.3; // 秒，縮短動畫時間
+	const TRANSITION_TIMING = "cubic-bezier(0.4, 0, 0.2, 1)"; // 使用更平滑的貝茲曲線
 	const TRANSITION = `${TRANSITION_DURATION}s ${TRANSITION_TIMING}`;
 
 	// 當組件初次渲染時，確保 bodyRef 有 scrollable class
@@ -36,9 +36,18 @@ export const GroupBlock = ({ total, catagory, num = 0, children}) => {
 		const bodyStyle = window.getComputedStyle(body);
 		const paddingLeft = parseFloat(bodyStyle.paddingLeft);
 
+		// 使用 will-change 提示瀏覽器優化
+		container.style.willChange = 'height';
+		items.forEach(item => {
+			item.style.willChange = 'transform';
+			const iconEl = item.querySelector(".group-block-item__icon");
+			if (iconEl) iconEl.style.willChange = 'transform';
+		});
+
 		const itemPositions = items.map((item) => {
 			const rect = item.getBoundingClientRect();
 			const iconEl = item.querySelector(".group-block-item__icon");
+			if (!iconEl) return null; // 防止錯誤
 			const iconRect = iconEl.getBoundingClientRect();
 			const itemStyle = window.getComputedStyle(item);
 
@@ -66,7 +75,7 @@ export const GroupBlock = ({ total, catagory, num = 0, children}) => {
 				iconLeft: iconRect.left - rect.left,
 				iconTop: iconRect.top - rect.top,
 			};
-		});
+		}).filter(Boolean); // 過濾空值
 
 		// 切換狀態
 		if (expanding) {
@@ -91,9 +100,14 @@ export const GroupBlock = ({ total, catagory, num = 0, children}) => {
 
 		// 處理項目位置和大小動畫
 		items.forEach((item, i) => {
+			if (i >= itemPositions.length) return; // 防止錯誤
 			const startPos = itemPositions[i];
+			if (!startPos) return; // 防止錯誤
+			
 			const finalRect = item.getBoundingClientRect();
 			const iconEl = item.querySelector(".group-block-item__icon");
+			if (!iconEl) return; // 防止錯誤
+			
 			const finalIconRect = iconEl.getBoundingClientRect();
 
 			// 計算整體位置差異
@@ -132,19 +146,26 @@ export const GroupBlock = ({ total, catagory, num = 0, children}) => {
 		setTimeout(() => {
 			container.style.height = "";
 			container.style.transition = "";
+			container.style.willChange = "auto";
+			
 			items.forEach((item) => {
 				const iconEl = item.querySelector(".group-block-item__icon");
+				if (!iconEl) return; // 防止錯誤
+				
 				item.style.transform = "";
 				item.style.transition = "";
+				item.style.willChange = "auto";
+				
 				iconEl.style.transform = "";
 				iconEl.style.transition = "";
+				iconEl.style.willChange = "auto";
 			});
 
 			// 只在收合時添加 scrollable
 			if (!expanding) {
 				body.classList.add("scrollable");
 			}
-		}, TRANSITION_DURATION * 1000);
+		}, TRANSITION_DURATION * 1000 + 50); // 加上一點延遲確保動畫完成
 	};
 
 	const handleToggle = () => {
