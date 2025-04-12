@@ -380,7 +380,7 @@ export const Stamps = () => {
 
         // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
         if (urlStampId) {
-            window.history.replaceState({}, "", "/stamps");
+            window.history.replaceState({}, "", "/collect");
             setUrlStampId(null);
         }
     }, [urlStampId, showScanner, handleCloseScanner]);
@@ -606,7 +606,7 @@ export const Stamps = () => {
 
         // 檢查路徑是否包含印章ID
         const pathParts = location.pathname.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'stamps') {
+        if (pathParts.length >= 4 && pathParts[1] === 'stamps' && pathParts[2] === 'collect') {
             const stampId = pathParts[3];
             if (stampId && stampId.trim() !== '') {
                 console.log(`從路徑獲取到印章 ID: ${stampId}`);
@@ -688,12 +688,15 @@ export const Stamps = () => {
         setUrlProcessStarted(true);
 
         const pathParts = location.pathname.split('/');
-        if (pathParts.length >= 3 && pathParts[1] === 'stamps') {
-            const stampId = pathParts[2]; // 修正為索引2
+        if (pathParts.length >= 4 && pathParts[1] === 'stamps' && pathParts[2] === 'collect') {
+            const stampId = pathParts[3];
             if (stampId && stampId.trim() !== '') {
                 console.log(`從路徑獲取到印章 ID: ${stampId}`);
                 setUrlStampId(stampId);
             }
+        } else if (stampParam) {
+            console.log("從 URL 參數獲取印章 ID:", stampParam);
+            setUrlStampId(stampParam);
         }
     }, [location, urlProcessStarted, setUrlStampId]);
 
@@ -751,7 +754,7 @@ export const Stamps = () => {
                                     <div key="final-stamp" className="w-full max-w-[540px] flex flex-col justify-center items-center p-8">
                                         <h2 className="text-[36px] mb-2 text-center font-bold" style={{ fontFamily: "B" }}>最終章點！</h2>
                                         <p className="text-[20px] mb-6 text-center text-secondary-color">填寫意見回饋，搜集第22個章以獲得抽獎資格！</p>
-                                        <Link to="/feedback" className="primary-button text-white px-4 py-2 rounded-lg">意見回饋</Link>
+                                        <Link to="https://forms.gle/k73vyKFFRP7JZo648" target="_blank" className="primary-button text-white px-4 py-2 rounded-lg">意見回饋</Link>
                                     </div>
                                 ) : null
                             )

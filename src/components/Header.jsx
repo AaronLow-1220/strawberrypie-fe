@@ -6,7 +6,7 @@ import { HeaderContext } from "./HeaderContext";
 import { jwtDecode } from "jwt-decode";
 
 
-const LinkLarge = ({ to, text }) => {
+const LinkLarge = ({ to, text, target, rel }) => {
   return (
     <Link
       to={to}
@@ -15,6 +15,8 @@ const LinkLarge = ({ to, text }) => {
         textShadow: "0px 4px 12px rgba(0, 0, 0, 0.6)",
         fontFamily: "B",
       }}
+      target={target}
+      rel={rel}
     >
       {text}
     </Link>
@@ -259,7 +261,7 @@ export const Header = ({ onOpenAccount }) => {
                 />
               </button>
             ) : (
-              <Link to="/login">
+              <Link to="/login" onClick={() => setMenuOpen(false)} >
                 <img
                   src="/Header/person.svg"
                   alt="Collect"
@@ -333,6 +335,7 @@ export const Header = ({ onOpenAccount }) => {
                 <Link
                   to="https://forms.gle/k73vyKFFRP7JZo648"
                   className="flex items-center"
+                  target="_blank"
                   onClick={() => setMenuOpen(false)}
                 >
                   <div>意見回饋</div>
@@ -364,7 +367,7 @@ export const Header = ({ onOpenAccount }) => {
               />
             </Link>
             <LinkLarge to={"/psychometric-test"} text="心理測驗" />
-            <LinkLarge to={"https://forms.gle/k73vyKFFRP7JZo648"} text="意見回饋" />
+            <LinkLarge to={"https://forms.gle/k73vyKFFRP7JZo648"} text="意見回饋" target="_blank" rel="noopener noreferrer" />
           </div>
           {/* 桌面版登入/個人資料按鈕 */}
           <div className="absolute right-10 top-[48px]">
@@ -377,7 +380,7 @@ export const Header = ({ onOpenAccount }) => {
                 />
               </button>
             ) : (
-              <Link to="/login" className="text-white hover:text-secondary-color transition-colors">
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="text-white hover:text-secondary-color transition-colors">
                 <img
                   src="/Header/person.svg"
                   alt="Login"
