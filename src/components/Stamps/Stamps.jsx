@@ -380,7 +380,7 @@ export const Stamps = () => {
 
         // 如果是從 URL 參數獲取的印章 ID，錯誤後也清除 URL 中的印章 ID
         if (urlStampId) {
-            window.history.replaceState({}, "", "/collect");
+            window.history.replaceState({}, "", "/stamps");
             setUrlStampId(null);
         }
     }, [urlStampId, showScanner, handleCloseScanner]);
@@ -586,13 +586,14 @@ export const Stamps = () => {
 
     // 在組件掛載時解析 URL 參數並初始化
     useEffect(() => {
-        // 綁定鍵盤事件
+        // 綁定鍵盤事件 - 按 h 顯示提示
         window.addEventListener("keydown", (e) => {
             if (e.key === "h") {
                 handleOpenHint();
             }
         });
 
+        // 綁定鍵盤事件 - 按 g 重置提示狀態
         window.addEventListener("keydown", (e) => {
             if (e.key === "g") {
                 localStorage.setItem("hideIntroHint", false);
@@ -600,31 +601,35 @@ export const Stamps = () => {
             }
         });
 
-        // 檢查URL參數是否包含印章ID
-        const searchParams = new URLSearchParams(location.search);
-        const stampParam = searchParams.get('stampid');
+        // 檢查 URL 是否包含印章 ID - 只處理一次
+        if (!urlProcessStarted) {
+            // 從查詢參數獲取 stampid
+            const searchParams = new URLSearchParams(location.search);
+            const stampParam = searchParams.get('stampid');
 
-        // 檢查路徑是否包含印章ID
-        const pathParts = location.pathname.split('/');
-        if (pathParts.length >= 4 && pathParts[1] === 'stamps' && pathParts[2] === 'collect') {
-            const stampId = pathParts[3];
-            if (stampId && stampId.trim() !== '') {
-                console.log(`從路徑獲取到印章 ID: ${stampId}`);
-                setUrlStampId(stampId);
+            // 從路徑獲取印章 ID (格式: /stamps/collect/[stampId])
+            const pathParts = location.pathname.split('/');
+            if (pathParts.length >= 4 && pathParts[1] === 'stamps' && pathParts[2] === 'collect') {
+                const stampId = pathParts[3];
+                if (stampId && stampId.trim() !== '') {
+                    console.log(`從路徑獲取到印章 ID: ${stampId}`);
+                    setUrlStampId(stampId);
+                }
+            } else if (stampParam) {
+                console.log("從 URL 參數獲取印章 ID:", stampParam);
+                setUrlStampId(stampParam);
             }
-        } else if (stampParam) {
-            console.log("從 URL 參數獲取印章 ID:", stampParam);
-            setUrlStampId(stampParam);
         }
 
-        // 獲取初始數據
+        // 獲取初始數據 - 已登入時獲取已收集的印章
         if (localStorage.getItem("accessToken") != null) {
             fetchStampCollects();
         }
         
-        // 確保獲取印章數據
+        // 確保獲取所有印章數據
         fetchStamps();
 
+        // 標記 URL 參數處理完成
         setUrlParamsProcessed(true);
 
         // 清理事件監聽器
@@ -636,11 +641,12 @@ export const Stamps = () => {
                 if (e.key === "g") localStorage.setItem("hideIntroHint", false);
             });
         };
-    }, [location]);
+    }, [location, urlProcessStarted]);
 
     /**
-     * 處理來自 URL 的印章 ID
-     * 為防止重複執行，使用 urlParamsProcessed 和 urlProcessStarted 狀態
+     * 處理來自 URL 的印章 ID - 設置處理狀態
+     * 只有當所有必要條件達成時（參數處理完成、有印章 ID、有印章數據、未開始處理）
+     * 才標記為開始處理，確保 StampCollector 組件只渲染一次
      */
     useEffect(() => {
         if (urlParamsProcessed && urlStampId && !urlProcessStarted && stamps.length > 0) {
@@ -670,35 +676,19 @@ export const Stamps = () => {
         console.log("Environment: ", import.meta.env.MODE);
     }, []);
 
+    // 監控印章數量變化，顯示相應提示
     useEffect(() => {
+        // 每集滿 7 個印章顯示提示
         if (currentCount > 1 && currentCount % 7 == 0) {
             handleOpenHint();
         }
+        // 集滿全部 22 個印章時顯示提示（僅顯示一次）
         if (currentCount == 22 && localStorage.getItem("allCollected") !== "true") {
             localStorage.setItem("allCollected", true);
             handleOpenHint();
             console.log("allCollected: ", localStorage.getItem("allCollected"));
         }
     }, [currentCount]);
-
-    // 獲取URL中的印章ID
-    useEffect(() => {
-        // 確保只處理一次URL參數
-        if (urlProcessStarted) return;
-        setUrlProcessStarted(true);
-
-        const pathParts = location.pathname.split('/');
-        if (pathParts.length >= 4 && pathParts[1] === 'stamps' && pathParts[2] === 'collect') {
-            const stampId = pathParts[3];
-            if (stampId && stampId.trim() !== '') {
-                console.log(`從路徑獲取到印章 ID: ${stampId}`);
-                setUrlStampId(stampId);
-            }
-        } else if (stampParam) {
-            console.log("從 URL 參數獲取印章 ID:", stampParam);
-            setUrlStampId(stampParam);
-        }
-    }, [location, urlProcessStarted, setUrlStampId]);
 
     return (
         <div className="lg:flex text-white lg:justify-center lg:items-center px-5 lg:px-[clamp(5.375rem,-6.7679rem+18.9732vw,16rem)] 2xl:gap-[96px] w-full">
