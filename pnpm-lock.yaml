@@ -29,9 +29,6 @@ importers:
       d3-ease:
         specifier: ^3.0.1
         version: 3.0.1
-      fontfaceobserver:
-        specifier: ^2.3.0
-        version: 2.3.0
       gsap:
         specifier: ^3.14.2
         version: 3.14.2
@@ -1213,9 +1210,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-
-  fontfaceobserver@2.3.0:
-    resolution: {integrity: sha512-6FPvD/IVyT4ZlNe7Wcn5Fb/4ChigpucKYSvD6a+0iMoLn2inpo711eyIcKjmDtE5XNcgAkSH9uN/nfAeZzHEfg==}
 
   for-each@0.3.5:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
@@ -3450,8 +3444,6 @@ snapshots:
   flatted@3.3.3: {}
 
   follow-redirects@1.15.11: {}
-
-  fontfaceobserver@2.3.0: {}
 
   for-each@0.3.5:
     dependencies:

@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap");
+@import "./font-subsets.generated.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,27 +23,6 @@ body, * {
 	-webkit-tap-highlight-color: transparent;
 }
 
-
-@font-face {
-  font-family: "Thin";
-  src: url("/font/ChenYuluoyan-Thin.ttf") format("truetype");
-  font-weight: 0;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "B";
-  src: url("/font/GenSenRounded-B.woff2") format("woff2");
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "R";
-  src: url("/font/GenSenRounded-R.woff2") format("woff2");
-  font-weight: 400; /* Regular */
-  font-style: normal;
-}
 
 /* 通用彈出視窗過渡效果 */
 .modal-enter {
@@ -748,7 +728,6 @@ body, * {
     transform: translateY(4px) rotate(0);
   }
 }
-
 
 
 

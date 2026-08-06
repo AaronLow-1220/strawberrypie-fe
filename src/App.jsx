@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import FontFaceObserver from "fontfaceobserver";
 //header
 import { Header } from "./components/Header";
 import { HeaderProvider } from "./components/HeaderContext";
+import { Seo } from "./components/Seo";
 //Test
 const PsychometricTest = lazy(() => import("./components/PsychometricTest/PsychometricTest").then(module => ({ default: module.PsychometricTest })));
 //HomePage - 直接導入，不使用 lazy loading，避免首頁出現兩次 loading
@@ -27,16 +27,13 @@ import { Account } from "./components/Account/Account";
 
 // Loading
 import { Loading } from "./components/Loading";
+import { PrerenderedRoute } from "./components/PrerenderedRoute";
 import { CSSTransition } from "react-transition-group";
 
 // 預載檔案列表 - 可以在這裡添加你需要預載的所有檔案
 const PRELOAD_ASSETS = {
-	// 字體列表
-	fonts: [
-		{ name: 'Thin', family: 'Thin' },
-		{ name: 'B', family: 'B' },
-		{ name: 'R', family: 'R' }
-	],
+	// 字型由 CSS 在背景預載；不可阻塞首次進站。
+	fonts: [],
 
 	// 關鍵圖片列表
 	images: [
@@ -129,24 +126,7 @@ function App() {
 					console.log(`載入進度: ${newProgress.toFixed(2)}%, 正在載入${type}... (${loaded}/${total})`);
 				};
 
-				// 1. 載入字體
-				setLoadingText("準備中...");
-				const fonts = PRELOAD_ASSETS.fonts;
-
-				for (let i = 0; i < fonts.length; i++) {
-					const font = fonts[i];
-					try {
-						console.log(`開始載入字體: ${font.name}`);
-						const observer = new FontFaceObserver(font.family);
-						await observer.load(null, 5000); // 確保等待字體載入完成
-						console.log(`字體 ${font.name} 已載入完成`);
-					} catch (error) {
-						console.warn(`字體 ${font.name} 載入失敗:`, error);
-					}
-					updateProgress(i + 1, fonts.length, "正在瀏覽梗圖");
-				}
-
-				// 2. 載入圖片
+				// 1. 載入圖片
 				setLoadingText("正在決定晚餐吃啥...");
 				const images = PRELOAD_ASSETS.images;
 
@@ -280,10 +260,15 @@ function App() {
 	return (
 		<>
 			{isLoading ? (
-				<Loading progress={loadingProgress} loadingText={loadingText} />
+				<PrerenderedRoute
+					pathname={window.location.pathname}
+					loadingProgress={loadingProgress}
+					loadingText={loadingText}
+				/>
 			) : (
 				<HeaderProvider>
 					<Router>
+						<Seo />
 						{/* 使用 Suspense 包裹 Routes，當組件載入時顯示 Loading 組件 */}
 						<Suspense fallback={<Loading progress={100} loadingText="學分重算中..." />}>
 							<Routes>
@@ -301,6 +286,7 @@ function App() {
 								<Route path="/register" element={<Register />} />
 								<Route path="/auth/callback" element={<Callback />} />
 								<Route path="/forget-password" element={<ForgetPassword />} />
+								<Route path="*" element={null} />
 							</Routes>
 						</Suspense>
 						{/* 只有當 showHeader 為 true 時才顯示 Header */}

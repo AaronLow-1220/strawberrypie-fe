@@ -672,6 +672,7 @@ export const Group = () => {
   return (
     <>
       <style>{transitionStyles}</style>
+      <h1 className="sr-only">草莓派參展作品</h1>
       <div className={focusedCard ? "pointer-events-none" : ""}>
         {renderNormalView()}
       </div>

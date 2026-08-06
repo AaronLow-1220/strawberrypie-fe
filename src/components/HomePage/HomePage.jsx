@@ -386,6 +386,7 @@ export const HomePage = ({ handleLogoAnimation, setShowHeader }) => {
 
   return (
     <div>
+      <h1 className="sr-only">草莓派｜元智資傳第28屆畢業展覽</h1>
       {/* 頂部視覺區塊 - 背景、Logo 和 3D 模型 */}
       <div>
         <div className="bg-pink-radial">

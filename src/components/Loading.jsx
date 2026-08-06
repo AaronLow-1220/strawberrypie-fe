@@ -1,8 +1,6 @@
-import React from 'react';
-
 export const Loading = ({ progress = 0, loadingText = "" }) => {
   return (
-    <div className="fixed inset-0 bg-[#1A080A] flex flex-col items-center justify-center z-50">
+    <div data-loading-screen className="fixed inset-0 bg-[#1A080A] flex flex-col items-center justify-center z-50">
       <div className="relative">
         {/* Logo 區域 */}
         <img 
@@ -37,4 +35,4 @@ export const Loading = ({ progress = 0, loadingText = "" }) => {
       </div>
     </div>
   );
-}; 
+};
